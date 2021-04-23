@@ -11,7 +11,6 @@
       - $DOTFILES_PATH/langs/js/nvm
 
 - link:
-    ~/.dotly: os/mac/.dotly
     ~/bin/bash: /usr/local/bin/bash
     ~/bin/date: /usr/local/bin/gdate
     ~/bin/make: /usr/local/opt/make/libexec/gnubin/make
