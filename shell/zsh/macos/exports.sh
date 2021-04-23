@@ -1,0 +1,1 @@
+source "$DOTFILES_PATH/shell/bash/macos/exports.sh"

@@ -1,0 +1,31 @@
+- clean: ['~']
+
+- defaults:
+    link:
+      create: true
+      force: true
+
+- create:
+    - shell/bash/completions
+    - shell/bash/themes
+    - shell/bash/themes
+    - editors/code/snippets
+    - shell/init-scripts
+    - shell/init-scripts
+    - shell/init-scripts.enabled
+    - ~/.ssh/control
+
+- link:
+    ~/.bash_profile: shell/bash/.bash_profile
+    ~/.bashrc: shell/bash/.bashrc
+    ~/.zimrc: shell/zsh/.zimrc
+    ~/.zlogin: shell/zsh/.zlogin
+    ~/.zshenv: shell/zsh/.zshenv
+    ~/.zshrc: shell/zsh/.zshrc
+    ~/.inputrc: shell/.inputrc
+    ~/.profile: shell/.profile
+    ~/.ssh/config: ssh/config
+    ~/.ssh/config.d-enabled: ssh/config.d-enabled
+    ~/.gitconfig: git/gitconfig
+    ~/.gitignore_global: git/gitignore_global
+    ~/.gitattributes: git/gitattributes

@@ -1,0 +1,7 @@
+@vue
+editorconfig
+generator-botbuilder
+nvm
+typescript
+yarn
+yo

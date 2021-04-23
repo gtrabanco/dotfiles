@@ -1,0 +1,112 @@
+{:profiles
+ {:Default
+  {:alone              500
+   :default            true
+   :delay              250
+   :held               500
+   :sim                200
+   :simlayer-threshold 500}}
+
+;; To obtain the app ID: `grep -A1 "CFBundleIdentifier" /Applications/The.app/Contents/Info.plist`
+;; You can use also: dot mac app_bundle "App" # Without .app
+:applications {
+    :Brave ["com.brave.Browser"]
+    :Finder ["com.apple.finder"]
+}
+
+ :froms     {:line-delete              {:modi :left_command :key :delete_or_backspace}
+             :line-duplicate           {:modi :left_command :key :d}
+             :selection-extend         {:modi :left_option :key :up_arrow}
+             :selection-shrink         {:modi :left_option :key :down_arrow}
+             :show-recent              {:modi :left_command :key :e}
+             :sidebar-primary-toggle   {:modi :left_command :key :1}
+             :sidebar-secondary-toggle {:modi :left_command :key :2}
+             :switch-account           {:modi :left_command :key :caps_lock}
+             :zoom-in                  {:modi :left_command :key :equal_sign}
+             :zoom-out                 {:modi :left_command :key :hyphen}}
+
+:simlayers {
+    :open-mode {:key :o}
+    :emoji-mode {:key :e}
+    :maths-mode {:key :m} 
+}
+
+:templates {
+    :paste
+        "osascript -e '
+            set the clipboard to \"%s\"
+            tell application \"System Events\"
+                keystroke \"v\" using command down
+            end tell
+        '"
+    :open "open -a '%s.app'"
+}
+
+ :main
+ [;; ------------ Remaps ------------
+  ;; ------------ Keyboard ------------
+
+  ;; ------------ Mouse ------------
+  {:des "[Mouse] Down to hide" :rules [[{:pkey :button4} [{:pkey :button1} :!Ch]]]}
+  {:des "[Mouse] Up to show" :rules [[{:pkey :button5} :!Ctab]]}
+
+  ;; ------------ Launchers ------------ 
+  {:des "Open iTerm" :rules [[:!CTOspacebar [:open "iTerm"]]]}
+  
+  {:des "Open mode" :rules[:open-mode
+                        [:t  [:open "iTerm"]]
+                        [:b  [:open "Brave Browser"]]
+  ]}
+
+  {:des "Emoji mode" :rules[:emoji-mode
+                        [:v [:paste "✅"]]
+                        [:w [:paste "❌"]]
+                        [:s [:paste "📛"]]
+                        [:u [:paste "👍"]]
+                        [:o [:paste "👌"]]
+                        [:d [:paste "👎"]]
+  ]}
+
+  {:des "Maths mode" :rules[:maths-mode
+                        [:q [:paste "≣"]]
+                        [:z [:paste "≤"]]
+                        [:x [:paste "≥"]]
+                        [:u [:paste "∪"]]
+                        [:n [:paste "∩"]]
+                        [:l [:paste "⊂"]]
+                        [:r [:paste "⊃"]]
+                        [:p [:paste "∏"]]
+                        [:e [:paste "ℇ"]]
+  ]}
+
+  ;; ------------ Application specific ------------
+  {:des "[Brave] Inspect element" :rules [:Brave [:!CTOi :!OCc]]}
+  {:des "[Brave] Toggle console" :rules [:Brave [:!CTOt :!OCj]]}
+
+
+ ;; ------------ Cheatsheet ------------
+ ;; !  stand for mandatory
+ ;; #  stand for optional
+ ;; !! stand for mandatory command + control + optional + shift (hyper)
+ ;; ## stand for optional any
+ ;; C T O S for left command control option shift
+ ;; Q W E R for right command control option shift
+ ;; F for fn
+ ;; need to prefix C T O S F Q W E R with ! or #
+]
+ :cheatsheet
+ {:!Ca        "command a"
+  :!Ta        "control a"
+  :!Oa        "option a"
+  :!Sa        "shift a"
+  :#Sa        "shift a"
+  :!CTOa      "command control option a"
+  :!Cspacebar "command space"
+  :!Fa        "fn a"
+  :##a        "keycode a optional any"
+  :!!a        "mandatory hyper (control command option shift) a "
+  :template   {:des   "Description of your action"
+               :rules [[:!Cspacebar "command to execute"]]}}}
+
+ ;; Debug when adding commands
+ ;;  tail -n0 -f ~/Library/Logs/goku.log | xargs -I_ osascript -e 'display notification "'"_"'" with title "Goku config modified"'

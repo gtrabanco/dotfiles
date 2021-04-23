@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+source "$DOTLY_PATH/scripts/core/_main.sh"
+
+##?   Solve fast forwards errors
+##? 
+##? Usage:
+##?   solve_ff <remote> <branch_name>
+##?
+docs::parse "$@"
+
+[[ "$#" -lt 1 ]] && exit 1
+
+git fetch $1
+git merge $1 $2

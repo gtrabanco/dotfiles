@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+source "$DOTLY_PATH/scripts/core/_main.sh"
+
+##?   Executes an amend. This should replace default dotly 
+##? amend because I prefer to amend what I want and not
+##? all files.
+##?
+##? Usage:
+##?   myamend
+docs::parse "$@"
+
+git commit --amend –C HEAD

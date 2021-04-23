@@ -1,0 +1,53 @@
+% network
+
+# Kill a process running on a given port
+lsof -i :<port> \
+   | awk '{l=$2} END {print l}' \
+   | xargs kill
+
+# Kill a process for port
+port="$(echo "<process>" | grep -Eo ':([0-9][0-9][0-9]+) ' | tr -d ':')"
+lsof -i :$port \
+   | awk '{l=$2} END {print l}' \
+   | xargs kill
+
+# List IP addresses connected on a given port
+netstat -tn 2>/dev/null \
+   | grep :<port> \
+   | awk '{print $5}' \
+   | cut -d: -f1 \
+   | sort \
+   | uniq -c \
+   | sort -nr \
+   | head
+
+# Find external, public IP address
+dig +short myip.opendns.com @resolver1.opendns.com
+
+# Find primary, local IP address
+ifconfig \
+  | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' \
+  | grep -Eo '([0-9]*\.){3}[0-9]*' \
+  | grep -v '127.0.0.1' \
+  | tail -n1
+
+# Get certificates for a service
+openssl s_client -showcerts -connect <url>
+
+# Geolocation data given an IP
+curl -sL "ipinfo.io/<ip>" | jq
+
+# Geolocation data for own IP
+curl -sL "ipinfo.io/<self_global_ip>" | jq
+
+# Launch a container with network utils
+docker run -it --entrypoint /bin/sh nicolaka/netshoot
+
+# Map ports
+sudo nmap -sS -sV -0 "<target>"
+
+# Port owner
+lsof -n -i4TCP:<port> | grep LISTEN
+
+$ self_global_ip: dig +short myip.opendns.com @resolver1.opendns.com
+$ process: lsof -iTCP -sTCP:LISTEN -n -P | sed -E "s/:([0-9][0-9][0-9]+) /:$(tput setaf 3)\1$(tput sgr0) /g" --- --header-lines 1

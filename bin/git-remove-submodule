@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+source "$DOTLY_PATH/scripts/core/_main.sh"
+
+if [[ -d ".git" ]] && [[ -f ".gitmodules" ]]; then
+  git submodule deinit -f -- "$1"
+  git rm -f "$1"
+  git commit -m "Removed submodule '$1'"
+  rm -rf ".git/modules/$1"
+  output::solution "Submodule '$1' was removed"
+else
+  output::error "This can be executed only in a directory which is a git repository and have .gitmodules file"
+  output::error "You must be in the root directory of the git repository"
+fi

@@ -1,0 +1,12 @@
+.DS_Store
+.env
+!.env.dist
+.secrets
+!.secrets.dist
+
+# IntelliJ IDEA
+.idea
+*.iml
+*.iws
+.idea-compl
+*.sc

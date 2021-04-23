@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+source "$DOTLY_PATH/scripts/core/_main.sh"
+
+if [[ -d ".git" ]] && [[ -f ".gitmodules" ]]; then
+  git filter-branch --index-filter 'git rm --cached --ignore-unmatch $1' HEAD
+else
+  output::error "This can be executed only in a directory which is a git repository and"
+  output::error "you must be also in the root directory of the git repository."
+fi

@@ -1,0 +1,27 @@
+- clean: ['~']
+
+- defaults:
+    link:
+      create: true
+      force: true
+
+- create:
+      - ~/.hushlogin
+      - ~/.config
+      - $DOTFILES_PATH/langs/js/nvm
+
+- link:
+    ~/.dotly: os/mac/.dotly
+    ~/bin/bash: /usr/local/bin/bash
+    ~/bin/date: /usr/local/bin/gdate
+    ~/bin/make: /usr/local/opt/make/libexec/gnubin/make
+    ~/bin/sed: /usr/local/opt/gnu-sed/libexec/gnubin/sed
+    ~/bin/touch: /usr/local/bin/gtouch
+    ~/bin/find: /usr/local/opt/findutils/bin/gfind
+    ~/.config/karabiner: os/mac/karabiner
+    ~/.config/karabiner.edn: os/mac/karabiner-goku/karabiner.edn
+    ~/.nvm: langs/js/nvm
+    "~/Library/Application Support/Code/User/keybindings.json": editors/code/keybindings.json
+    "~/Library/Application Support/Code/User/settings.json": editors/code/settings.json
+    "~/Library/Application Support/Code/User/snippets": editors/code/snippets
+    ~/Library/Preferences/com.knollsoft.Rectangle.plist: os/mac/rectangle/com.knollsoft.Rectangle.plist

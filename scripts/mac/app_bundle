@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+source "$DOTLY_PATH/scripts/core/_main.sh"
+
+##? Get the bundle identifier from app
+##?
+##? Usage:
+##?   app_bundle <app>
+docs::parse "$@"
+
+app_file_info="/Applications/${app}.app/Contents/Info.plist"
+[[ -f "$app_file_info" ]] && output::write "$(grep -A1 "CFBundleIdentifier" "$app_file_info")" || output::write "There is no app named \"${app}\.app"
