@@ -1,0 +1,12 @@
+*.lock.json
+*.private*
+known_hosts
+.marketplace-cache
+.dotly_update_available
+.dotly_updated
+.cached_github_api_calls
+
+# Ignoreing files in secrets because I do not want to add internal symlinks to 
+# my dotfiles git repository
+os/mac/settings
+ssh/config.d
