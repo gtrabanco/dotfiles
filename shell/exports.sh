@@ -1,5 +1,6 @@
 export DOTLY_AUTO_UPDATE_DAYS=7
 export DOTLY_AUTO_UPDATE_MODE="silent"
+#export DOTLY_NO_INIT_SCRIPTS=True
 
 # Homebrew
 export HOMEBREW_AUTO_UPDATE_SECS=259300 # 3 days
