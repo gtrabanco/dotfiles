@@ -18,7 +18,7 @@
 	ui = true
 
 [core]
-	excludesfile = ~/.gitignore_global
+	excludesfile = /Users/gtrabanco/.gitignore_global
 	attributesfile = ~/.gitattributes
 	editor = vim
 	autocrlf = input
