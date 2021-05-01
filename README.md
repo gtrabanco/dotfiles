@@ -2,6 +2,10 @@
   .dotfiles created using <a href="https://github.com/gtrabanco/dotly/tree/beta">🌚 dotly (gtrabanco fork, beta version)</a>
 </h1>
 
+## About this dotfiles
+
+This requieres a newer version than official DOTLY version which is in [my fork](https://github.com/gtrabanco/dotly).
+
 ## Restore your Dotfiles
 
 * Install git
@@ -14,8 +18,10 @@
 
 # Install Deno DeployCTL
 
+The PATH `$HOME/.deno/bin` is already set in [`shell/paths.sh`](shell/paths.sh)
+
 ```bash
-deno install --allow-read --allow-write --allow-env --allow-net --allow-run --no-check -f https://deno.land/x/deploy/deployctl.ts
+dot self afterinstall deno_deploy
 ```
 
 # To run java you need to execute manually

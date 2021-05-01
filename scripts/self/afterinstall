@@ -18,6 +18,10 @@ case $1 in
   sudo ln -sfn /usr/local/opt/openjdk@8/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-8.jdk
   sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
   ;;
+"deno_deploy")
+  deno install --allow-read --allow-write --allow-env --allow-net --allow-run --no-check -f https://deno.land/x/deploy/deployctl.ts
+  export PATH="$PATH:$HOME/.deno/bin"
+  ;;
 *)
   exit 1
   ;;
