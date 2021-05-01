@@ -103,5 +103,6 @@
 	st = status
 	c = !git add -A && git commit
 	diff-permissions = !git diff -p -R --no-color | grep -E \\\"^(diff|(old|new) mode)\\\" --color=newer | git apply
+	tree = log --graph --oneline --all
 [protocol "keybase"]
 	allow = always
