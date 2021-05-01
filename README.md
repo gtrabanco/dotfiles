@@ -8,31 +8,20 @@ This requieres a newer version than official DOTLY version which is in [my fork]
 
 ## Restore your Dotfiles
 
-* Install git
-* Clone your dotfiles repository `git clone [your repository of dotfiles] $HOME/.dotfiles`
-* Go to your dotfiles folder `cd $HOME/.dotfiles`
-* Install git submodules `git submodule update --init --recursive`
-* Install your dotfiles `DOTFILES_PATH="$HOME/.dotfiles" DOTLY_PATH="$DOTFILES_PATH/modules/dotly" "$DOTLY_PATH/bin/dot" self install`
-* Restart your terminal
-* Import your packages `dot package import`
+1. Generate ssh key or import the old one (not recommended) and add it to your GitHub or elsewhere you stored your dotfiles.
+2. Do the same with the repository you have your secrets.
+3. Clone your dotfiles repository `git clone [your repository of dotfiles] $HOME/.dotfiles`
+4. Go to your dotfiles folder `cd $HOME/.dotfiles`
+5. Install git submodules `git submodule update --init --recursive`
+6. Install your dotfiles `DOTFILES_PATH="$HOME/.dotfiles" DOTLY_PATH="$DOTFILES_PATH/modules/dotly" "$DOTLY_PATH/bin/dot" self install`
+7. Apply your secrets: `dot secrets apply` 
+8. Restart your terminal
+9. Import your packages `dot package import`
+10. Import your settings `dot mac defaults import`
 
-# Install Deno DeployCTL
+### Install Paragon NTFS
 
-The PATH `$HOME/.deno/bin` is already set in [`shell/paths.sh`](shell/paths.sh)
-
-```bash
-dot self afterinstall deno_deploy
-```
-
-# To run java you need to execute manually
-
-```bash
-dot self afterinstall install_java
-```
-
-This will do all the magic
-
-# Install Paragon NTFS
+After `dot package import`:
 
 ```bash
 /usr/local/Caskroom/paragon-ntfs/15/FSInstaller.app
