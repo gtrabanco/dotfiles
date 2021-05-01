@@ -12,6 +12,11 @@
 * Restart your terminal
 * Import your packages `dot package import`
 
+# Install Deno DeployCTL
+
+```bash
+deno install --allow-read --allow-write --allow-env --allow-net --allow-run --no-check -f https://deno.land/x/deploy/deployctl.ts
+```
 
 # To run java you need to execute manually
 

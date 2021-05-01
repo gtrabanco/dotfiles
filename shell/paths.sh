@@ -6,6 +6,7 @@ export path=(
   "$GEM_HOME/bin"
   "$GOPATH/bin"
   "$HOME/.cargo/bin"
+  "$HOME/.deno/bin"
   "/usr/local/opt/ruby/bin"
   "/usr/local/opt/python/libexec/bin"
   "/usr/local/bin"
