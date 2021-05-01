@@ -1,6 +1,7 @@
-<h1 align="center">
-  .dotfiles created using <a href="https://github.com/gtrabanco/dotly/tree/beta">🌚 dotly (gtrabanco fork, beta version)</a>
-</h1>
+<div align="center">
+  <h1>.dotfiles created using <a href="https://github.com/gtrabanco/dotly/tree/beta">🌚 dotly</a></h1>
+  <h4>(gtrabanco fork, beta version)</h4>
+</div>
 
 ## About this dotfiles
 
