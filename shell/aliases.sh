@@ -14,6 +14,7 @@ alias fixcompinit='sudo chmod -R 755 /usr/local/share/zsh && sudo chown -R root:
 alias code_dotly="cd $DOTLY_PATH && code ."
 alias godotly='cd ~/MyCodes/dotly'
 alias webstorm='open -na "Webstorm.app"'
+alias intellij='open -na "IntelliJ IDEA"'
 alias chrome-cli='brave-cli'
 alias github='source $DOTLY_PATH/scripts/dotly/tools/github.sh'
 
