@@ -106,3 +106,8 @@
 	tree = log --graph --oneline --all
 [protocol "keybase"]
 	allow = always
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
