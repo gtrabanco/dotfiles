@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+. "$DOTLY_PATH/scripts/core/_main.sh"
+
+##? Convert a binary representation into text characters
+##? 
+##?
+##? Usage:
+##?   fromBinary [-h | --help]
+##?   fromBinary [-v | --version]
+##?   fromBinary <bin_text>...
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot text fromBinary"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+echo "${bin_text[*]:-}" | sed 's/ //g' | perl -lpe '$_=pack"B*",$_'
+
