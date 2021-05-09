@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+. "$DOTLY_PATH/scripts/core/_main.sh"
+. "$DOTLY_PATH/scripts/core/github.sh"
+
+##? Make API Calls using github api
+##? 
+##?
+##? Usage:
+##?   api [-h | --help]
+##?   api [-v | --version]
+##?   api fetch <url>
+##?   api call [-n | --no-cache] [--user=<user>] [--repository=<repo>] [--branch=<branch>] [<api_path>]
+##?   api path [--user=<user>] [--repository=<repo>] [--branch=<branch>] [<api_path>]
+##?
+##? Options:
+##?   -h --help            Show this help
+##?   -v --version         Show the program version
+##?   -n --no-cache        No cached curl
+##?   --user=<user>        Define a repository organization or user.
+##?                        If not defines uses "gtrabanco"
+##?   --repository=<repo>  Define a repository. If not defined use
+##?                        "dotfiles".
+##?   --branch=<branc>     Set a branch if not, it is not used
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot github api"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+# Here begin your script
+
+case ${1:-} in
+# Any subcommand should be here
+"fetch")
+  if [ -z "${url:-}" ]; then
+    exit 1
+  fi
+
+  if [ -n "${no_cache:-}" ]; then
+    github::curl --no-cache "$url"
+  else
+    github::curl "$url"
+  fi
+  ;;
+"path")
+  _args=(-u "${user:-gtrabanco}" -r "${repo:-dotfiles}")
+  
+  if [ -n "${branch:-}" ]; then
+    _args+=(-b "$branch")
+  fi
+  
+  github::get_api_url "${_args[@]}" "${api_path:-}"
+  ;;
+"call")
+  _args=(-u "${user:-gtrabanco}" -r "${repo:-dotfiles}")
+  
+  if [ -n "${branch:-}" ]; then
+    _args+=(-b "$branch")
+  fi
+
+  "$DOTLY_PATH/bin/dot" github api call "$(github::get_api_url "${_args[@]}" "${api_path:-}")"
+  ;;
+*)
+  echo "$0" --help
+  ;;
+esac
