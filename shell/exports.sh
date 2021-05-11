@@ -1,5 +1,6 @@
-export DOTLY_AUTO_UPDATE_DAYS=7
-export DOTLY_AUTO_UPDATE_MODE="silent"
+export DOTLY_AUTO_UPDATE_PERIOD_IN_DAYS=7
+export DOTLY_AUTO_UPDATE_MODE="auto" # silent, auto, info, prompt
+export DOTLY_UPDATE_VERSION="latest" # latest, stable, minor
 #export DOTLY_NO_INIT_SCRIPTS=True
 
 # Homebrew
