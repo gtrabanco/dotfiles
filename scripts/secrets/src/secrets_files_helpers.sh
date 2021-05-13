@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-source "$DOTFILES_PATH/scripts/secrets/lib/install_needed_soft_and_vars.sh"
-source "$DOTFILES_PATH/scripts/secrets/lib/secrets_helpers.sh"
-source "$DOTFILES_PATH/scripts/secrets/lib/secrets_json.sh"
+. "$DOTFILES_PATH/scripts/secrets/src/install_needed_soft_and_vars.sh"
+. "$DOTFILES_PATH/scripts/secrets/src/secrets_helpers.sh"
+. "$DOTFILES_PATH/scripts/secrets/src/secrets_json.sh"
 
 secrets::find () {
   local find_relative_path exclude_itself arguments

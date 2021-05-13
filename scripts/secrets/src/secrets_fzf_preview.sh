@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-source "$DOTFILES_PATH/scripts/core/_main.sh"
-source "$DOTFILES_PATH/scripts/secrets/lib/secrets_helpers.sh"
-source "$DOTFILES_PATH/scripts/secrets/lib/secrets_json.sh"
+. "$DOTFILES_PATH/scripts/core/_main.sh"
+. "$DOTFILES_PATH/scripts/secrets/src/secrets_helpers.sh"
+. "$DOTFILES_PATH/scripts/secrets/src/secrets_json.sh"
 
 secrets::preview() {
   local file file_alias

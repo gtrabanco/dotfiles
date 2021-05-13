@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source "$DOTFILES_PATH/scripts/secrets/lib/install_needed_soft_and_vars.sh"
-source "$DOTFILES_PATH/scripts/secrets/lib/secrets_helpers.sh"
+. "$DOTFILES_PATH/scripts/secrets/src/install_needed_soft_and_vars.sh"
+. "$DOTFILES_PATH/scripts/secrets/src/secrets_helpers.sh"
 
 secrets::var_exists() {
   secrets::check_exists "vars/$1"

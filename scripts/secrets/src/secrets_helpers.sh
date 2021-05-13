@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$DOTFILES_PATH/scripts/secrets/lib/install_needed_soft_and_vars.sh"
+. "$DOTFILES_PATH/scripts/secrets/src/install_needed_soft_and_vars.sh"
 
 secrets::remove_file() {
   local start_dir
