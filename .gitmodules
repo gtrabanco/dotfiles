@@ -1,7 +1,3 @@
-[submodule "modules/secrets"]
-	path = modules/secrets
-	url = keybase://private/gtrabanco/secrets
-	branch = master
 [submodule "modules/dotly"]
 	path = modules/dotly
 	url = git@github.com:gtrabanco/dotly.git
