@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+. "$DOTLY_PATH/scripts/core/_main.sh"
+
+yaml::to_json_pretty() {
+  if [[ -z "${1:-}" ]]; then
+    python -c 'import sys, yaml, json; print(json.dumps(yaml.safe_load(sys.stdin.read()), indent=2, sort_keys=False))' 2>/dev/null
+  else
+    [[ -e "${1:-}" ]] &&\
+      python -c 'import sys, yaml, json; print(json.dumps(yaml.safe_load(open(sys.argv[1])), indent=2, sort_keys=False))' "$1" 2>/dev/null
+  fi
+}
+
+##? Convert a yaml string or file to json
+##? 
+##?
+##? Usage:
+##?   yaml2json [-h | --help]
+##?   yaml2json [-v | --version]
+##?   yaml2json [<file_path>]
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot utils yaml2json"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+# Here begin your script
+
+if [[ -n "${file_path:-}" ]] && [[ -f "${file_path:-}" ]]; then
+  if echo "$file_path" | grep -q "yaml"; then
+    yaml_file_path="${file_path%*.yaml}.json"
+  else
+    yaml_file_path="${file_path%*.yml}.json"
+  fi
+
+  yaml::to_json_pretty "$file_path" | sponge "$yaml_file_path"
+  output::solution "File '$yaml_file_path' created"
+elif [ -t 1 ]; then
+  yaml::to_json_pretty < /dev/stdin
+else
+  exit 1
+fi
