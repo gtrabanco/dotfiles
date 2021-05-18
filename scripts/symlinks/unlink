@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+. "$DOTLY_PATH/scripts/core/_main.sh"
+dot::get_script_src_path "dotbot_yaml_edit.sh" "symlinks"
+
+symlinks::get_file_path() {
+  local yaml_file_posibilities yaml_file
+  yaml_file="${1:-conf}"
+  yaml_file_posibilities=(
+    "$yaml_file"
+    "$yaml_file.yaml"
+    "$yaml_file.yml"
+    "$DOTFILES_PATH/symlinks/$yaml_file"
+    "$DOTFILES_PATH/symlinks/$yaml_file.yaml"
+    "$DOTFILES_PATH/symlinks/$yaml_file.yml"
+    "$DOTFILES_PATH/symlinks/conf.yml"
+  )
+
+  for f in "${yaml_file_posibilities[@]}" ; do
+    [[ -f "$f" ]] && [[ -w "$f" ]] && yaml_file="$f" && break
+  done
+
+  if [ ! -w "$yaml_file" ]; then
+    output::error "The yaml file '$yaml_file' does not exists or its not writable by you."
+    exit 1
+  fi
+
+  echo "$yaml_file" && return 0
+}
+
+##? Undo your current linksection of your dotbot yaml files.
+##? 
+##?
+##? Usage:
+##?   unlink [-h | --help]
+##?   unlink [-v | --version]
+##?   unlink [<yaml_file>]
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot symlinks unlink"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+yaml_file="${yaml_file:-"$(symlinks::get_file_path "${yaml_file:-}")"}"
+[[ -z "$yaml_file" ]] && output::error "No dotbot yaml file found" && exit 1
+
+links=("$(dotbot::get_all_keys_in "link" "$yaml_file")")
+
+cd "$DOTFILES_PATH" || exit 1
+
+for link in ${links[@]}; do
+  if eval rm -f "$link"; then
+    output::solution "Link '$link': Reverted"
+  else
+    output::error "Link '$link': could not be reverted"
+  fi
+done
