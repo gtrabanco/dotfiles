@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+. "$DOTLY_PATH/scripts/core/_main.sh"
+dot::get_script_src_path "dotbot_yaml_edit.sh" "symlinks"
+dot::get_script_src_path "symlinks.sh" "symlinks"
+bk_suffix="$(date +%s)"
+
+if [[ -d "$DOTFILES_PATH/ssh" ]]; then
+  output::error "This update was applied or you have same file names or directory path."
+  output::yesno "Do you want to perform a backup of your current configuration inside your dotfiles and continue" || { output::error "User aborted"; exit; }
+  files::backup_if_file_exists "$DOTFILES_PATH/ssh" "$bk_suffix"
+fi
+
+if [[ -d "$HOME/.ssh" ]]; then
+  output::yesno "Do you want to perform a backup of your current ~/.ssh directory" && files::backup_if_file_exists "$HOME/.ssh" "$bk_suffix"
+fi
+
+output::answer "Copying template ssh folder to your current DOTFILES_PATH"
+cp -R "$DOTLY_PATH/dotfiles_template/ssh" "$DOTFILES_PATH/"
+
+output::answer "Applying right permissions to ssh folder"
+chmod -R 0700 "$DOTFILES_PATH/ssh"
+
+# TODO Add to current conf.yaml the needed configuration for ssh
+# Todo this needs `feature/move_files_dotbot`
+yaml_file="$(symlinks::get_file_path "${yamsl_file:-}")"
+dotbot::add_or_edit_json_value_to_directive "create" "~/.ssh/control" "$yaml_file"
+dotbot::add_or_edit_json_value_to_directive "link" "~/.ssh/config" "ssh/config" "$yaml_file"
+dotbot::add_or_edit_json_value_to_directive "link" "~/.ssh/config.d" "ssh/config.d" "$yaml_file"
+dotbot::add_or_edit_json_value_to_directive "link" "~/.ssh/config.d-enabled" "ssh/config.d-enabled" "$yaml_file"
+
+
+# TODO Execute symlinks file or user symlinks file
+#"$DOTLY_PATH/bin/dot" symlinks update ssh-feature
+#"$DOTLY_PATH/bin/dot" symlinks apply
