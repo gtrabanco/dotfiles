@@ -22,9 +22,10 @@ export NODE_REPL_MODE='sloppy';
 export NVM_DIR="$HOME/.nvm"
 
 # Java
-export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8 2>&1 /dev/null)
-export JAVA_11_HOME=$(/usr/libexec/java_home -v11 2>&1 /dev/null)
-export JAVA_LATEST=$(/usr/libexec/java_home 2>&1 /dev/null)
+JAVA_8_HOME=$(/usr/libexec/java_home -v1.8 2>&1 /dev/null)
+JAVA_11_HOME=$(/usr/libexec/java_home -v11 2>&1 /dev/null)
+JAVA_LATEST=$(/usr/libexec/java_home 2>&1 /dev/null)
+export JAVA_8_HOME JAVA_11_HOME JAVA_LATEST
 export JAVA_HOME="$JAVA_LATEST"
 
 export FZF_DEFAULT_OPTS='
@@ -32,11 +33,21 @@ export FZF_DEFAULT_OPTS='
   --reverse
 '
 
-export GPG_TTY=$(tty)
+GPG_TTY=$(tty)
+export GPG_TTY
 
-export EDITOR="$(which vim)"
+EDITOR="$(which vim)"
+export EDITOR
 
 export LANG=en_GB.UTF-8
 
-[[ -z "$GITHUB_TOKEN" ]] && export GITHUB_TOKEN="$(dot secrets var GITHUB_TOKEN)"
-[[ -z "$NTFY_PUSHOVER_TOKEN" ]] && export NTFY_PUSHOVER_TOKEN="$(dot secrets var NTFY_PUSHOVER_TOKEN)"
+# HASSIO
+#export HASS_SCHEME="https"
+#export HASS_PORT="443"
+
+# TOKENS
+[[ -z "$HASS_FQDN" ]] && HASS_FQDN="$(dot secrets var HASS_FQDN)"
+[[ -z "$HASS_TOKEN" ]] && HASS_TOKEN="$(dot secrets var HASS_TOKEN)"
+[[ -z "$GITHUB_TOKEN" ]] && GITHUB_TOKEN="$(dot secrets var GITHUB_TOKEN)"
+[[ -z "$NTFY_PUSHOVER_TOKEN" ]] && NTFY_PUSHOVER_TOKEN="$(dot secrets var NTFY_PUSHOVER_TOKEN)"
+export HASS_FQDN HASS_TOKEN GITHUB_TOKEN NTFY_PUSHOVER_TOKEN

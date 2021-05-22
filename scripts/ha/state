@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+. "$DOTLY_PATH/scripts/core/_main.sh"
+dot::get_script_src_path "ha.sh"
+
+##? Execute hassio State from console
+##? 
+##?
+##? Usage:
+##?   state [-h | --help]
+##?   state [-v | --version]
+##?   state [<entity> [<json>]]
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot ha state"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+url="$HASS_API_URL/states"
+
+
+if [[ -n "${json:-}" ]]; then
+  curl --silent -X POST\
+    -H "Content-Type: application/json"\
+    -H "Authorization: Bearer $HASS_TOKEN"\
+    -d "${json:-\{\}}"\
+    "$url/${entity:-}"
+else
+  output="$(curl --silent -X GET\
+    -H "Content-Type: application/json"\
+    -H "Authorization: Bearer $HASS_TOKEN"\
+    "$url")"
+
+  if [[ -n "${entity:-}" ]]; then
+    echo "$output" | jq -r --arg entity "$entity" '.[] | select(.entity_id == $entity) | .'
+  else
+    echo "$output"
+  fi
+fi
