@@ -6,10 +6,10 @@ known_hosts
 .dotly_updated
 .cached_github_api_calls
 
-# Ignoreing files in secrets because I do not want to add internal symlinks to 
-# my dotfiles git repository
+# Ignoreing files in secrets because its not neccessary to store those symlinks in the repository
 os/mac/settings
 ssh/config.d-enabled/*
 !ssh/config.d-enabled/default
 !ssh/config.d-enabled/multiplexer
 !ssh/config.d-enabled/remote
+shell/init-scripts/secrets_autoload
