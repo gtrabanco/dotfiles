@@ -169,10 +169,17 @@ then
     output::answer "Configuring git"
     git config --global user.signingkey "$sec"
     git config --global commit.gpgsign true
+    git config --global gpg.program "$(which gpg)"
     output::solution "Git configured"
     output::empty_line
 
-    # Step 5 add it in your github setting
+    # Step 5 (Conditional step) Configure GPNUPG
+    if [[ -d "$HOME/.gnupg" ]] && ! grep -q "no-tty" "$HOME/.gnupg/gpg.conf"; then
+      output::solution "Configured GNUPG"
+      echo "no-tty" >> "$HOME/.gnupg/gpg.conf"
+    fi
+
+    # Step 6 add it in your github setting
     output::answer "Now add your public key in you github settings"
     {
       gpg --armor --export "$sec" | "$DOTLY_PATH/bin/pbcopy" && output::solution "Public key is in your clipboard"
@@ -187,6 +194,9 @@ then
     } || {
       output::write "Open in browser ans paste your key:"
       output::answer "https://github.com/settings/gpg/new"
+      output::empty_line
+      output::write "In case of errors signing commits:"
+      output::answer "https://github.com/gtrabanco/keybase-gpg-github#troubleshooting-gpg-failed-to-sign-the-data"
       output::empty_line
     }
   else
