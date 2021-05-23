@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+os=$(uname)
+if [[ "$os" == "Linux" ]]; then
+  if [[ -n "$(which xdg-open)" ]]; then
+    xdg-open "$@"
+  elif [[ -n "$(gnome-open)" ]]; then
+    gnome-open "$@"
+  fi
+elif [[ "$os" == "Darwin" ]]; then
+  /usr/bin/open "$@" 
+fi
+# If should were possible to use bash on windows
+# should use `start` command
