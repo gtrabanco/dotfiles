@@ -11,4 +11,4 @@ source "$DOTLY_PATH/scripts/core/_main.sh"
 ##?   port_owner <port>
 docs::parse "$@"
 
-lsof -n -i4TCP:$1 | grep LISTEN
+lsof -n -i4TCP:"${port:-}" | grep LISTEN

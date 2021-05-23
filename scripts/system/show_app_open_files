@@ -8,8 +8,8 @@ source "$DOTLY_PATH/scripts/core/_main.sh"
 #?? 1.0.0
 ##?
 ##? Usage:
-##?   show_app_open_files
 ##?   show_app_open_files --watch
+##?   show_app_open_files
 ##?
 ##? Options:
 ##?   -h --help   Show this screen.
@@ -18,7 +18,7 @@ docs::parse "$@"
 
 selected=$(dot system list_opened_apps | fzf)
 
-if $watch; then
+if ${watch:-}; then
   lsof -r 2 -c "$selected" | awk '{print $4 " " $9}'
 else
   lsof -c "$selected" | awk '{print $4 " " $9}'

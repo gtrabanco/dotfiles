@@ -8,7 +8,8 @@ source "$DOTLY_PATH/scripts/core/_main.sh"
 #?? 1.0.0
 ##?
 ##? Usage:
-##?   volume
+##?   volume (increase|decrease|toggle_mute)
+docs::parse "$@"
 
 chunk_size=5
 current_volume=$(osascript -e 'output volume of (get volume settings)')

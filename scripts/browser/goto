@@ -6,16 +6,21 @@ source "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Fuzzy search and activate Chrome tab from terminal
 ##? Based on: https://github.com/Rasukarusan/fzf-chrome-active-tab
-#?? 1.0.0
+##? 1.0.0
+##?
+##? Modified to use any other chromium browser, the original:
+##?  - https://github.com/rgomezcasas/dotfiles/tree/master/scripts/chrome/goto
 ##?
 ##? Usage:
 ##?   goto
 docs::parse "$@"
 
+DEFAULT_CHROMIUM_BROWSER="${DEFAULT_CHROMIUM_BROWSER:-Google Chrome}"
+
 function getTabs() {
   osascript <<EOF
     set _output to ""
-    tell application "Google Chrome"
+    tell application "$DEFAULT_CHROMIUM_BROWSER"
         set _window_index to 1
         repeat with w in windows
             set _tab_index to 1
@@ -40,7 +45,7 @@ function setActiveTab() {
   on run argv
       set _window_index to item 1 of argv
       set _tab_index to item 2 of argv
-      tell application "Google Chrome"
+      tell application "$DEFAULT_CHROMIUM_BROWSER"
           activate
           set index of window (_window_index as number) to (_window_index as number)
           set active tab index of window (_window_index as number) to (_tab_index as number)

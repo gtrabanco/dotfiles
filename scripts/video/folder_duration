@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-source "$DOTLY_PATH/scripts/core/_main.sh"
+. "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Prints the sum of all videos duration
 ##?

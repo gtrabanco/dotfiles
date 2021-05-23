@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-source "$DOTLY_PATH/scripts/core/_main.sh"
+. "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Downloads a video in the current directory
 ##?
 ##? Usage:
 ##?   download-mp4 <url>
+docs::parse "$@"
 
-youtube-dl --format mp4 "$1"
+[[ -n "${url:-}" ]] && youtube-dl --format mp4 "${url}"
