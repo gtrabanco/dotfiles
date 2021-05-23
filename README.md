@@ -27,3 +27,12 @@ After `dot package import`:
 ```bash
 /usr/local/Caskroom/paragon-ntfs/15/FSInstaller.app
 ```
+
+## Secrets Scripts
+
+Those scripts are not ready for production and could end in a lost of private data that can not be recovered or easy recovered. I do not recommend at all the use of those scripts yet for files.
+
+I recommend and are running very well for TOKEN variables without exposing the token values in your repository.
+
+Go [Secrets scripts folder](https://github.com/gtrabanco/dotfiles/tree/master/scripts/secrets) to view more information.
+
