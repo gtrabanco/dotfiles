@@ -24,7 +24,7 @@
     ~/.zshrc: shell/zsh/.zshrc
     ~/.inputrc: shell/.inputrc
     ~/.profile: shell/.profile
-    # ~/.ssh/config: ssh/config
+    ~/.ssh/config: ssh/config
     ~/.ssh/config.d-enabled: ssh/config.d-enabled
     ~/.gitconfig: git/gitconfig
     ~/.gitignore_global: git/gitignore_global

@@ -1,0 +1,8 @@
+Host ui
+	Hostname unifi
+	User root
+	Port 22
+	StrictHostKeyChecking no
+	LogLevel ERROR
+	UserKnownHostsFile /dev/null
+	RemoteForward 127.0.0.1:3333 127.0.0.1:22
