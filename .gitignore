@@ -6,6 +6,9 @@ known_hosts
 .dotly_updated
 .cached_github_api_calls
 
+# Ignoring Karabiner automatic backups
+os/mac/karabiner/automatic_backup
+
 # Ignoreing files in secrets because its not neccessary to store those symlinks in the repository
 os/mac/settings
 ssh/config.d-enabled/*
