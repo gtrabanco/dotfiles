@@ -11,12 +11,15 @@ alias dotfiles='cd $DOTFILES_PATH'
 #alias fixly='"$DOTLY_PATH/bin/dot" shell zsh clean_cache && "$DOTLY_PATH/bin/dot" shell zsh reload_completions'
 alias fixly='"$DOTLY_PATH/bin/dot" shell zsh reload_completions'
 alias fixcompinit='sudo chmod -R 755 /usr/local/share/zsh && sudo chown -R root:staff /usr/local/share/zsh' # https://stackoverflow.com/a/13785716
-alias go-dotly='cd $DOTLY_PATH'
+alias cly='cd $DOTLY_PATH'
 alias cdot='cd $DOTFILES_PATH && code $DOTFILES_PATH'
 alias webstorm='open -na "Webstorm.app"'
 alias intellij='open -na "IntelliJ IDEA"'
 alias chrome-cli='brave-cli'
 alias github='source $DOTLY_PATH/scripts/dotly/tools/github.sh'
+alias codes="cd ${HOME}/MyCodes"
+alias cdc="codes"
+alias projects="cd ${HOME}/MyCodes"
 
 # Git
 alias g="git"

@@ -1,8 +1,5 @@
 alias dl="cd ${HOME}/Downloads"
 alias dc="cd ${HOME}/Documents"
-alias codes="cd ${HOME}/MyCodes"
-alias cdc="codes"
-alias projects="cd ${HOME}/MyCodes"
 alias iCloud="cd ${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
 alias tasmotizer="cd ${HOME}/.tasmotizer && $(which tasmotizer.py)"
 

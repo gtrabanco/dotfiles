@@ -14,6 +14,7 @@
     - shell/init-scripts
     - shell/init-scripts.enabled
     - ~/.ssh/control
+    - ~/MyCodes
 
 - link:
     ~/.bash_profile: shell/bash/.bash_profile
