@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+source "$DOTLY_PATH/scripts/core/_main.sh"
+
+##?   Executes a script from remote url
+##?
+##? Usage:
+##?   remote_bash <url>
+docs::parse "$@"
+
+[[ "$#" -lt 1 ]] && exit 1
+
+bash <( curl -fsL "$url" )
