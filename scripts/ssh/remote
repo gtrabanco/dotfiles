@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+echo "Not ready for production script"
+exit 1
+
+source "$DOTLY_PATH/scripts/core/_main.sh"
+
+##? Adapt the current terminal to use develop dotly
+##?
+##? Usage:
+##?   afterinstall java
+docs::parse "$@"
+
+#!/usr/bin/env bash
+
+# bash <( curl -fsL $GIST_RAW_URL ) --port 15555 --user mylocaluser
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --port|-p)
+      LOCAL_PORT="$2"
+      shift
+      shift
+    ;;
+    --user|-u)
+      LOCAL_USER="$2"
+      shift
+      shift
+    ;;
+    --localconfig|-lc)
+      cat <<EOF
+Host *
+  RequestTTY yes
+  RemoteForward ${LOCAL_PORT:-10333} localhost:22
+EOF
+    exit 0
+    ;;
+    --help|-h)
+      cat <<EOF
+  Usage:
+    bash <( curl -fsL $GIST_RAW_URL ) [--help|-h]
+    bash <( curl -fsL $GIST_RAW_URL ) --port <remote_computer_ssh_port> [--localconfig|-lc]
+    bash <( curl -fsL $GIST_RAW_URL ) --port <remote_computer_ssh_port> --user <your_local_computer_user>
+  
+  Options:
+    --help -h          Gives this help
+    --port -p          The port where you want to expose your ssh \in the remote computer (local remote port)
+    --user -u          Your desktop computer user (it could be different than your remote user)
+    --localconfig -lc  Generate a ssh configuration file \for your desktop computer. Do not use this param
+                       \in the remote machine 
+  
+  Description:
+    Remember that you should enable Remote TCP Connections and create a TCP redirect to local port. So your
+    local machine does not need to expose the ssh port.
+    
+    To see a sample configuration call option --localconfig
+    
+    WARNING: THIS SCRIPT COULD OVERWRITE SOME OF YOUR SSH CONFIGURATION. THIS CAN BREAK YOUR SSH CONFIG.
+             THE USE WOULD BE SAFE BUT WE PROVIDE NOT WARRANTY ABOUT THE USAGE AND THE CONSECUENCES.
+EOF
+    exit 0
+    ;;
+    *)
+      [[ $# -gt 0 ]] && echo "Invalid Arguments call option --help to see some help about the usage of this command" && exit 1
+    ;;
+  esac
+done
+
+# If not port and user, then there is nothing to do
+[[ -z "$LOCAL_PORT" || -z "$LOCAL_USER" ]] && exit 0
+
+SSH_DESKTOP_FILE="${SSH_DESKTOP_FILE:-$HOME/.ssh/config.d/desktop}"
+SSH_CONFIG_PATH="${SSH_CONFIG_PATH:-$HOME/.ssh}"
+SSH_CONFIGD_PATH="${SSH_CONFIGD_PATH:-$SSH_CONFIG_PATH/config.d}"
+SSH_CONFIGD_ENABLED_RELATIVE_PATH="config.d-enabled"
+SSH_CONFIGD_ENABLED_PATH="${SSH_CONFIGD_PATH:-$SSH_CONFIG_PATH/$SSH_CONFIGD_ENABLED_RELATIVE_PATH}"
+SSH_CONFIGD_FILES="$(realpath --relative-to="$SSH_CONFIG_PATH" "$SSH_CONFIGD_PATH")/*"
+
+[[ -f "$SSH_DESKTOP_FILE" ]] && exit 0
+
+if [[ ! -d "$SSH_CONFIGD_PATH" ]]; then
+  mkdir -p "$SSH_CONFIGD_PATH"
+  chmod 0700 "$SSH_CONFIG_PATH" "$SSH_CONFIGD_PATH"
+  cd "$SSH_CONFIG_PATH"
+  echo "Include $SSH_CONFIGD_ENABLED_RELATIVE_PATH/*" >> ~/.ssh/config
+fi
+
+if [[ ! -d "$SSH_CONFIGD_ENABLED_PATH" ]]; then
+  echo "We are here"
+  mkdir -p "$SSH_CONFIGD_ENABLED_PATH"
+  chmod 0700 mkdir -p "$SSH_CONFIGD_ENABLED_PATH"
+fi
+
+
+echo "Host desktop" > "$SSH_DESKTOP_FILE"
+echo "    Hostname 127.0.0.1" >> "$SSH_DESKTOP_FILE"
+echo "    Port ${LOCAL_PORT}" >> "$SSH_DESKTOP_FILE"
+echo "    Username ${LOCAL_USER}" >> "$SSH_DESKTOP_FILE"
+chmod 0600 "$SSH_DESKTOP_FILE"
+cd $SSH_CONFIGD_ENABLED_PATH
+echo $SSH_DESKTOP_FILE
+
+# case $1 in
+# "java")
+#   sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+#   sudo ln -sfn /usr/local/opt/openjdk@8/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-8.jdk
+#   sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
+#   ;;
+# *)
+#   exit 1
+#   ;;
+# esac

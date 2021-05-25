@@ -1,0 +1,154 @@
+#!/usr/bin/env bash
+echo "Not ready for production script"
+exit 1
+
+# To use this script see comments
+
+write::out() {
+  echo "$@"
+}
+
+write::log() {
+  [[ ! -z "$DEBUG" ]] && write::out "$@"
+}
+
+write::logg() {
+  DEBUG_LEVEL=${DEBUG_LEVEL:-1}
+  [[ $DEBUG_LEVEL -gt 1 ]] && write::log $@
+}
+
+write::log_exec() {
+  write::log "Executing: ${@}"
+  ${@}
+}
+
+set::variable () {
+  local var_name="$1"
+  shift
+  local values=$@
+  eval "$var_name=${values[@]}"
+
+  write::logg "Set varible '$var_name' to '${values[@]}'"
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --port|-p)
+      set::variable "LOCAL_PORT" "$2"
+      shift
+      shift
+    ;;
+    --user|-u)
+      set::variable "LOCAL_USER" "$2"
+      shift
+      shift
+    ;;
+    --enable-macos|-em)      
+      if [[ "$(sudo systemsetup -getremotelogin)" == "Off" ]]; then
+        sudo -v
+        sudo systemsetup -f -setremotelogin "On" > /dev/null 2>&1
+        echo "Remember to enable full disk access for sshd program on System Preferences > Security & Privacy > Privacy (Tab) and 'Full Disk Access' (option)"
+      fi
+    ;;
+    --localconfig|-lc)
+      write::logg "Local Config Called"
+      cat <<EOF
+Host *
+  RequestTTY yes
+  RemoteForward ${LOCAL_PORT:-10333} localhost:22
+EOF
+    exit 0
+    ;;
+    --help|-h)
+      write::logg "Help called"
+      cat <<EOF
+  Usage:
+    bash <( curl -fsL $GIST_RAW_URL ) [--help|-h]
+    bash <( curl -fsL $GIST_RAW_URL ) --port <remote_computer_ssh_port> [--localconfig|-lc]
+    bash <( curl -fsL $GIST_RAW_URL ) --port <remote_computer_ssh_port> --user <your_local_computer_user>
+  
+  Options:
+    --help -h           Gives this help
+    --port -p           The port where you want to expose your ssh \in the remote computer (local remote port)
+    --user -u           Your desktop computer user (it could be different than your remote user)
+    --localconfig -lc   Generate a ssh configuration file \for your desktop computer. Do not use this param
+                        \in the remote machine 
+    --enable-macos -em  Enable remote login (ssh) on macOS through bash
+  
+  Description:
+    Remember that you should enable Remote TCP Connections and create a TCP redirect to local port. So your
+    local machine does not need to expose the ssh port.
+    
+    To see a sample configuration call option --localconfig
+
+    You can define all SSH_* variables from outside the script to personalize the installation. Please be
+    advise if you use relative paths that this script changes working directory to user \$HOME directory.
+    
+    WARNING: THIS SCRIPT COULD OVERWRITE SOME OF YOUR SSH CONFIGURATION. THIS CAN BREAK YOUR SSH CONFIG.
+             THE USE WOULD BE SAFE BUT WE PROVIDE NOT WARRANTY ABOUT THE USAGE AND THE CONSECUENCES.
+EOF
+    exit 0
+    ;;
+    *)
+      write::log "Invalid Arguments"
+      [[ $# -gt 0 ]] && echo "Invalid Arguments call option --help to see some help about the usage of this command" && exit 1
+    ;;
+  esac
+done
+
+# If not port or user and we are here, then, there is nothing to do
+[[ -z "$LOCAL_PORT" || -z "$LOCAL_USER" ]] && write::log "No port and/or user provided." && exit 0
+
+# Setting variables
+set::variable "SSH_CONFIG_PATH" "${SSH_CONFIG_PATH:-$HOME/.ssh}"
+set::variable "SSH_CONFIG_FILE" "$SSH_CONFIG_PATH/config"
+set::variable "SSH_DESKTOP_FILE" "${SSH_DESKTOP_FILE:-$SSH_CONFIG_PATH/config.d/desktop}"
+set::variable "SSH_CONFIGD_PATH" "${SSH_CONFIGD_PATH:-$SSH_CONFIG_PATH/config.d}"
+set::variable "SSH_CONFIGD_ENABLED_RELATIVE_PATH" "config.d-enabled"
+set::variable "SSH_CONFIGD_ENABLED_PATH" "${SSH_CONFIGD_ENABLED_PATH:-$SSH_CONFIG_PATH/$SSH_CONFIGD_ENABLED_RELATIVE_PATH}"
+set::variable "SSH_CONFIGD_FILES" "$(realpath --relative-to="$SSH_CONFIG_PATH" "$SSH_CONFIGD_PATH")/*"
+
+set::variable "CURRENT_WORKING_DIR" "$(pwd)"
+
+# Exit if Desktop file already exists
+if [[ -f "$SSH_DESKTOP_FILE" ]]; then
+  write::log "Error: Desktop file already exists"
+  exit 1
+fi
+
+# if [[ -f "$SSH_DESKTOP_FILE" ]]; then
+#   if [[ -d "$SSH_CONFIGD_ENABLED_PATH" ]]; then
+    
+#   else
+#     write::log "The script finished because SSH_DESKTOP_FILE exists and there is not SSH_CONFIGD_ENABLED_PATH"
+#     exit 0
+#   fi
+# fi
+
+if [[ ! -d "$SSH_CONFIGD_PATH" ]]; then
+  write::log_exec mkdir -p "$SSH_CONFIGD_PATH"
+  write::log_exec chmod 0700 "$SSH_CONFIG_PATH" "$SSH_CONFIGD_PATH"
+fi
+
+if [[ ! -f "$SSH_CONFIG_FILE" ]]; then
+  write::log_exec cd "$SSH_CONFIG_PATH"
+  echo "Include $SSH_CONFIGD_ENABLED_RELATIVE_PATH/*" >> $SSH_CONFIG_FILE
+fi
+
+if [[ ! -d "$SSH_CONFIGD_ENABLED_PATH" ]]; then
+  write::log_exec mkdir -p "$SSH_CONFIGD_ENABLED_PATH"
+  write::log_exec chmod 0700 "$SSH_CONFIGD_ENABLED_PATH"
+fi
+
+
+write::log "Creating SSH_DESKTOP_FILE"
+echo "Host desktop" > "$SSH_DESKTOP_FILE"
+echo "    Hostname 127.0.0.1" >> "$SSH_DESKTOP_FILE"
+echo "    Port ${LOCAL_PORT}" >> "$SSH_DESKTOP_FILE"
+echo "    User ${LOCAL_USER}" >> "$SSH_DESKTOP_FILE"
+write::log_exec chmod 0600 "$SSH_DESKTOP_FILE"
+
+write::log_exec cd "$SSH_CONFIGD_ENABLED_PATH"
+write::log_exec ln -f -s "$(realpath -m --relative-to=$SSH_CONFIGD_ENABLED_PATH $SSH_DESKTOP_FILE)"
+write::log_exec cd "$CURRENT_WORKING_DIR"
+exit 0
