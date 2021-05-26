@@ -87,6 +87,3 @@ alias showhiddenfiles="defaults write com.apple.finder AppleShowAllFiles -bool t
 
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
-
-# The fuck aliasses
-#eval "$(thefuck --alias)"

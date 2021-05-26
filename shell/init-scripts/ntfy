@@ -1,0 +1,2 @@
+# Notifications for long time commands
+eval "$(ntfy shell-integration)"
