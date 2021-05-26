@@ -8,8 +8,8 @@ export HOMEBREW_AUTO_UPDATE_SECS=259300 # 3 days
 export HOMEBREW_NO_ANALYTICS=true
 
 export HISTCONTROL=ignoredups
+
 export GEM_HOME="$HOME/.gem"
-export GOPATH="$HOME/.go"
 
 export NVM_DIR="$HOME/.nvm"
 # Enable persistent REPL history for `node`.
@@ -44,10 +44,3 @@ export LANG=en_GB.UTF-8
 # HASSIO
 #export HASS_SCHEME="https"
 #export HASS_PORT="443"
-
-# TOKENS
-[[ -z "$HASS_FQDN" ]] && HASS_FQDN="$(dot secrets var HASS_FQDN)"
-[[ -z "$HASS_TOKEN" ]] && HASS_TOKEN="$(dot secrets var HASS_TOKEN)"
-[[ -z "$GITHUB_TOKEN" ]] && GITHUB_TOKEN="$(dot secrets var GITHUB_TOKEN)"
-[[ -z "$NTFY_PUSHOVER_TOKEN" ]] && NTFY_PUSHOVER_TOKEN="$(dot secrets var NTFY_PUSHOVER_TOKEN)"
-export HASS_FQDN HASS_TOKEN GITHUB_TOKEN NTFY_PUSHOVER_TOKEN

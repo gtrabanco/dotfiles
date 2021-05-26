@@ -34,3 +34,7 @@ reverse-search() {
   typeset -f zle-line-init >/dev/null && zle zle-line-init
   return $ret
 }
+
+bash_from_url() {
+  [[ -n "${1:-}" ]] && bash <(curl -fskL "${1}")
+}

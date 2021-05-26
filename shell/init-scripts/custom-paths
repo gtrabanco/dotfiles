@@ -1,0 +1,39 @@
+# Load personalized paths by shell, os, shell and os, and finally, by machine name
+
+MYSHELL=${SHELL##*/}
+OSNAME="other"
+
+case "$OSTYPE" in
+    linux*)
+        OSNAME="linux"
+        ;;
+    darwin*)
+        OSNAME="macos"
+        ;;
+esac
+
+path_files=(
+  "$DOTFILES_PATH/shell/$MYSHELL/paths.sh"
+  "$DOTFILES_PATH/shell/$OSNAME/paths.sh"
+  "$DOTFILES_PATH/shell/$MYSHELL/$OSNAME/paths.sh"
+  "$DOTFILES_PATH/shell/machines/$(hostname)/paths.sh"
+)
+
+for path_file in "${path_files[@]}"; do
+  if [[ -f "$path_file" ]]; then
+    unset tmp_path
+    tmp_path=("${path[@]}")
+    . "$path_file"
+    path+=("${tmp_path[@]}")
+
+    case "$MYSHELL" in
+      bash)
+        PATH="$PATH$(IFS=":"; echo -n "${path[*]}")"
+        export PATH
+        ;;
+    esac
+  fi
+done
+
+export path
+unset tmp_path path_file path_files

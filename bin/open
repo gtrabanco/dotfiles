@@ -1,14 +1,38 @@
 #!/usr/bin/env bash
 
-os=$(uname)
-if [[ "$os" == "Linux" ]]; then
-  if [[ -n "$(which xdg-open)" ]]; then
-    xdg-open "$@"
-  elif [[ -n "$(gnome-open)" ]]; then
-    gnome-open "$@"
-  fi
-elif [[ "$os" == "Darwin" ]]; then
-  /usr/bin/open "$@" 
-fi
+os=$(uname | tr '[:upper:]' '[:lower:]')
+
+
+
+case "$os" in
+  *darwin*)
+    if [[ -f "$(which open)" ]]; then
+      $(which open) "$@"
+    else
+      open "$@"
+    fi
+    ;;
+  *linux*)
+    if grep -q Microsoft /proc/version; then
+      cmd.exe /C start "$@"
+    elif ! which open | grep 'not found'; then
+      if [[ -f "$(which open)" ]]; then
+        $(which open) "$@"
+      else
+        open "$@"
+      fi
+    elif ! which xdg-open | grep 'not found'; then
+      xdg-open "$@"
+    elif ! which gnome-open | grep 'not found'; then
+      gnome-open "$@"
+    fi
+    ;;
+  *cygwin*)
+    cygstart "$@"
+    ;;
+  *)
+    exit 1
+    ;;
+esac
 # If should were possible to use bash on windows
 # should use `start` command
