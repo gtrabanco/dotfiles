@@ -1,10 +1,9 @@
-- clean: ['~']
-
+- clean:
+    - "~"
 - defaults:
     link:
       create: true
       force: true
-
 - create:
     - shell/bash/completions
     - shell/bash/themes
@@ -15,7 +14,6 @@
     - shell/init-scripts.enabled
     - ~/.ssh/control
     - ~/MyCodes
-
 - link:
     ~/.bash_profile: shell/bash/.bash_profile
     ~/.bashrc: shell/bash/.bashrc
