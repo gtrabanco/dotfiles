@@ -2,8 +2,6 @@
 
 os=$(uname | tr '[:upper:]' '[:lower:]')
 
-
-
 case "$os" in
   *darwin*)
     if [[ -f "$(which open)" ]]; then
@@ -34,5 +32,3 @@ case "$os" in
     exit 1
     ;;
 esac
-# If should were possible to use bash on windows
-# should use `start` command
