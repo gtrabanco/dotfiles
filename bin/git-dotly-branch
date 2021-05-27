@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+red='\033[0;31m'
+green='\033[0;32m'
+normal='\033[0m'
+
+cd "$DOTFILES_PATH" || exit 1
+
+if [ ! -f ".gitmodules" ]; then
+  echo -e "${red}Where is .gitmodules file?${normal}"
+  echo
+  exit 1
+fi
+
+if [[ -z "${1:-}" ]]; then
+  echo -e "${red}You should provide an existing branch.${normal}"
+  echo 
+  exit 1
+fi
+
+submodule_branch="$1"
+start_dir="$(pwd)"
+
+cd "$DOTLY_PATH" || exit 1
+
+exists_branch="$(git branch --list "${submodule_branch}")"
+exists_branch="${exists_branch:-$(git ls-remote --heads origin "${submodule_branch}")}"
+
+cd "$DOTFILES_PATH" || exit 1
+
+if [[ -z "$exists_branch" ]]; then
+  echo -e "${red}The branch does not exists.${normal}"
+  exit 1
+fi
+
+{
+  git config -f .gitmodules submodule."$submodule_path".branch "$submodule_branch" &&\
+  cd "$DOTLY_PATH" &&\
+  git checkout "${submodule_branch}" &&\
+  echo -e "${green}Submodule branch changed"
+} || echo -e "${red}Branch could not be modified${normal}"

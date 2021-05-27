@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+red='\033[0;31m'
+green='\033[0;32m'
+normal='\033[0m'
+
+if ! git rev-parse HEAD >/dev/null 2>&1 || [ ! -f ".gitmodules" ]; then
+  echo -e "${red}You are not in a git repository or has no git modules.${normal}"
+  echo -e "${red}Remember you should be in the repository root directory.${normal}"
+  echo
+  exit 1
+fi
+
+if [[ -z "${1:-}" ]] || [[ -z "${2:-}" ]]; then
+  echo -e "${red}You should provide the path to the submodule and a branch that exists.${normal}"
+  echo 
+  exit 1
+fi
+
+submodule_path="$1"
+submodule_branch="$2"
+start_dir="$(pwd)"
+cd "$submodule_path" || exit 1
+
+exists_branch="$(git branch --list "${submodule_branch}")"
+exists_branch="${exists_branch:-$(git ls-remote --heads origin "${submodule_branch}")}"
+
+if [[ -z "$exists_branch" ]]; then
+  echo -e "${red}The branch does not exists.${normal}"
+  echo
+  exit 1
+fi
+
+cd "$start_dir" || true
+
+{
+  git config -f .gitmodules submodule."$submodule_path".branch "$submodule_branch" &&\
+  cd "$submodule_path" &&\
+  git checkout "${submodule_branch}" &&\
+  echo -e "${green}Submodule branch changed"
+} || {
+  echo -e "${red}Branch could not be modified${normal}"
+  echo
+  exit 1
+}
+
+echo
