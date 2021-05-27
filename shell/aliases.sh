@@ -1,3 +1,6 @@
+alias d='dot'
+alias lazy='dot'
+alias l='dot'
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
