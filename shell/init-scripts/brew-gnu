@@ -1,3 +1,4 @@
+# This file will not be necessary after PR #129 was merged
 export PATH="$PATH:$(brew --prefix)/opt/coreutils/libexec/gnubin"
 export PATH="$PATH:$(brew --prefix)/opt/findutils/libexec/gnubin"
 export PATH="$PATH:/usr/local/opt/openssl@1.1/bin"

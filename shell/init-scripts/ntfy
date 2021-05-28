@@ -1,2 +1,4 @@
 # Notifications for long time commands
-eval "$(ntfy shell-integration)"
+if type ntfy &>/dev/null; then
+  eval "$(ntfy shell-integration)"
+fi

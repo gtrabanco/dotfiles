@@ -1,0 +1,9 @@
+iterm2_shell_integration_path="$HOME/.iterm2_shell_integration.zsh"
+
+if [[ ! -f "$iterm2_shell_integration_path" ]]; then
+  bash <(curl -s -f -L https://iterm2.com/shell_integration/install_shell_integration.sh)
+fi
+
+test -e "$iterm2_shell_integration_path" && source "$iterm2_shell_integration_path" || true
+
+unset iterm2_shell_integration_path

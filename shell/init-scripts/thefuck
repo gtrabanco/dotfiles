@@ -1,4 +1,4 @@
 # The fuck aliasses
-if ! which thefuck | grep -q 'not found'; then
+if type thefuck &>/dev/null; then
   eval "$(thefuck --alias)"
 fi
