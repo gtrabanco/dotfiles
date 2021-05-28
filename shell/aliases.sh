@@ -1,6 +1,7 @@
 alias d='dot'
 alias lazy='dot'
 alias l='dot'
+alias sloth='dot'
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 

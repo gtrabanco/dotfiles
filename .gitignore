@@ -7,7 +7,7 @@ known_hosts
 .cached_github_api_calls
 
 # Ignoring Karabiner automatic backups
-os/mac/karabiner/automatic_backup
+os/mac/karabiner/automatic_backup*
 
 # Ignoreing files in secrets because its not neccessary to store those symlinks in the repository
 os/mac/settings
