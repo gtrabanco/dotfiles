@@ -3,6 +3,9 @@ export DOTLY_AUTO_UPDATE_MODE="auto" # silent, auto, info, prompt
 export DOTLY_UPDATE_VERSION="latest" # latest, stable, minor
 #export DOTLY_NO_INIT_SCRIPTS=True
 
+# Avoid touching any of my dotfiles while installing something
+export PROFILE="/dev/null"
+
 # Homebrew
 export HOMEBREW_AUTO_UPDATE_SECS=259300 # 3 days
 export HOMEBREW_NO_ANALYTICS=true

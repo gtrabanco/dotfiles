@@ -30,5 +30,3 @@
     ~/.gitattributes: git/gitattributes
     ~/StreamDeck-Scripts: os/common/streamdeck/scripts
     ~/StreamDeck-Assets: os/common/streamdeck/assets
-    ~/Library/Application Support/com.elgato.StreamDeck/Plugins: os/common/streamdeck/Plugins
-    ~/Library/Application Support/com.elgato.StreamDeck/ProfilesV2: os/common/streamdeck/ProfilesV2

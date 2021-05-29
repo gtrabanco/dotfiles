@@ -46,3 +46,5 @@ for source_file in ${source_files[@]}; do
 done
 
 unset source_file source_files
+
+echo "custom"
