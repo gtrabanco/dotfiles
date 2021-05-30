@@ -5,6 +5,17 @@ alias sloth='dot'
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
+# Dotly
+alias dotfiles='cd $DOTFILES_PATH'
+#alias fixly='"$DOTLY_PATH/bin/dot" shell zsh clean_cache && "$DOTLY_PATH/bin/dot" shell zsh reload_completions'
+alias fixly='"$DOTLY_PATH/bin/dot" shell zsh reload_completions'
+alias fixcompinit='sudo chmod -R 755 /usr/local/share/zsh && sudo chown -R root:staff /usr/local/share/zsh' # https://stackoverflow.com/a/13785716
+alias cly='cd $DOTLY_PATH'
+alias cdot='cd $DOTFILES_PATH && code $DOTFILES_PATH'
+alias vdot='EDITOR=cat $DOTFILES_PATH/bin/edot'
+alias vsdot='EDITOR=code $DOTFILES_PATH/bin/edot'
+
+# Paths and apps
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -12,12 +23,6 @@ alias ll="ls -l"
 alias la="ls -la"
 alias ~="cd ~"
 alias dc="cd"
-alias dotfiles='cd $DOTFILES_PATH'
-#alias fixly='"$DOTLY_PATH/bin/dot" shell zsh clean_cache && "$DOTLY_PATH/bin/dot" shell zsh reload_completions'
-alias fixly='"$DOTLY_PATH/bin/dot" shell zsh reload_completions'
-alias fixcompinit='sudo chmod -R 755 /usr/local/share/zsh && sudo chown -R root:staff /usr/local/share/zsh' # https://stackoverflow.com/a/13785716
-alias cly='cd $DOTLY_PATH'
-alias cdot='cd $DOTFILES_PATH && code $DOTFILES_PATH'
 alias webstorm='open -na "Webstorm.app"'
 alias intellij='open -na "IntelliJ IDEA"'
 alias chrome-cli='brave-cli'
