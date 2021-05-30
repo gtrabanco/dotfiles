@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+#shellcheck source=/dev/null
+. "$DOTLY_PATH/scripts/core/_main.sh"
+
+##? Create a custom git.io url for github domains
+##? 
+##?
+##? Usage:
+##?   gitio [-h | --help]
+##?   gitio [-v | --version]
+##?   gitio <url> [<custom_name>]
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot github gitio"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+[[ -z "${url:-}" ]] && exit 1
+
+is_github_url() {
+  local domains dom
+  local -r url="${1:-}"
+  [[ -z "$url" ]] && return 1
+
+  domains=(
+    "github.com"
+    "github.io"
+    "githubusercontent.com"
+  )
+
+  for dom in "${domains[@]}"; do
+    if echo "$url" | grep -q "$dom" && echo "$url" | grep -q "https://"; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+if is_github_url "$url" [[ -n "${custom_name:-}" ]]; then
+  curl https://git.io/ -i -F "url=$url" -F "code=$custom_name"
+elif is_github_url "$url"; then
+  curl https://git.io/ -i -F "url=$url"
+fi
