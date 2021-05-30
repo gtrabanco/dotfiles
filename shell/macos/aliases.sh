@@ -72,6 +72,8 @@ then
   alias free="top -s 0 -l 1 -pid 0 -stats pid | grep '^PhysMem: ' | cut -d : -f 2- | tr ',' '\n'"
 fi
 
+# Reset launchpad
+alias resetlaunchpad='defaults write com.apple.dock ResetLaunchPad -bool true; killall Dock'
 
 # Empty the Trash on all mounted volumes and the main HDD
 alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; rm -rfv ~/.Trash"
