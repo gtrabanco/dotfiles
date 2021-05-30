@@ -1,7 +1,12 @@
+# Dotly configuration
+export DOTLY_THEME=codely
+export CODELY_THEME_MODE=dark # Dark mode is default one
+export CODELY_THEME_MINIMAL=false
 export DOTLY_AUTO_UPDATE_PERIOD_IN_DAYS=7
 export DOTLY_AUTO_UPDATE_MODE="auto" # silent, auto, info, prompt
 export DOTLY_UPDATE_VERSION="latest" # latest, stable, minor
-#export DOTLY_NO_INIT_SCRIPTS=True
+export DOTLY_INIT_SCRIPTS=true # This makes slower the initialization
+  # (depending on how fast are init scripts...), but provides a lot of functionality
 
 # Avoid touching any of my dotfiles while installing something
 export PROFILE="/dev/null"
