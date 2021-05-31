@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+#shellcheck source=/dev/null
+. "$DOTLY_PATH/scripts/core/_main.sh"
+
+##? Toggle the view only one app in the screen
+##? 
+##?
+##? Usage:
+##?   singleapp [-h | --help]
+##?   singleapp [-v | --version]
+##?   singleapp [-t | --true | -f | --false]
+##?   singleapp
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?   -t --true     Set to true the Single App function
+##?   -f --false    Set to false the Single App function
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot mac singleapp"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+if ${true:-false} || [[ $(defaults read com.apple.dock single-app) -eq 0 ]]; then
+  defaults write com.apple.dock single-app -bool TRUE
+elif ${false:-} || [[ $(defaults read com.apple.dock single-app) -eq 1 ]]; then
+  defaults write com.apple.dock single-app -bool FALSE
+else
+  output::error "Something went terrible wrong"
+  open "https://www.youtube.com/watch?v=t3otBjVZzT0"
+  exit 1
+fi
+
+killall Dock

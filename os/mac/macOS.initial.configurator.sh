@@ -77,7 +77,7 @@ defaults write com.apple.screensaver askForPasswordDelay -int 600
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
 # Set login window text
-sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "I'm sorry Dave, I'm afraid I can't do that"
+sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "I'm sorry, I'm afraid I can't do that"
 
 
 #
