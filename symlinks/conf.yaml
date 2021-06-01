@@ -30,3 +30,4 @@
     ~/.gitattributes: git/gitattributes
     ~/StreamDeck-Scripts: os/common/streamdeck/scripts
     ~/StreamDeck-Assets: os/common/streamdeck/assets
+    ~/.gnupg/gpg.conf: os/common/gnupg/gpg.conf
