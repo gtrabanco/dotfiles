@@ -1,20 +1,18 @@
-- clean: ['~']
-
+- clean:
+    - '~'
 - defaults:
     link:
       create: true
       force: true
-
 - create:
-      - ~/.hushlogin
-      - ~/.config
-
+    - ~/.hushlogin
+    - ~/.config
 - link:
     ~/.config/karabiner: os/mac/karabiner
     ~/.config/karabiner.edn: os/mac/karabiner-goku/karabiner.edn
-    "~/Library/Application Support/Code/User/keybindings.json": editors/code/keybindings.json
-    "~/Library/Application Support/Code/User/settings.json": editors/code/settings.json
-    "~/Library/Application Support/Code/User/snippets": editors/code/snippets
+    ~/Library/Application Support/Code/User/keybindings.json: editors/code/keybindings.json
+    ~/Library/Application Support/Code/User/settings.json: editors/code/settings.json
+    ~/Library/Application Support/Code/User/snippets: editors/code/snippets
     ~/Library/Preferences/com.knollsoft.Rectangle.plist: os/mac/rectangle/com.knollsoft.Rectangle.plist
-    ~/Library/Application Support/com.elgato.StreamDeck/Plugins: os/common/streamdeck/Plugins
-    ~/Library/Application Support/com.elgato.StreamDeck/ProfilesV2: os/common/streamdeck/ProfilesV2
+    ~/Library/Application Support/com.elgato.StreamDeck/Plugins: os/mac/streamdeck/Plugins
+    ~/StreamDeckBackups: ~/Library/Mobile Documents/com~apple~CloudDocs/StreamDeckBackups/mac
