@@ -3,6 +3,12 @@
   <h4>(gtrabanco fork, beta version)</h4>
 </div>
 
+## About this and any other dotfiles
+
+Dotfiles are not meant to be cloned and used as template repository. Dotfiles content are personal configuration that probably does not fit to you. This is just and advert, see, click a start, learn and copy.
+
+Feel free to use (issues)[issues] to ask something, report a bug, make a correction in any code or whatever you want to say, ask or teach. I will reply, be sure about it.
+
 ## About this dotfiles
 
 This requieres a newer version than official DOTLY version which is in [my fork](https://github.com/gtrabanco/dotly).
