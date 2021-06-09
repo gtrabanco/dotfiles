@@ -3,65 +3,80 @@
 set -euo pipefail
 
 if [[ -z "${DOTLY_PATH:-}" ]] || ! output::empty_line >/dev/null 2>&1; then
-  output_url=(
-    "https://raw.githubusercontent.com/gtrabanco/dotly/feature/core/scripts/core/output.sh"
-    "https://raw.githubusercontent.com/gtrabanco/dotly/HEAD/scripts/core/output.sh"
-  )
-  platform_url=(
-    "https://raw.githubusercontent.com/gtrabanco/dotly/feature/core/scripts/core/platform.sh"
-    "https://raw.githubusercontent.com/gtrabanco/dotly/HEAD/scripts/core/platform.sh"
-  )
-  open_url="https://raw.githubusercontent.com/gtrabanco/dotfiles/HEAD/bin/open"
-  pbcopy_url="https://raw.githubusercontent.com/CodelyTV/dotly/HEAD/bin/pbcopy"
-  dot::load_remote() {
-    local url http_code CURL_BIN
-    [[ $# -lt 1 ]] && return 1
-    url="${1:-}"
-    CURL_BIN="${2:-$(which curl)}"
-    http_code="$(curl -o /dev/null -Isw '%{http_code}' "$url")"
-    
-    [[ "$http_code" != "200" ]] && return 1
-    #shellcheck disable=SC1090
-    . <( curl --silent "$url" ) || return 1
+  red='\033[0;31m'
+  green='\033[0;32m'
+  bold_blue='\033[1m\033[34m'
+  normal='\033[0m'
+  output::error() { output::answer "${red}$1${normal}"; }
+  output::write() {
+    local -r text="${1:-}"
+    echo -e "$text"
   }
-
-  # Load remote output
-  for remote_file in "${output_url[@]}"; do
-    loaded=true
-    dot::load_remote "$remote_file" || {
-      loaded=false
-      continue
-    }
-  done
-  if ! $loaded; then
-    echo -e "\033[0;31mOutput library could not be loaded from remote\033[0m"
-    exit 5
-  fi
-  unset loaded remote_file output_url
-
-  # Load remote platform
-  for remote_file in "${platform_url[@]}"; do
-    loaded=true
-    dot::load_remote "$remote_file" || {
-      loaded=false
-      continue
-    }
-  done
-  if ! $loaded; then
-    echo -e "\033[0;31mPlatform library could not be loaded from remote\033[0m"
-    exit 5
-  fi
-  unset loaded remote_file platform_url
-
-  # Load open
-  dot::load_remote "$open_url" || {
-    echo -e "\033[0;31mOpen function could not be loaded from remote\033[0m"
-    exit 5
+  output::answer() { output::write " > $1"; }
+  output::clarification() {
+    with_code_parsed=$(echo "$1" | awk "{ORS=(NR+1)%2==0?\"${green}\":RS}1" RS="\`" | awk "{ORS=NR%1==0?\"${normal}\":RS}1" RS="\`"| tr -d '\n')
+    output::write "$with_code_parsed";
   }
-  # Load open
-  dot::load_remote "$pbcopy_url" || {
-    echo -e "\033[0;31mPbcopy function could not be loaded from remote\033[0m"
-    exit 5
+  output::error() { output::answer "${red}$1${normal}"; }
+  output::solution() { output::answer "${green}$1${normal}"; }
+  output::question() {
+    stty sane >/dev/null 2>&1
+    if [ platform::is_macos ]; then
+      echo -n " > 🤔 $1: ";
+      read -r "$2";
+    else
+      read -rp "🤔 $1: " "$2"
+    fi
+  }
+  output::question_default() {
+    local question default_value var_name
+    question="$1"
+    default_value="$2"
+    var_name="$3"
+
+    output::question "$question? [$default_value]" "$var_name"
+    eval "$var_name=\"\${$var_name:-$default_value}\""
+  }
+  output::yesno() {
+    local question default PROMPT_REPLY values
+    question="${1:-}"
+    default="${2:-Y}"
+
+    [[ -z "${question}" ]] && return 1
+
+    if [[ "$default" =~ ^[Yy] ]]; then
+      values="Y/n"
+    else
+      values="y/N"
+    fi
+
+    output::question "${question:-}❓ [${values:-Y/n}]" "PROMPT_REPLY"
+    [[ "${PROMPT_REPLY:-$default}" =~ ^[Yy] ]]
+  }
+  output::empty_line() { echo ''; }
+  output::header() { output::empty_line; output::write "${bold_blue}---- $1 ----${normal}"; }
+  platform::command_exists() {
+    type "$1" >/dev/null 2>&1
+  }
+  open() {
+    os=$(uname)
+    if [[ "$os" == "Linux" ]]; then
+      if [[ -n "$(which xdg-open)" ]]; then
+        xdg-open "$@"
+      elif [[ -n "$(gnome-open)" ]]; then
+        gnome-open "$@"
+      fi
+    elif [[ "$os" == "Darwin" ]]; then
+      /usr/bin/open "$@" 
+    fi
+  }
+  pbcopy() {
+    os=$(uname)
+    if [[ "$os" == "Linux" ]]; then
+      xclip -selection clipboard
+    elif [[ "$os" == "Darwin" ]]; then
+      /usr/bin/pbcopy
+    fi
   }
 fi
 
@@ -77,7 +92,7 @@ output::list() {
   local item i
   i=1
   for item in "$@"; do
-    output::write "    $i) $item"
+    output::clarification "    $i) $item"
     i=$(( i + 1 ))
   done
 }
