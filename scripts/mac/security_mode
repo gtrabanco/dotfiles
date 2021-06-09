@@ -162,6 +162,8 @@ security_modes=(
   "website (view security recommendations)"
   "captive_on"
   "captive_off"
+  "gatekeeper_on"
+  "gatekeeper_off"
 )
 
 if [[ -z "${security_mode:-}" ]]; then
@@ -198,6 +200,18 @@ captive_on)
 captive_off)
   output::answer "Disable captive portal"
   security::captive_disable &>/dev/null || true
+  ;;
+gatekeeper_on)
+  output::answer "Gatekeeper"
+  {
+    sudo sysctl --master-enable && output::solution "Gatekeeper Enabled"
+  } || output::answer "Gatekeeper could not be enabled"
+  ;;
+gatekeeper_off)
+  output::answer "Gatekeeper"
+  {
+    sudo sysctl --master-disable && output::error "Gatekeeper Disabled"
+  } || output::answer "Gatekeeper could not be disabled"
   ;;
 *)
   output::answer "Configure File vault"
