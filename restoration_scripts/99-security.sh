@@ -2,8 +2,12 @@
 
 . "$DOTLY_PATH/bin/scripts/core/_main.sh"
 
+is_macos() {
+  command -v platform::is_macos &>/dev/null && platform::is_macos
+}
+
 security::duti() {
-  if declare -F platform::is_macos && platform::is_macos && platform::command_exists duti; then
+  if is_macos && command -v platform::command_exists &>/dev/null && platform::command_exists duti; then
     duti -s com.apple.Safari afp
     duti -s com.apple.Safari ftp
     duti -s com.apple.Safari nfs
@@ -12,7 +16,7 @@ security::duti() {
   fi
 }
 
-if declare -F platform::is_macos; then
+if is_macos; then
   security::duti
 
   # Disable NETBIOS
@@ -20,6 +24,8 @@ if declare -F platform::is_macos; then
 
   # No Crash Reports
   defaults write com.apple.CrashReporter DialogType none
-fi
 
-# TODO WIP
+  # Security mode
+  "$DOTLY_PATH/bin/dot" mac security_mode travel
+  "$DOTLY_PATH/bin/dot" mac security_mode captive_off
+fi
