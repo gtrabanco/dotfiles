@@ -5,7 +5,7 @@ known_hosts
 .dotly_update_available
 .dotly_updated
 .cached_github_api_calls
-*.log
+*/**.log
 
 # Ignoring Karabiner automatic backups
 os/mac/karabiner/automatic_backup*

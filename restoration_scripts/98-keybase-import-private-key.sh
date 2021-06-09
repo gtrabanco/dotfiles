@@ -147,9 +147,9 @@ then
       sec=""
 
       if [[ ${#all_secs[@]} -gt 1 ]]; then
-        sec="$(sec::fzf "${all_secs[@]}" || echo "")"
+        sec="$(sec::fzf "${all_secs[@]}" || exit 1)"
       elif [[ ${#all_secs[@]} -eq 1 ]]; then
-        sec="${all_secs[1]}"
+        sec="${all_secs[0]}"
       fi
 
       {
