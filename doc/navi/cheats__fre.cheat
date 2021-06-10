@@ -1,4 +1,0 @@
-% fre
-
-# fre path
-echo "${HOME}/Library/Application Support/fre/fre.json"
