@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -euo pipefail. "$DOTLY_PATH/scripts/core/_main.sh"
+set -euo pipefail
+. "$DOTLY_PATH/scripts/core/_main.sh"
 
 remote=origin
 for brname in $(git branch -r | grep "$remote" | grep -v "master" | grep -v "HEAD" | awk '{gsub(/[^\/]+\//,"",$1); print $1}'); do
