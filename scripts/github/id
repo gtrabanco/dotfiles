@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+#shellcheck source=/dev/null
+. "$DOTLY_PATH/scripts/core/_main.sh"
+
+##? Get the user profile of GitHub user by the ID
+##? 
+##?
+##? Usage:
+##?   id [-h | --help]
+##?   id [-v | --version]
+##?   id [<number>]
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot github id"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+number="${number:-$(od -A n -t d -N 4 /dev/urandom | xargs)}"
+number="${number#-}"
+
+output::header "Looking for user \`${number}\`"
+
+curl --silent "https://api.github.com/user/${number}"
+
+profile_url="$(curl --silent "https://api.github.com/user/${number}" 2>/dev/null | jq -r '.html_url | values' 2>/dev/null)"
+
+if [[ -n "$profile_url" ]]; then
+  output::answer "ID \`${number}\` has the profile url: \`${profile_url}\`"
+  output::yesno "Do you want to open the profile url" && open "$profile_url"
+else
+  output::answer "ID \`${number}\` has no profile."
+fi

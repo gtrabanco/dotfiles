@@ -41,9 +41,6 @@ export FZF_DEFAULT_OPTS='
   --reverse
 '
 
-GPG_TTY=$(tty)
-export GPG_TTY
-
 EDITOR="$(which vim)"
 export EDITOR
 

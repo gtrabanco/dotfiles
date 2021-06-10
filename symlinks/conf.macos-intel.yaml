@@ -15,4 +15,4 @@
     ~/Library/Application Support/Code/User/snippets: editors/code/snippets
     ~/Library/Preferences/com.knollsoft.Rectangle.plist: os/mac/rectangle/com.knollsoft.Rectangle.plist
     ~/Library/Application Support/com.elgato.StreamDeck/Plugins: os/mac/streamdeck/Plugins
-    ~/StreamDeckBackups: ~/Library/Mobile Documents/com~apple~CloudDocs/StreamDeckBackups/mac
+    ~/StreamDeckBackups: ~/Library/Mobile Documents/com~apple~CloudDocs/StreamDeckBackups

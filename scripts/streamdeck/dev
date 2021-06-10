@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "$DOTLY_PATH" ]] && exit 1
+
+#shellcheck source=/dev/null
+. "$DOTLY_PATH/scripts/core/_main.sh"
+
+##? Toggle Stream Deck Developer mode if not `--on` or `--off` is passed as argument
+##? 
+##?
+##? Usage:
+##?   dev [-h | --help]
+##?   dev [-v | --version]
+##?   dev [ --on | --off ]
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?   --on          Toggle on
+##?   --off         Toggle off
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+docs::parse "$@"
+
+SCRIPT_NAME="dot github dev"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+streamdeck::is_enabled() {
+  defaults read com.elgato.StreamDeck html_remote_debugging_enabled &>/dev/null &&\
+    [[ "$(defaults read com.elgato.StreamDeck html_remote_debugging_enabled 2>/dev/null)" -eq "1" ]]
+}
+
+if ! ${on:-} && ! ${off:-}; then
+  { streamdeck::is_enabled && off=true; } || on=true
+fi
+
+if ${on:-false}; then
+  output::solution "Stream deck: Debugging mode enabled"
+  defaults write com.elgato.StreamDeck html_remote_debugging_enabled -bool YES
+elif ${off:-false}; then
+  output::error "Stream deck: Debugging mode disabled"
+  defaults write com.elgato.StreamDeck html_remote_debugging_enabled -bool NO
+else
+  echo "$on - $off"
+  output::answer "Nothing to do"
+  exit 1
+fi
