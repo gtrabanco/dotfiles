@@ -28,8 +28,9 @@
     ~/.gitconfig: git/gitconfig
     ~/.gitignore_global: git/gitignore_global
     ~/.gitattributes: git/gitattributes
-    ~/StreamDeck-Scripts: os/common/streamdeck/scripts
-    ~/StreamDeck-Assets: os/common/streamdeck/assets
+    ~/StreamDeck-Scripts: ~/Library/Mobile Documents/com~apple~CloudDocs/StreamDeck/scripts
+    ~/StreamDeck-Assets: ~/Library/Mobile Documents/com~apple~CloudDocs/StreamDeck/assets
+    ~/StreamDeck-Sounds: ~/Library/Mobile Documents/com~apple~CloudDocs/StreamDeck/sounds
     ~/.gnupg/gpg.conf: os/common/gnupg/gpg.conf
     ~/.gnupg/gpg-agent.conf: os/common/gnupg/gpg-agent.conf
     ~/.gnupg/trustdb.gpg: os/common/gnupg/trustdb.gpg
