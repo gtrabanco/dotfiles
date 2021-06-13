@@ -8,6 +8,9 @@ export DOTLY_UPDATE_VERSION="latest" # latest, stable, minor
 export DOTLY_INIT_SCRIPTS=true # This makes slower the initialization
   # (depending on how fast are init scripts...), but provides a lot of functionality
 
+# Secrets config
+export DOTLY_SECRETS_VAR_MACOS_STORE="keychain" # filepath or keychain (only macos)
+
 # Avoid touching any of my dotfiles while installing something
 export PROFILE="/dev/null"
 
