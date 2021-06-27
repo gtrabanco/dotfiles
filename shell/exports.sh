@@ -1,5 +1,6 @@
 # Dotly configuration
 export DOTLY_THEME=codely
+export SLOTH_THEME=codely
 export CODELY_THEME_MODE=dark # Dark mode is default one
 export CODELY_THEME_MINIMAL=false
 export DOTLY_AUTO_UPDATE_PERIOD_IN_DAYS=7
