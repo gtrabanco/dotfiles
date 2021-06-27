@@ -1,10 +1,15 @@
+# START OF SLOTH GITIGNORE
+.sloth_force_current_version
+.sloth_update_available
+.sloth_update_available_is_major
+.sloth_updated
+.marketplace_cache
+.cached_github_api_calls
+# END OF SLOTH GITIGNORE
+
 *.lock.json
 *.private*
 known_hosts
-.marketplace-cache
-.dotly_update_available
-.dotly_updated
-.cached_github_api_calls
 *.log
 
 # Ignoring Karabiner automatic backups
