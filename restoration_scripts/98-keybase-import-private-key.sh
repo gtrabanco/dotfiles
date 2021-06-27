@@ -3,67 +3,204 @@
 set -euo pipefail
 
 if [[ -z "${DOTLY_PATH:-}" ]] || ! output::empty_line >/dev/null 2>&1; then
-  output_url=(
-    "https://raw.githubusercontent.com/gtrabanco/dotly/feature/core/scripts/core/output.sh"
-    "https://raw.githubusercontent.com/gtrabanco/dotly/HEAD/scripts/core/output.sh"
-  )
-  platform_url=(
-    "https://raw.githubusercontent.com/gtrabanco/dotly/feature/core/scripts/core/platform.sh"
-    "https://raw.githubusercontent.com/gtrabanco/dotly/HEAD/scripts/core/platform.sh"
-  )
-  open_url="https://raw.githubusercontent.com/gtrabanco/dotfiles/HEAD/bin/open"
-  pbcopy_url="https://raw.githubusercontent.com/CodelyTV/dotly/HEAD/bin/pbcopy"
-  dot::load_remote() {
-    local url http_code CURL_BIN
-    [[ $# -lt 1 ]] && return 1
-    url="${1:-}"
-    CURL_BIN="${2:-$(which curl)}"
-    http_code="$(curl -o /dev/null -Isw '%{http_code}' "$url")"
-    
-    [[ "$http_code" != "200" ]] && return 1
-    #shellcheck disable=SC1090
-    . <( curl --silent "$url" ) || return 1
+  red='\033[0;31m'
+  green='\033[0;32m'
+  bold_blue='\033[1m\033[34m'
+  normal='\033[0m'
+
+  _output::parse_code() {
+    local color="$normal"
+    case "${1:-}" in
+      --color)
+        color="$2"
+        shift 2
+        ;;
+    esac
+
+    local -r text="${*:-}"
+
+    with_code_parsed=$(echo "$text" | awk "{ORS=(NR+1)%2==0?\"${green}\":RS}1" RS="\`" | awk "{ORS=NR%1==0?\"${color}\":RS}1" RS="\`" | tr -d '\n')
+
+    echo -e "$with_code_parsed"
   }
 
-  # Load remote output
-  for remote_file in "${output_url[@]}"; do
-    loaded=true
-    dot::load_remote "$remote_file" || {
-      loaded=false
-      continue
-    }
-  done
-  if ! $loaded; then
-    echo -e "\033[0;31mOutput library could not be loaded from remote\033[0m"
-    exit 5
-  fi
-  unset loaded remote_file output_url
+  output::write() {
+    local with_code_parsed color
+    color="$normal"
+    case "${1:-}" in
+      --color)
+        color="$2"
+        shift 2
+        ;;
+    esac
 
-  # Load remote platform
-  for remote_file in "${platform_url[@]}"; do
-    loaded=true
-    dot::load_remote "$remote_file" || {
-      loaded=false
-      continue
-    }
-  done
-  if ! $loaded; then
-    echo -e "\033[0;31mPlatform library could not be loaded from remote\033[0m"
-    exit 5
-  fi
-  unset loaded remote_file platform_url
-
-  # Load open
-  dot::load_remote "$open_url" || {
-    echo -e "\033[0;31mOpen function could not be loaded from remote\033[0m"
-    exit 5
+    local -r text="${*:-}"
+    with_code_parsed="$(_output::parse_code --color "${color}" "$text")"
+    echo -e "$with_code_parsed"
   }
-  # Load open
-  dot::load_remote "$pbcopy_url" || {
-    echo -e "\033[0;31mPbcopy function could not be loaded from remote\033[0m"
-    exit 5
+  output::answer() {
+    local color
+    color="$normal"
+    case "${1:-}" in
+      --color)
+        color="$2"
+        shift 2
+        ;;
+    esac
+    output::write --color "${color}" " > ${*:-}";
+  }
+  output::error() { output::answer --color "${red}" "${red}${*:-}${normal}"; }
+  output::solution() { output::answer --color "${green}" "${green}${*:-}${normal}"; }
+
+  output::question_default() {
+    local with_code_parsed color question default_value var_name
+    color="$normal"
+    case "${1:-}" in
+      --color)
+        color="$2"
+        shift 2
+        ;;
+    esac
+
+    [[ $# -lt 3 ]] && return 1
+
+    question="$1"
+    default_value="$2"
+    var_name="$3"
+
+    with_code_parsed="$(_output::parse_code --color "${color}" "$question")"
+
+    read -rp "🤔 $with_code_parsed ? [$default_value]: " PROMPT_REPLY
+    eval "$var_name=\"${PROMPT_REPLY:-$default_value}\""
+  }
+
+  output::yesno() {
+    local with_code_parsed color question default PROMPT_REPLY values
+    color="$normal"
+    case "${1:-}" in
+      --color)
+        color="$2"
+        shift 2
+        ;;
+    esac
+
+    [[ $# -eq 0 ]] && return 1
+
+    question="$1"
+    default="${2:-Y}"
+    with_code_parsed="$(_output::parse_code --color "${color}" "$question")"
+
+    if [[ "$default" =~ ^[Yy] ]]; then
+      values="Y/n"
+    else
+      values="y/N"
+    fi
+
+    output::question_default "$with_code_parsed" "$values" "PROMPT_REPLY"
+    [[ "$PROMPT_REPLY" == "$values" ]] && PROMPT_REPLY=""
+    [[ "${PROMPT_REPLY:-$default}" =~ ^[Yy] ]]
+  }
+
+  output::empty_line() { echo ''; }
+
+  output::header() {
+    output::empty_line
+    output::write --color "${bold_blue}" "${bold_blue}---- ${*:-} ----${normal}"
   }
 fi
+
+if [[ -z "$(command -v platform::command_exists)" ]]; then
+  platform::command_exists() {
+    type "$1" &>/dev/null
+  }
+fi
+
+if [[ -z "$(command -v platform::is_macos)" ]]; then
+  platform::is_macos() {
+    [[ $(uname -s) == "Darwin" ]]
+  }
+fi
+
+if ! command -v open &>/dev/null; then
+  open() {
+    # Open command if open exists in system
+    SCRIPT_PATH="$(cd -- "$(dirname "$0")" && pwd -P)"
+    FULL_SCRIPT_PATH="$SCRIPT_PATH/$(basename "$0")"
+
+    mapfile -c 1 -t < <( which -a open | grep -v "$FULL_SCRIPT_PATH" )
+    OPEN_BIN=""
+    if [[ "${#MAPFILE[@]}" -gt 0 ]]; then
+      OPEN_BIN="${MAPFILE[0]}"
+    fi
+
+    os=$(uname | tr '[:upper:]' '[:lower:]')
+
+    case "$os" in
+      *darwin*)
+        if [[ -n "$OPEN_BIN" && -x "$OPEN_BIN" ]]; then
+          "$OPEN_BIN" "$@"
+        else
+          echo -e "\033[0;31mNot possible to use \`open\` command in this system\033[0m"
+          return 4
+        fi
+        ;;
+      *linux*)
+        if grep -q Microsoft /proc/version; then
+          cmd.exe /C start "$@"
+        elif [[ -n "$OPEN_BIN" && -x "$OPEN_BIN" ]]; then
+          "$OPEN_BIN" "$@"
+        elif ! which xdg-open | grep 'not found'; then
+          xdg-open "$@"
+        elif ! which gnome-open | grep 'not found'; then
+          gnome-open "$@"
+        else
+          echo -e "\033[0;31mNot possible to use \`open\` command in this system\033[0m"
+          return 4
+        fi
+        ;;
+      *cygwin*)
+        if command -v realpath &>/dev/null; then
+          cygstart "$@"
+        else
+          echo -e "\033[0;31mNot possible to use \`open\` command in this system\033[0m"
+          return 4
+        fi
+        ;;
+      *)
+        echo -e "\033[0;31m\`open\` command or any other known alternative does not exists in this system\033[0m"
+        return 1
+        ;;
+    esac
+  }
+fi
+
+if ! command -v pbcopy &>/dev/null; then
+  pbcopy() {
+    os=$(uname)
+    if [[ "$os" == "Linux" ]]; then
+      xclip -selection clipboard
+    elif [[ "$os" == "Darwin" ]]; then
+      /usr/bin/pbcopy
+    else
+      return 1
+    fi
+  }
+fi
+
+call_sed() {
+  if command -v gsed &>/dev/null; then
+    "$(which gsed)" "$@"
+  elif [[ -f "/usr/local/opt/gnu-sed/libexec/gnubin/sed" ]]; then
+    /usr/local/opt/gnu-sed/libexec/gnubin/sed "$@"
+  elif platform::is_macos; then
+    # Any other BSD should be added to this check
+    "$(which sed)" '' "$@"
+  elif command -v sed &>/dev/null; then
+    "$(which sed)" "$@"
+  else
+    return 1
+  fi
+}
 
 parse_emails() {
   if [ -t 0 ]; then
@@ -93,12 +230,17 @@ output::header " 🔒 Keybase GPG Key Setup 🔑"
 output::empty_line
 
 # Previous step: Check if we have needed tools
-if platform::command_exists keybase >/dev/null 2>&1 &&\
-    platform::command_exists gpg >/dev/null 2>&1 &&\
-    platform::command_exists git >/dev/null 2>&1
+if platform::command_exists keybase &>/dev/null &&\
+    platform::command_exists gpg &>/dev/null &&\
+    platform::command_exists git &>/dev/null
 then
   # Ask user if want to execute the script
   if output::yesno "Do you want to configure a Keybase GPG key with GIT"; then
+    # Step 0: Delete no-tty from .gnupg/gpg.conf to avoid errors
+    if grep -q '^no-tty$' "$HOME/.gnupg/gpg.conf"; then
+      call_sed -i '/^no-tty$/d' "$HOME/.gnupg/gpg.conf"
+    fi
+    
     # Step 1: Check if there are any gpg key
     pgp_list="$(keybase pgp list)"
     if [[ -z "$pgp_list" ]]; then
@@ -107,7 +249,7 @@ then
       {
         output::yesno "Do you want to generate a new key 🔑 " &&\
           keybase gpg gen &&\
-          output::solution "🔑 New key generated" &&\
+          output::answer "🔑 New key generated" &&\
           pgp_list="$(keybase pgp list)" ||\
           output::error "🚨 Key could not be generated"
       } || true
@@ -141,7 +283,7 @@ then
         [[ -z "$sec" ]] &&\
         output::error "No key selected or found" &&\
         output::yesno "Do you want to write it manually" &&\
-        output::question "Write your key rsa" "sec"
+        sec="$(output::question "Write your key rsa")"
       } || true
 
       # If selected or provided sec exists continue
@@ -183,7 +325,7 @@ then
             output::write "You can view your GitHub private no reply mail address here:"
             output::answer "https://github.com/settings/emails"
             output::empty_line
-            output::question "Write your desired email address" "author_email"
+            author_email="$(output::question "Write your desired email address")"
             output::empty_line
             [[ -z "$author_email" ]] && output::error "⛔️ Email is necessary to use private keys" && exit 1
           }
@@ -244,24 +386,30 @@ then
 
         # Step 6 add it in your github setting
         output::answer "⚙️ Now add your public key in you github settings"
-        {
+
+        if platform::command_exists pbcopy &&\
+           output::yesno "Do you want to copy the key to the clipboard"
+        then
           gpg --armor --export "$sec" | "$DOTLY_PATH/bin/pbcopy" && output::solution "Public key is in your clipboard"
-        } || {
+        else
           gpg --armor --export "$sec"
           output::empty_line
-        }
+        fi
 
-        { 
-          platform::command_exists open &&\
+        if platform::command_exists open &&\
+           output::yesno "Do you want to open github settings to add your private GPG key"
+        then
           open "https://github.com/settings/gpg/new"
-        } || {
+        else
           output::write "🌍 Open in browser and paste your key:"
           output::answer "https://github.com/settings/gpg/new"
           output::empty_line
           output::write "🔎 In case of errors signing commits:"
           output::answer "https://github.com/gtrabanco/keybase-gpg-github#troubleshooting-gpg-failed-to-sign-the-data"
           output::empty_line
-        }
+        fi
+
+        output::solution "✅ GPG Import sucessfully"
       else
         output::error "🚨 No key was selected or provided rsa for the key is wrong"
       fi
