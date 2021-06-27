@@ -20,16 +20,16 @@ This requieres a newer version than official DOTLY version which is in [my fork]
 
 ## Restore your Dotfiles
 
-1. Generate ssh key or import the old one (not recommended) and add it to your GitHub or elsewhere you stored your dotfiles.
-2. Do the same with the repository you have your secrets.
+1. Generate ssh key or import the old one (not recommended) and add it to your GitHub or elsewhere you stored your dotfiles (the public key) to import your dotfiles if the repository is private and to be able to modify your dotfiles.
+2. Do the same with the repository you have your secrets (if you have your secrets in a repository :).
 3. Clone your dotfiles repository `git clone [your repository of dotfiles] $HOME/.dotfiles`
 4. Go to your dotfiles folder `cd $HOME/.dotfiles`
 5. Install git submodules `git submodule update --init --recursive`
-6. Install your dotfiles `DOTFILES_PATH="$HOME/.dotfiles" DOTLY_PATH="$DOTFILES_PATH/modules/dotly" "$DOTLY_PATH/bin/dot" self install`
+6. Install your dotfiles `DOTFILES_PATH="$HOME/.dotfiles" DOTLY_PATH="$DOTFILES_PATH/modules/sloth" SLOTH_PATH="$DOTLY_PATH" "$DOTLY_PATH/bin/dot" self install`
 7. Apply your secrets: `dot secrets apply` 
 8. Restart your terminal
 9. Import your packages `dot package import`
-10. Import your settings `dot mac defaults import`
+10. Import your settings `dot mac defaults import`. This does not work very well always 😅
 
 ### Install Paragon NTFS
 
