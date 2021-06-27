@@ -34,6 +34,7 @@ if [[ -z "$exists_branch" ]]; then
 fi
 
 {
+  [[ -n "$submodule_path" ]] &&\
   git config -f .gitmodules submodule."$submodule_path".branch "$submodule_branch" &&\
   cd "$DOTLY_PATH" &&\
   git checkout "${submodule_branch}" &&\
