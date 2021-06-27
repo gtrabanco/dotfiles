@@ -1,5 +1,11 @@
 export DOTFILES_PATH="$HOME/.dotfiles"
-export DOTLY_PATH="$DOTFILES_PATH/modules/dotly"
+
+if [[ -d "$DOTFILES_PATH/modules/sloth" ]]; then
+  export DOTLY_PATH="$DOTFILES_PATH/modules/sloth"
+elif [[ -d "$DOTFILES_PATH/modules/dotly" ]]; then
+  export DOTLY_PATH="$DOTFILES_PATH/modules/dotly"
+fi
+export SLOTH_PATH="$DOTLY_PATH"
 
 if [[ -f "$DOTLY_PATH/shell/bash/init-dotly.sh" ]]
 then
