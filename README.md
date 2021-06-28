@@ -8,6 +8,47 @@ This dotfiles were originally created using <a href="https://github.com/codelytv
 
 This dotfiles are quite close to complete example of the features that Sloth has.
 
+## Migration from DOTLY to SLOTH
+
+```bash
+call_sed() {
+  if command -v gsed &>/dev/null; then
+    "$(which gsed)" "$@"
+  elif [[ -f "/usr/local/opt/gnu-sed/libexec/gnubin/sed" ]]; then
+    /usr/local/opt/gnu-sed/libexec/gnubin/sed "$@"
+  elif platform::is_macos; then
+    # Any other BSD should be added to this check
+    "$(which sed)" '' "$@"
+  elif command -v sed &>/dev/null; then
+    "$(which sed)" "$@"
+  else
+    return 1
+  fi
+}
+cp -R "$DOTFILES_PATH" "$HOME/.dotfiles.back-$(date +%s)"
+cd "$DOTFILES_PATH"
+# Move dotly to sloth
+git mv "modules/dotly" "modules/sloth"
+# Replace values in .gitmodules: path of module, branch and url
+call_sed -i 's|modules/dotly|modules/sloth|g' .gitmodules
+git config -f .gitmodules submodule."modules/sloth".branch "master"
+git config -f .gitmodules submodule."modules/sloth".url "https://github.com/gtrabanco/sloth"
+# Select master branch
+cd modules/sloth
+git checkout --force master
+cd ../..
+# Sync submodule
+git submodule sync --recursive
+# Define new variables
+export DOTLY_PATH="$DOTFILES_PATH/modules/sloth"
+export SLOTH_PATH="$DOTFILES_PATH/modules/sloth"
+export ZIM_HOME="$SLOTH_PATH/modules/zimfw"
+# Reinstall zim
+zsh "$ZIM_HOME/zimfw.zsh" install
+"$SLOTH_PATH/bin/dot" shell zsh reload_completions
+echo "Restart your terminal to finish the migration"
+```
+
 ## About this and any other dotfiles
 
 Dotfiles are not meant to be cloned and used as template repository. Dotfiles content are personal configuration that probably does not fit to you. This is just and advert, see, click a start, learn and copy.
