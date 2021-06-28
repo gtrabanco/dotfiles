@@ -2,15 +2,6 @@
     "deno.unstable": true,
     "deno.lint": true,
     "todo-tree.tree.showScanModeButton": false,
-    "json.schemas": [
-        {
-            "fileMatch": [
-                "ci*.yml",
-                "ci*.yaml"
-            ],
-            "url": "http://json.schemastore.org/github-workflow"
-        }
-    ],
     "yaml.schemas": {
         "file:///toc.schema.json": "/toc\\.yml/i"
     },
@@ -29,8 +20,8 @@
     "workbench.startupEditor": "none",
     "security.workspace.trust.untrustedFiles": "open",
     "launch": {
-
         "configurations": [],
         "compounds": []
-    }
+    },
+    "redhat.telemetry.enabled": true
 }
