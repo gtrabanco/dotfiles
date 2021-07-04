@@ -8,9 +8,6 @@
 [fetch]
 	prune = true
 
-[push]
-	default = simple
-
 [color]
 	diff = auto
 	status = auto
@@ -113,3 +110,5 @@
 	required = true
 [gpg]
 	program = /usr/local/bin/gpg
+[push]
+	default = current
