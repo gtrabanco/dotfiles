@@ -27,7 +27,7 @@ SCRIPT_NAME="dot ssh enable"
 SCRIPT_VERSION="1.0.0"
 
 # Print name and version
-if $version; then
+if ${version:-}; then
   output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
   exit
 fi
