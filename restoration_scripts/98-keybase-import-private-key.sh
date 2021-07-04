@@ -371,18 +371,19 @@ then
         output::answer "⚙️ Configuring git"
         git config --global user.signingkey "$sec"
         git config --global commit.gpgsign true
+        git config --global tag.gpgsign true
         git config --global gpg.program "$(which gpg)"
         output::solution "Git configured"
         output::empty_line
 
         # Step 5 (Conditional step) Configure GPNUPG
-        if [[ -d "$HOME/.gnupg" ]] &&\
-           [[ -f "$HOME/.gnupg/gpg.conf" ]] &&\
-           ! grep -q "no-tty" "$HOME/.gnupg/gpg.conf"
-        then
-          output::solution "⚙️ Configured GNUPG"
-          echo "no-tty" >> "$HOME/.gnupg/gpg.conf"
-        fi
+        # if [[ -d "$HOME/.gnupg" ]] &&\
+        #    [[ -f "$HOME/.gnupg/gpg.conf" ]] &&\
+        #    ! grep -q "no-tty" "$HOME/.gnupg/gpg.conf"
+        # then
+        #   echo "no-tty" >> "$HOME/.gnupg/gpg.conf"
+        #   output::solution "⚙️ Configured GNUPG"
+        # fi
 
         # Step 6 add it in your github setting
         output::answer "⚙️ Now add your public key in you github settings"
