@@ -58,16 +58,16 @@ case ${1:-} in
     ;;
   "path")
     _args=(-u "${user:-gtrabanco}" -r "${repository:-dotfiles}")
-    
+
     if [ -n "${branch:-}" ]; then
       _args+=(-b "$branch")
     fi
-    
+
     github::get_api_url "${_args[@]}" "${api_path:-}"
     ;;
   "call")
     _args=(-u "${user:-gtrabanco}" -r "${repository:-dotfiles}")
-    
+
     if [ -n "${branch:-}" ]; then
       _args+=(-b "$branch")
     fi
