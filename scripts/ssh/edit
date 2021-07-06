@@ -72,7 +72,9 @@ fi
 if [[ ! -e "$ssh_file" ]]; then
   output::error "❌ Wrong ssh file or alias."
 elif $view; then
-  cat "$ssh_file"
+  if [[ -f "$ssh_file" ]]; then
+    cat "$ssh_file"
+  fi
 elif [[ -n "$option" ]]; then
   # Delete the option if exists
   file_line="$(cat -n "$ssh_file" | grep "$option" | awk '{print $1}')"
