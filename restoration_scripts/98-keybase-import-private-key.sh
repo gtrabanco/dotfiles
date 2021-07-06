@@ -121,6 +121,12 @@ if [[ -z "$(command -v platform::is_macos)" ]]; then
   }
 fi
 
+if [[ -z "$(command -v brew::is_installed)" ]]; then
+  brew::is_installed() {
+    platform::command_exists brew && { brew list --formula "$@" &> /dev/null || brew list --cask "$@" &> /dev/null; }
+  }
+fi
+
 if ! command -v open &> /dev/null; then
   open() {
     # Open command if open exists in system
@@ -375,13 +381,13 @@ if platform::command_exists keybase &> /dev/null &&
         output::empty_line
 
         # Step 5 (Conditional step) Configure GPNUPG
-        # if [[ -d "$HOME/.gnupg" ]] &&\
-        #    [[ -f "$HOME/.gnupg/gpg.conf" ]] &&\
-        #    ! grep -q "no-tty" "$HOME/.gnupg/gpg.conf"
-        # then
-        #   echo "no-tty" >> "$HOME/.gnupg/gpg.conf"
-        #   output::solution "⚙️ Configured GNUPG"
-        # fi
+        if [[ -d "$HOME/.gnupg" ]] &&\
+           [[ -f "$HOME/.gnupg/gpg.conf" ]] &&\
+           ! grep -q "no-tty" "$HOME/.gnupg/gpg.conf"
+        then
+          echo "no-tty" >> "$HOME/.gnupg/gpg.conf"
+          output::solution "⚙️ Configured GNUPG"
+        fi
 
         # Step 6 add it in your github setting
         output::answer "⚙️ Now add your public key in you github settings"
@@ -404,6 +410,61 @@ if platform::command_exists keybase &> /dev/null &&
           output::write "🔎 In case of errors signing commits:"
           output::answer "https://github.com/gtrabanco/keybase-gpg-github#troubleshooting-gpg-failed-to-sign-the-data"
           output::empty_line
+        fi
+
+        # Step 7 (Optional): only macos with brew
+        if
+          platform::is_macos &&
+          platform::command_exists brew &&
+          output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
+        then
+          output::header "🍎 Optional Configuration for macOS only"
+          if
+            ! brew::is_installed "gpg-suite-no-mail" &&
+            ! brew::is_installed "gpg-suite" &&
+            ! brew::is_installed "pinentry-mac"
+          then
+            PS3="Choose an option: "
+            options=("gpg-suite-no-mail" "gpg-suite" "pinentry" "Quit")
+            select opt in "${options[@]}"; do
+              case "$opt" in
+                Quit)
+                  output::answer "User exit"
+                  exit
+                  ;;
+                *)
+                  brew install "$opt"
+                  ;;
+              esac
+            done
+          fi
+
+          # GPG Suite
+          if
+            brew::is_installed "gpg-suite-no-mail" ||
+            brew::is_installed "gpg-suite"
+          then
+            output::write "Now the GPG Preferences will be opened and mark the options:"
+            output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
+            open -b com.apple.systempreferences "/Library/PreferencePanes/GPGPreferences.prefPane"
+
+            if ! grep -q "^default-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
+              echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
+            fi
+
+            if ! grep -q "^max-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
+              echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
+            fi
+
+            call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
+          
+          # Pinentry Mac
+          elif brew::is_installed "pinentry-mac"; then
+            call_sed -i '/^default-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
+            call_sed -i '/^max-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
+            call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
+            echo "pinentry-program $(which pinentry-mac)"
+          fi
         fi
 
         output::solution "✅ GPG Import sucessfully"
