@@ -4,7 +4,7 @@
 dot::get_script_src_path "ssh.sh"
 
 ##? Create ssh configurations, enable or disable them easily
-##? 
+##?
 ##?
 ##? Usage:
 ##?   create [-h | --help]
@@ -32,7 +32,6 @@ if ${version:-}; then
   exit
 fi
 
-
 output::header "This will create a ssh config file"
 output::empty_line
 output::write "Set up an ssh alias, you can use multiple separated by space, the"
@@ -49,7 +48,7 @@ while [ -z "$ssh_alias" ]; do
     ssh_alias="$tmp_ssh_alias"
     tmp_ssh_alias=""
   fi
-  
+
   [[ -z "$ssh_alias" ]] && output::question "Set your alias/es (use a simple space to insert multiple)" "ssh_alias"
 
   if [[ -n "$ssh_alias" ]]; then

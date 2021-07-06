@@ -8,7 +8,7 @@ set -euo pipefail
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Show used network ports and the application that is using it
-##? 
+##?
 ##?
 ##? Usage:
 ##?   netports [-h | --help]

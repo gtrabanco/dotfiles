@@ -9,7 +9,7 @@ set -euo pipefail
 #/repos/{owner}/{repo}/pulls/{pull_number}/merge
 
 ##? Make API Calls using github api
-##? 
+##?
 ##?
 ##? Usage:
 ##?   api [-h | --help]

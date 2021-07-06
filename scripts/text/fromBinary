@@ -7,7 +7,7 @@ set -euo pipefail
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Convert a binary representation into text characters
-##? 
+##?
 ##?
 ##? Usage:
 ##?   fromBinary [-h | --help]
@@ -32,4 +32,3 @@ if ${version:-}; then
 fi
 
 echo "${bin_text[*]:-}" | sed 's/ //g' | perl -lpe '$_=pack"B*",$_'
-

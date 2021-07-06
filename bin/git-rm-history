@@ -3,7 +3,7 @@
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 if git::is_in_repo; then
-  git push . :refs/original/refs/heads/master &>/dev/null
+  git push . :refs/original/refs/heads/master &> /dev/null
   git filter-branch --index-filter "git rm -r --cached --ignore-unmatch $1" HEAD
 else
   output::error "This can be executed only in a directory which is a git repository and"

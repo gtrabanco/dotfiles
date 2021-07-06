@@ -5,7 +5,7 @@ set -euo pipefail
 source "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##?   Solve fast forwards errors
-##? 
+##?
 ##? Usage:
 ##?   solve_ff <remote> <branch_name>
 ##?

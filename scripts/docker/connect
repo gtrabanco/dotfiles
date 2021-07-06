@@ -11,7 +11,7 @@ source "$DOTLY_PATH/scripts/core/_main.sh"
 ##?   connect
 docs::parse "$@"
 
-if docker ps >/dev/null 2>&1; then
+if docker ps > /dev/null 2>&1; then
   container=$(docker ps | awk '{if (NR!=1) print $1 ": " $(NF)}' | fzf --height 40%)
 
   if [[ -n $container ]]; then

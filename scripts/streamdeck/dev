@@ -8,7 +8,7 @@ set -euo pipefail
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Toggle Stream Deck Developer mode if not `--on` or `--off` is passed as argument
-##? 
+##?
 ##?
 ##? Usage:
 ##?   dev [-h | --help]
@@ -35,8 +35,8 @@ if ${version:-}; then
 fi
 
 streamdeck::is_enabled() {
-  defaults read com.elgato.StreamDeck html_remote_debugging_enabled &>/dev/null &&\
-    [[ "$(defaults read com.elgato.StreamDeck html_remote_debugging_enabled 2>/dev/null)" -eq "1" ]]
+  defaults read com.elgato.StreamDeck html_remote_debugging_enabled &> /dev/null &&
+    [[ "$(defaults read com.elgato.StreamDeck html_remote_debugging_enabled 2> /dev/null)" -eq "1" ]]
 }
 
 if ! ${on:-} && ! ${off:-}; then

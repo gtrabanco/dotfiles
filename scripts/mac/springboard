@@ -8,7 +8,7 @@ set -euo pipefail
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Change the columns or rows in the springboard
-##? 
+##?
 ##?
 ##? Usage:
 ##?   springboard [-h | --help]
@@ -37,37 +37,38 @@ fi
 # Here begin your script
 
 case ${1-} in
-"columns")
-  if [[ ${number:-0} -lt 1 ]]; then
-    exit 1
-  fi
-  defaults write com.apple.dock springboard-columns -int "$number"
-  ;;
-"rows")
-  if [[ ${number:-0} -lt 1 ]]; then
-    exit 1
-  fi
-  defaults write com.apple.dock springboard-rows -int "$number"
-  ;;
-*)
-  if ! ${reset:-}; then
-    "$0" --help
-    exit 1
-  fi
-
-  case "$2" in
-    columns)
-      defaults delete com.apple.dock springboard-columns
-      ;;
-    rows)
-      defaults delete com.apple.dock springboard-rows
-      ;;
-    *)
-      output::error "Something went terribly wrong"
-      open "https://www.youtube.com/watch?v=t3otBjVZzT0"
+  "columns")
+    if [[ ${number:-0} -lt 1 ]]; then
       exit 1
-  esac
-  ;;
+    fi
+    defaults write com.apple.dock springboard-columns -int "$number"
+    ;;
+  "rows")
+    if [[ ${number:-0} -lt 1 ]]; then
+      exit 1
+    fi
+    defaults write com.apple.dock springboard-rows -int "$number"
+    ;;
+  *)
+    if ! ${reset:-}; then
+      "$0" --help
+      exit 1
+    fi
+
+    case "$2" in
+      columns)
+        defaults delete com.apple.dock springboard-columns
+        ;;
+      rows)
+        defaults delete com.apple.dock springboard-rows
+        ;;
+      *)
+        output::error "Something went terribly wrong"
+        open "https://www.youtube.com/watch?v=t3otBjVZzT0"
+        exit 1
+        ;;
+    esac
+    ;;
 esac
 
 defaults write com.apple.dock ResetLaunchPad -bool TRUE && killall Dock

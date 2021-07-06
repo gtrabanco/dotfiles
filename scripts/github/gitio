@@ -8,7 +8,7 @@ set -euo pipefail
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Create a custom git.io url for github domains
-##? 
+##?
 ##?
 ##? Usage:
 ##?   gitio [-h | --help]

@@ -18,7 +18,7 @@ docs::parse "$@"
 DEFAULT_CHROMIUM_BROWSER="${DEFAULT_CHROMIUM_BROWSER:-Google Chrome}"
 
 function getTabs() {
-  osascript <<EOF
+  osascript << EOF
     set _output to ""
     tell application "$DEFAULT_CHROMIUM_BROWSER"
         set _window_index to 1
@@ -41,7 +41,7 @@ EOF
 function setActiveTab() {
   local _window_index=$1
   local _tab_index=$2
-  osascript -- - "$_window_index" "$_tab_index" <<EOF
+  osascript -- - "$_window_index" "$_tab_index" << EOF
   on run argv
       set _window_index to item 1 of argv
       set _tab_index to item 2 of argv
@@ -60,8 +60,8 @@ function main() {
   local -r windows_num=$(echo "$selected" | rev | awk '{print $2}')
   local -r tab_num=$(echo "$selected" | rev | awk '{print $1}')
 
-#  echo "WIN $windows_num"
-#  echo "TAB $tab_num"
+  #  echo "WIN $windows_num"
+  #  echo "TAB $tab_num"
 
   setActiveTab "$windows_num" "$tab_num"
 }

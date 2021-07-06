@@ -7,7 +7,10 @@ bk_suffix="$(date +%s)"
 
 if [[ -d "$DOTFILES_PATH/ssh" ]]; then
   output::error "This update was applied or you have same file names or directory path."
-  output::yesno "Do you want to perform a backup of your current configuration inside your dotfiles and continue" || { output::error "User aborted"; exit; }
+  output::yesno "Do you want to perform a backup of your current configuration inside your dotfiles and continue" || {
+    output::error "User aborted"
+    exit
+  }
   files::backup_if_file_exists "$DOTFILES_PATH/ssh" "$bk_suffix"
 fi
 
@@ -28,7 +31,6 @@ dotbot::add_or_edit_json_value_to_directive "create" "~/.ssh/control" "$yaml_fil
 dotbot::add_or_edit_json_value_to_directive "link" "~/.ssh/config" "ssh/config" "$yaml_file"
 dotbot::add_or_edit_json_value_to_directive "link" "~/.ssh/config.d" "ssh/config.d" "$yaml_file"
 dotbot::add_or_edit_json_value_to_directive "link" "~/.ssh/config.d-enabled" "ssh/config.d-enabled" "$yaml_file"
-
 
 # TODO Execute symlinks file or user symlinks file
 #"$DOTLY_PATH/bin/dot" symlinks update ssh-feature

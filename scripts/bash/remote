@@ -12,4 +12,4 @@ docs::parse "$@"
 
 [[ "$#" -lt 1 ]] && exit 1
 
-bash <( curl -fsL "$url" )
+bash <(curl -fsL "$url")

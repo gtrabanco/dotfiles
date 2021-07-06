@@ -3,11 +3,11 @@
 . "$DOTLY_PATH/bin/scripts/core/_main.sh"
 
 is_macos() {
-  command -v platform::is_macos &>/dev/null && platform::is_macos
+  command -v platform::is_macos &> /dev/null && platform::is_macos
 }
 
 security::duti() {
-  if is_macos && command -v platform::command_exists &>/dev/null && platform::command_exists duti; then
+  if is_macos && command -v platform::command_exists &> /dev/null && platform::command_exists duti; then
     duti -s com.apple.Safari afp
     duti -s com.apple.Safari ftp
     duti -s com.apple.Safari nfs

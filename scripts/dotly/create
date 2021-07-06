@@ -8,7 +8,7 @@ SCRIPT_VERSION="1.0.0"
 SCRIPT_TEMPLATE="$DOTLY_PATH/scripts/dotly/helpers/script-template"
 
 ##? Dotly script creator
-##? 
+##?
 ##?
 ##? Usage:
 ##?   create [-h | --help]
@@ -71,11 +71,11 @@ fi
 
 # If script exits ask user to overwrite
 if [[ -f $script_filepath ]]; then
-  output::yesno "The script exists, do you want to delete it and create a empty script" "N" ||\
+  output::yesno "The script exists, do you want to delete it and create a empty script" "N" ||
     {
-      output::error "The script name \"$script_name\" exists in context \"$context\" and user refuse to recreate the script" &&\
-      output::write "Provide a different name for the script or context." &&\
-      exit 1
+      output::error "The script name \"$script_name\" exists in context \"$context\" and user refuse to recreate the script" &&
+        output::write "Provide a different name for the script or context." &&
+        exit 1
     }
 fi
 

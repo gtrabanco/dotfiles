@@ -9,14 +9,14 @@ set -euo pipefail
 # If file is not valid return 1 (false)
 json::to_yaml() {
   if [[ -z "${1:-}" ]]; then
-    python -c 'import sys, yaml, json; print(yaml.dump(json.loads(sys.stdin.read())))' 2>/dev/null
+    python -c 'import sys, yaml, json; print(yaml.dump(json.loads(sys.stdin.read())))' 2> /dev/null
   else
     [[ -e "${1:-}" ]] && python -c 'import sys, yaml, json; print(yaml.dump(json.loads(sys.stdin.read())))' < "$1"
   fi
 }
 
 ##? Convert a json string of file to yaml
-##? 
+##?
 ##?
 ##? Usage:
 ##?   json2yaml [-h | --help]

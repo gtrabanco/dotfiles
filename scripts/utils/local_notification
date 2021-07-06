@@ -7,7 +7,7 @@ set -euo pipefail
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Send a local notification
-##? 
+##?
 ##?
 ##? Usage:
 ##?   local_notification [-h | --help]
@@ -35,5 +35,5 @@ fi
 
 os="$(uname)"
 if [[ "$os" == "Darwin" ]]; then
-  osascript -e 'display notification "'"${body[*]:-}"'" with title "'"${title}"'"' 
+  osascript -e 'display notification "'"${body[*]:-}"'" with title "'"${title}"'"'
 fi

@@ -8,7 +8,7 @@
 [ -z "$DOTFILES_SCRIPTS_PATH" ] && output::error "Failed to load needed GitHub library" && exit
 
 ##? Install script from dotly marketplace
-##? 
+##?
 ##?
 ##? Usage:
 ##?   install [-h | --help]

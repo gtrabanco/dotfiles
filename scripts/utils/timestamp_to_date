@@ -11,6 +11,6 @@ source "$DOTLY_PATH/scripts/core/_main.sh"
 ##?   timestamp_to_date <timestamp>
 docs::parse "$@"
 
-DATE_FORMATTED=$(( ${timestamp:-0}/1000 ))
+DATE_FORMATTED=$((${timestamp:-0} / 1000))
 
 gdate -d @$DATE_FORMATTED

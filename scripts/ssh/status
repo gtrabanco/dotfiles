@@ -4,7 +4,7 @@
 dot::get_script_src_path "ssh.sh"
 
 ##? Create ssh configurations, enable or disable them easily
-##? 
+##?
 ##?
 ##? Usage:
 ##?   status [-h | --help]
@@ -35,16 +35,16 @@ fi
 
 if [[ -z "$ssh_alias" ]]; then
   find "$DOTFILES_SSH_CONFIGD" -name "*" -type f | xargs -I _ basename _ | while read -r item; do
-    if (ssh::check_is_enabled_file_name "$item" >/dev/null); then
+    if (ssh::check_is_enabled_file_name "$item" > /dev/null); then
       output::solution "'$item' enabled."
     else
       output::error "'$item' disabled."
     fi
   done
 else
-  if ssh::check_is_enabled_file_name "$ssh_alias" >/dev/null || ssh::check_enabled_alias "$ssh_alias" >/dev/null; then
+  if ssh::check_is_enabled_file_name "$ssh_alias" > /dev/null || ssh::check_enabled_alias "$ssh_alias" > /dev/null; then
     output::solution "'$ssh_alias' enabled."
-  elif ! ssh::check_alias_exists "$ssh_alias" >/dev/null && ! ssh::check_configd_file_name "$ssh_alias" >/dev/null; then
+  elif ! ssh::check_alias_exists "$ssh_alias" > /dev/null && ! ssh::check_configd_file_name "$ssh_alias" > /dev/null; then
     output::error "'$ssh_alias' not exists."
   else
     output::error "'$ssh_alias' disabled."

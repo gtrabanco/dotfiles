@@ -8,7 +8,7 @@ set -euo pipefail
 dot::get_script_src_path "ha.sh"
 
 ##? Execute hassio State from console
-##? 
+##?
 ##?
 ##? Usage:
 ##?   state [-h | --help]
@@ -34,17 +34,14 @@ fi
 
 url="$HASS_API_URL/states"
 
-
 if [[ -n "${json:-}" ]]; then
-  curl --silent -X POST\
-    -H "Content-Type: application/json"\
-    -H "Authorization: Bearer $HASS_TOKEN"\
-    -d "${json:-\{\}}"\
+  curl --silent -X POST -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $HASS_TOKEN" \
+    -d "${json:-\{\}}" \
     "$url/${entity:-}"
 else
-  output="$(curl --silent -X GET\
-    -H "Content-Type: application/json"\
-    -H "Authorization: Bearer $HASS_TOKEN"\
+  output="$(curl --silent -X GET -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $HASS_TOKEN" \
     "$url")"
 
   if [[ -n "${entity:-}" ]]; then

@@ -3,7 +3,6 @@ alias dc="cd ${HOME}/Documents"
 alias iCloud="cd ${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
 alias tasmotizer="cd ${HOME}/.tasmotizer && $(which tasmotizer.py)"
 
-
 alias flushDNS="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 alias flush=flushDNS
 alias localip="ipconfig getifaddr en0"
@@ -20,7 +19,6 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo 
 alias safeTrash="defaults write com.apple.finder EmptyTrashSecurely -bool true"
 alias unsafeTrash="defaults write com.apple.finder EmptyTrashSecurely -bool false"
 
-
 # Stuff I never really use but cannot delete either because of http://xkcd.com/530/
 alias stfu="osascript -e 'set volume output muted true'"
 alias pumpitup="osascript -e 'set volume output volume 100'"
@@ -30,9 +28,9 @@ alias pumpitup="osascript -e 'set volume output volume 100'"
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 
 # JavaScriptCore REPL
-jscbin="/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc";
-[ -e "${jscbin}" ] && alias jsc="${jscbin}";
-unset jscbin;
+jscbin="/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc"
+[ -e "${jscbin}" ] && alias jsc="${jscbin}"
+unset jscbin
 
 # Clean up LaunchServices to remove duplicates in the “Open With” menu
 alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
@@ -61,14 +59,12 @@ alias plistbuddy="/usr/libexec/PlistBuddy"
 # Airport CLI alias
 alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
 
-
 # After this, the aliases are from: https://github.com/CuriousLearner/dotfiles/blob/master/.osx
 # Lock screen
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 # add a poor facsimile for Linux's `free` if we're on Mac OS
-if ! type free > /dev/null 2>&1 && [[ "$(uname -s)" == 'Darwin' ]]
-then
+if ! type free > /dev/null 2>&1 && [[ "$(uname -s)" == 'Darwin' ]]; then
   alias free="top -s 0 -l 1 -pid 0 -stats pid | grep '^PhysMem: ' | cut -d : -f 2- | tr ',' '\n'"
 fi
 

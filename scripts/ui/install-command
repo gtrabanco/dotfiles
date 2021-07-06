@@ -11,7 +11,7 @@ source "$DOTLY_PATH/scripts/core/_main.sh"
 docs::parse "$@"
 
 if [[ ! -z "$pkg_url" ]]; then
-    echo "rm \"/tmp/unifi_sysvinit_all.deb\" &> /dev/null; curl -o \"/tmp/unifi_sysvinit_all.deb\" \"$pkg_url\" && dpkg -i \"/tmp/unifi_sysvinit_all.deb\" && rm \"/tmp/unifi_sysvinit_all.deb\""
+  echo "rm \"/tmp/unifi_sysvinit_all.deb\" &> /dev/null; curl -o \"/tmp/unifi_sysvinit_all.deb\" \"$pkg_url\" && dpkg -i \"/tmp/unifi_sysvinit_all.deb\" && rm \"/tmp/unifi_sysvinit_all.deb\""
 else
-    echo "Not url provided"
+  echo "Not url provided"
 fi

@@ -7,9 +7,8 @@ set -euo pipefail
 . "$DOTLY_PATH/scripts/core/_main.sh"
 dot::get_script_src_path "ha.sh"
 
-
 ##? Execute Hassio Service from console
-##? 
+##?
 ##?
 ##? Usage:
 ##?   service [-h | --help]
@@ -36,15 +35,13 @@ fi
 url="$HASS_API_URL/services"
 
 if [[ -n "${json:-}" ]]; then
-  curl --silent -X POST\
-    -H "Content-Type: application/json"\
-    -H "Authorization: Bearer $HASS_TOKEN"\
-    -d "$json"\
+  curl --silent -X POST -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $HASS_TOKEN" \
+    -d "$json" \
     "$url/$(echo "$domain" | tr "." "/")"
 else
-  output="$(curl --silent -X GET\
-    -H "Content-Type: application/json"\
-    -H "Authorization: Bearer $HASS_TOKEN"\
+  output="$(curl --silent -X GET -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $HASS_TOKEN" \
     "$url")"
 
   if [[ -n "${domain:-}" ]]; then

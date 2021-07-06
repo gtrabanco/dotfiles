@@ -16,26 +16,26 @@ docs::parse "$@"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --port|-p)
+    --port | -p)
       LOCAL_PORT="$2"
       shift
       shift
-    ;;
-    --user|-u)
+      ;;
+    --user | -u)
       LOCAL_USER="$2"
       shift
       shift
-    ;;
-    --localconfig|-lc)
-      cat <<EOF
+      ;;
+    --localconfig | -lc)
+      cat << EOF
 Host *
   RequestTTY yes
   RemoteForward ${LOCAL_PORT:-10333} localhost:22
 EOF
-    exit 0
-    ;;
-    --help|-h)
-      cat <<EOF
+      exit 0
+      ;;
+    --help | -h)
+      cat << EOF
   Usage:
     bash <( curl -fsL $GIST_RAW_URL ) [--help|-h]
     bash <( curl -fsL $GIST_RAW_URL ) --port <remote_computer_ssh_port> [--localconfig|-lc]
@@ -57,11 +57,11 @@ EOF
     WARNING: THIS SCRIPT COULD OVERWRITE SOME OF YOUR SSH CONFIGURATION. THIS CAN BREAK YOUR SSH CONFIG.
              THE USE WOULD BE SAFE BUT WE PROVIDE NOT WARRANTY ABOUT THE USAGE AND THE CONSECUENCES.
 EOF
-    exit 0
-    ;;
+      exit 0
+      ;;
     *)
       [[ $# -gt 0 ]] && echo "Invalid Arguments call option --help to see some help about the usage of this command" && exit 1
-    ;;
+      ;;
   esac
 done
 
@@ -89,7 +89,6 @@ if [[ ! -d "$SSH_CONFIGD_ENABLED_PATH" ]]; then
   mkdir -p "$SSH_CONFIGD_ENABLED_PATH"
   chmod 0700 mkdir -p "$SSH_CONFIGD_ENABLED_PATH"
 fi
-
 
 echo "Host desktop" > "$SSH_DESKTOP_FILE"
 echo "    Hostname 127.0.0.1" >> "$SSH_DESKTOP_FILE"

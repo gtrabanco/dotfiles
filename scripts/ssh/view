@@ -3,7 +3,7 @@
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? View all or selected ssh configurations
-##? 
+##?
 ##?
 ##? Usage:
 ##?   view [-h | --help]

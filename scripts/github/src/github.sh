@@ -20,15 +20,15 @@ github::get_api_url() {
 
   while [ $# -gt 0 ]; do
     case ${1:-} in
-      --user|-u|--organization|-o)
+      --user | -u | --organization | -o)
         user="${2:-}"
         shift 2
         ;;
-      --repository|-r)
+      --repository | -r)
         repository="${2:-}"
         shift 2
         ;;
-      --branch|-b)
+      --branch | -b)
         branch="/branches/${2:-}"
         shift 2
         ;;
@@ -53,7 +53,7 @@ github::get_api_url() {
   fi
 
   { [[ -z "$user" ]] || [[ -z "$repository" ]]; } && return 1
-  
+
   [[ $# -gt 0 ]] && arguments="$(str::join '/' "$*")"
 
   echo "$GITHUB_API_URL/$user/$repository${branch:-}${arguments:-}"
@@ -66,15 +66,15 @@ github::branch_raw_url() {
 
   while [ $# -gt 0 ]; do
     case ${1:-} in
-      --user|-u|--organization|-o)
+      --user | -u | --organization | -o)
         user="${2:-}"
         shift 2
         ;;
-      --repository|-r)
+      --repository | -r)
         repository="${2:-}"
         shift 2
         ;;
-      --branch|-b)
+      --branch | -b)
         branch="/branches/${2:-}"
         shift 2
         ;;
@@ -99,7 +99,7 @@ github::branch_raw_url() {
   fi
 
   { [[ -z "$user" ]] || [[ -z "$repository" ]]; } && return 1
-  
+
   [[ $# -gt 1 ]] && branch="$1" && shift
   [[ $# -gt 0 ]] && file="/$(str::join '/' "$*")"
 
@@ -112,36 +112,37 @@ github::clean_cache() {
 
 github::_command() {
   local url CURL_BIN
-  url="$1"; shift
+  url="$1"
+  shift
   CURL_BIN="$(which curl)"
 
   params=(-S -s -L -q -f -k "-H 'Accept: application/vnd.github.v3+json'")
   [[ -n "$GITHUB_TOKEN" ]] && params+=("-H 'Authorization: token $GITHUB_TOKEN'")
-  
+
   echo "$CURL_BIN ${params[*]} ${*} $url"
 }
 
 github::curl() {
   local md5command cached_request_file_path _command url cached cache_period
-  
+
   cached=true
   cache_period="$GITHUB_CACHE_PETITIONS_PERIOD_IN_DAYS"
 
   case "$1" in
-    --no-cache|-n)
+    --no-cache | -n)
       cached=false
       shift
       ;;
-    --cached|-c)
+    --cached | -c)
       shift
       ;;
-    --period-in-days|-p)
+    --period-in-days | -p)
       cache_period="$2"
       shift 2
       ;;
   esac
 
-  url=${1:-$(</dev/stdin)}
+  url=${1:-$(< /dev/stdin)}
   _command="$(github::_command "$url")"
 
   if $cached; then
@@ -152,7 +153,7 @@ github::curl() {
     md5command="$(echo "$_command" | md5)"
     cached_request_file_path="$GITHUB_DOTLY_CACHE_PETITIONS/$md5command"
 
-    [[ -f "$cached_request_file_path" ]] &&\
+    [[ -f "$cached_request_file_path" ]] &&
       files::check_if_path_is_older "$cached_request_file_path" "$cache_period"
 
     # Cache result if is not
@@ -175,14 +176,14 @@ github::get_remote_file_path_json() {
   GITHUB_REPOSITORY="${2:-$GITHUB_DOTLY_REPOSITORY}"
 
   if [[ "$#" -eq 2 ]]; then
-    url="$(github::get_api_url --branch "master" "$GITHUB_REPOSITORY" | github::curl | jq '.commit.commit.tree.url' 2>/dev/null)"
+    url="$(github::get_api_url --branch "master" "$GITHUB_REPOSITORY" | github::curl | jq '.commit.commit.tree.url' 2> /dev/null)"
 
     [[ -n "$url" ]] && github::get_remote_file_path_json "$1" "$GITHUB_REPOSITORY" "$url" && return $?
   elif [[ "$#" -gt 2 ]]; then
     file_paths=($(echo "${1:-}" | tr "/" "\n"))
     url="${3:-}"
 
-    json="$(github::curl "$url" | jq --arg file_path "${file_paths[0]}" '.tree[] | select(.path == $file_path)' 2>/dev/null)"
+    json="$(github::curl "$url" | jq --arg file_path "${file_paths[0]}" '.tree[] | select(.path == $file_path)' 2> /dev/null)"
 
     if [[ -n "$json" ]] && [[ ${#file_paths[@]} -gt 1 ]]; then
       github::get_remote_file_path_json "$(str::join / "${file_paths[@]:1}")" "$GITHUB_REPOSITORY" "$(echo "$json" | jq '.url')"
@@ -191,6 +192,6 @@ github::get_remote_file_path_json() {
       return $?
     fi
   fi
-  
+
   return 1
 }

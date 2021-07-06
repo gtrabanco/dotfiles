@@ -8,7 +8,7 @@ set -euo pipefail
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 ##? Get the user profile of GitHub user by the ID
-##? 
+##?
 ##?
 ##? Usage:
 ##?   id [-h | --help]
@@ -39,7 +39,7 @@ output::header "Looking for user \`${number}\`"
 
 curl --silent "https://api.github.com/user/${number}"
 
-profile_url="$(curl --silent "https://api.github.com/user/${number}" 2>/dev/null | jq -r '.html_url | values' 2>/dev/null)"
+profile_url="$(curl --silent "https://api.github.com/user/${number}" 2> /dev/null | jq -r '.html_url | values' 2> /dev/null)"
 
 if [[ -n "$profile_url" ]]; then
   output::answer "ID \`${number}\` has the profile url: \`${profile_url}\`"

@@ -50,7 +50,7 @@ cd "$dotfiles_context"
 # Download the script
 output::write "Downloading the script ⚡️"
 $(echo "$download_command" "$script_raw_url")
-if [ ! $? ] ; then
+if [ ! $? ]; then
   if [ ! $(ls -A "$dotfiles_context") ]; then
     output::answer "El context $dotfiles_context esta vacio"
   fi

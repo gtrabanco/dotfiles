@@ -8,15 +8,15 @@ set -euo pipefail
 
 yaml::to_json_pretty() {
   if [[ -z "${1:-}" ]]; then
-    python -c 'import sys, yaml, json; print(json.dumps(yaml.safe_load(sys.stdin.read()), indent=2, sort_keys=False))' 2>/dev/null
+    python -c 'import sys, yaml, json; print(json.dumps(yaml.safe_load(sys.stdin.read()), indent=2, sort_keys=False))' 2> /dev/null
   else
-    [[ -e "${1:-}" ]] &&\
-      python -c 'import sys, yaml, json; print(json.dumps(yaml.safe_load(open(sys.argv[1])), indent=2, sort_keys=False))' "$1" 2>/dev/null
+    [[ -e "${1:-}" ]] &&
+      python -c 'import sys, yaml, json; print(json.dumps(yaml.safe_load(open(sys.argv[1])), indent=2, sort_keys=False))' "$1" 2> /dev/null
   fi
 }
 
 ##? Convert a yaml string or file to json
-##? 
+##?
 ##?
 ##? Usage:
 ##?   yaml2json [-h | --help]

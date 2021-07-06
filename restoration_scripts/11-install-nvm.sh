@@ -14,7 +14,7 @@ if curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/HEAD/install.sh | bash;
     output::empty_line
   }
 else
-    output::empty_line
-    output::error "Error installing nvm"
-    output::empty_line
+  output::empty_line
+  output::error "Error installing nvm"
+  output::empty_line
 fi

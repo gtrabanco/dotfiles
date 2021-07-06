@@ -89,7 +89,7 @@ security::bonjour_disable() {
 }
 
 ##? Change mac security settings
-##? 
+##?
 ##? See:
 ##?    https://github.com/drduh/macOS-Security-and-Privacy-Guide
 ##?
@@ -129,31 +129,31 @@ sudo -v
 output::empty_line
 
 case "${1:-}" in
-block-on)
-  sudo pfctl -e -f pf.rules &>/dev/null || true
-  exit 0
-  ;;
-block-off)
-  sudo pfctl -d &>/dev/null || true
-  exit 0
-  ;;
-ip-block)
-  [[ -z "${ip_addr:-}" ]] && exit 1
-  sudo pfctl -e -f pf.rules &>/dev/null || true
-  sudo pfctl -t blocklist -T add "$ip_addr"
-  exit 0
-  ;;
-ip-unblock)
-  [[ -z "${ip_addr:-}" ]] && exit 1
-  sudo pfctl -e -f pf.rules &>/dev/null || true
-  sudo pfctl -t blocklist -T delete "$ip_addr"
-  exit 0
-  ;;
-show-block)
-  [[ -z "${ip_addr:-}" ]] && exit 1
-  sudo pfctl -t blocklist -T show
-  exit 0
-  ;;
+  block-on)
+    sudo pfctl -e -f pf.rules &> /dev/null || true
+    exit 0
+    ;;
+  block-off)
+    sudo pfctl -d &> /dev/null || true
+    exit 0
+    ;;
+  ip-block)
+    [[ -z "${ip_addr:-}" ]] && exit 1
+    sudo pfctl -e -f pf.rules &> /dev/null || true
+    sudo pfctl -t blocklist -T add "$ip_addr"
+    exit 0
+    ;;
+  ip-unblock)
+    [[ -z "${ip_addr:-}" ]] && exit 1
+    sudo pfctl -e -f pf.rules &> /dev/null || true
+    sudo pfctl -t blocklist -T delete "$ip_addr"
+    exit 0
+    ;;
+  show-block)
+    [[ -z "${ip_addr:-}" ]] && exit 1
+    sudo pfctl -t blocklist -T show
+    exit 0
+    ;;
 esac
 
 security_modes=(
@@ -170,60 +170,59 @@ if [[ -z "${security_mode:-}" ]]; then
   security_mode="$(printf "%s\n" "${security_modes[@]}" | fzf)"
 fi
 
-[[ -z "$security_mode" ]] &&\
-  ! output::yesno "Sure you want to set a default strict mode" &&\
-  output::error "User aborted" &&\
+[[ -z "$security_mode" ]] &&
+  ! output::yesno "Sure you want to set a default strict mode" &&
+  output::error "User aborted" &&
   exit 1
 
-
 case "${security_mode:-strict}" in
-home)
-  output::answer "Configure File vault"
-  security::file_vault_default &>/dev/null || true
+  home)
+    output::answer "Configure File vault"
+    security::file_vault_default &> /dev/null || true
 
-  output::answer "Configure Firewall"
-  security::firewall_default &>/dev/null || true
+    output::answer "Configure Firewall"
+    security::firewall_default &> /dev/null || true
 
-  output::answer "Disable Screen Saver to ask password"
-  security::screen_passwd_noask &>/dev/null || true
+    output::answer "Disable Screen Saver to ask password"
+    security::screen_passwd_noask &> /dev/null || true
 
-  output::answer "Enabling bonjour"
-  security::bonjour_enable &>/dev/null || true
-  ;;
-website*)
-  open "https://github.com/drduh/macOS-Security-and-Privacy-Guide"
-  ;;
-captive_on)
-  output::answer "Enable captive portal"
-  security::captive_enable &>/dev/null || true
-  ;;
-captive_off)
-  output::answer "Disable captive portal"
-  security::captive_disable &>/dev/null || true
-  ;;
-gatekeeper_on)
-  output::answer "Gatekeeper"
-  {
-    sudo sysctl --master-enable && output::solution "Gatekeeper Enabled"
-  } || output::answer "Gatekeeper could not be enabled"
-  ;;
-gatekeeper_off)
-  output::answer "Gatekeeper"
-  {
-    sudo sysctl --master-disable && output::error "Gatekeeper Disabled"
-  } || output::answer "Gatekeeper could not be disabled"
-  ;;
-*)
-  output::answer "Configure File vault"
-  security::file_vault_strict &>/dev/null || true
-  
-  output::answer "Configure Firewall"
-  security::firewall_strict &>/dev/null || true
-  
-  output::answer "Configure screen saver to ask password"
-  security::screen_passwd_ask &>/dev/null || true
+    output::answer "Enabling bonjour"
+    security::bonjour_enable &> /dev/null || true
+    ;;
+  website*)
+    open "https://github.com/drduh/macOS-Security-and-Privacy-Guide"
+    ;;
+  captive_on)
+    output::answer "Enable captive portal"
+    security::captive_enable &> /dev/null || true
+    ;;
+  captive_off)
+    output::answer "Disable captive portal"
+    security::captive_disable &> /dev/null || true
+    ;;
+  gatekeeper_on)
+    output::answer "Gatekeeper"
+    {
+      sudo sysctl --master-enable && output::solution "Gatekeeper Enabled"
+    } || output::answer "Gatekeeper could not be enabled"
+    ;;
+  gatekeeper_off)
+    output::answer "Gatekeeper"
+    {
+      sudo sysctl --master-disable && output::error "Gatekeeper Disabled"
+    } || output::answer "Gatekeeper could not be disabled"
+    ;;
+  *)
+    output::answer "Configure File vault"
+    security::file_vault_strict &> /dev/null || true
 
-  output::answer "Disable bonjour"
-  security::bonjour_disable &>/dev/null || true
-  ;;
+    output::answer "Configure Firewall"
+    security::firewall_strict &> /dev/null || true
+
+    output::answer "Configure screen saver to ask password"
+    security::screen_passwd_ask &> /dev/null || true
+
+    output::answer "Disable bonjour"
+    security::bonjour_disable &> /dev/null || true
+    ;;
 esac

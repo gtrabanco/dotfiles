@@ -10,7 +10,7 @@ DOTFILES_SSH_CONFIG_ENABLED="${DOTFILES_SSH_CONFIG_ENABLED:-"$DOTFILES_PATH/ssh/
 
 ssh::get_alias() {
   local configuration
-  configuration="${1:-$(</dev/stdin)}"
+  configuration="${1:-$(< /dev/stdin)}"
   [[ -f "$configuration" ]] && configuration="$(cat "$configuration")"
   echo "$configuration" | grep "^Host " | grep -v "*" | awk '{$1="";print $0;}' | tr "\n" " " | str::to_lower
 }
@@ -18,7 +18,6 @@ ssh::get_alias() {
 ssh::get_all_alias() {
   cat "$(dirname "$DOTFILES_SSH_CONFIGD")/config" "$DOTFILES_SSH_CONFIGD/"* | ssh::get_alias
 }
-
 
 ssh::get_enabled_alias() {
   cat "$(dirname "$DOTFILES_SSH_CONFIGD")/config" "$DOTFILES_SSH_CONFIG_ENABLED/"* | ssh::get_alias
@@ -50,8 +49,8 @@ ssh::check_configd_file_name() {
 }
 
 ssh::check_is_enabled_file_name() {
-  [[ -n "$1" ]] &&\
-    [[ -e "$DOTFILES_SSH_CONFIG_ENABLED/$(basename "$1")" ]] &&\
+  [[ -n "$1" ]] &&
+    [[ -e "$DOTFILES_SSH_CONFIG_ENABLED/$(basename "$1")" ]] &&
     echo "$DOTFILES_SSH_CONFIG_ENABLED/$(basename "$1")"
 }
 
@@ -71,7 +70,7 @@ ssh::get_configd_file_by_alias() {
       return 0
     fi
   done
-  
+
   return 1
 }
 
@@ -138,8 +137,7 @@ ssh::disable() {
 }
 
 ssh::fzf() {
-  fzf -m --extended\
-    --header "Select ssh configuration file to ${1:-}"\
+  fzf -m --extended --header "Select ssh configuration file to ${1:-}" \
     --preview "bash -c '. \"$DOTLY_PATH/scripts/ssh/lib/ssh.sh\"; ssh::preview {}'"
 }
 
@@ -151,7 +149,7 @@ ssh::preview() {
   echo "Press Tab+Shift to select multiple options."
   echo "Press Ctrl+C to exit with no selection."
   echo
-  
+
   [[ -z "$file" ]] && return
   if ssh::check_is_enabled_file_name "$file"; then
     file_name="$(basename "$file") (enabled)"

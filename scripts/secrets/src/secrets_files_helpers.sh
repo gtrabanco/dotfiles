@@ -4,23 +4,25 @@
 . "$DOTFILES_PATH/scripts/secrets/src/secrets_helpers.sh"
 . "$DOTFILES_PATH/scripts/secrets/src/secrets_json.sh"
 
-secrets::find () {
+secrets::find() {
   local find_relative_path exclude_itself arguments
 
   case "$1" in
     --exclude)
-      exclude_itself=true; shift
-    ;;
+      exclude_itself=true
+      shift
+      ;;
     *)
       exclude_itself=false
-    ;;
+      ;;
   esac
 
   find_relative_path="$DOTFILES_PATH/$DOTLY_SECRETS_MODULE_PATH/"
   arguments=()
 
   if [ -e "$DOTFILES_PATH/$DOTLY_SECRETS_MODULE_PATH/${1:-}" ]; then
-    find_relative_path="$find_relative_path${1:-}"; shift
+    find_relative_path="$find_relative_path${1:-}"
+    shift
   fi
 
   if $exclude_itself; then
@@ -36,10 +38,10 @@ secrets::find () {
 
 secrets::fzf() {
   local piped_values
-  piped_values="$(</dev/stdin)"
+  piped_values="$(< /dev/stdin)"
 
   printf "%s\n" ${piped_values[@]} | fzf -m --extended \
-    --header "$1"\
+    --header "$1" \
     --preview "source \"$DOTFILES_PATH/scripts/secrets/lib/secrets_fzf_preview.sh\";secrets::preview {}" # CHANGE FOR DOTLY_PATH
 }
 
@@ -62,26 +64,25 @@ secrets::relative_path() {
 
 secrets::purge_secrets_json() {
   local item
-  jq -r\
-    '.[] | select( .link != null) | .link | map_values(.) | keys[1:] | .[]'\
-    "$SECRETS_JSON" |\
+  jq -r '.[] | select( .link != null) | .link | map_values(.) | keys[1:] | .[]' \
+    "$SECRETS_JSON" |
     while read -r item; do
       secrets::remove_secrets_json_link_by_symlink "$item"
-  done
+    done
 }
 
 secrets::revert() {
   local start_dir item
-  
+
   start_dir="$(pwd)"
   cd "$DOTFILES_PATH" || return 1
 
   if [[ -f "$SECRETS_JSON" ]]; then
-    jq -r '.[] | select( .link != null) | .link | keys[1:] | .[]' "$SECRETS_JSON" |\
+    jq -r '.[] | select( .link != null) | .link | keys[1:] | .[]' "$SECRETS_JSON" |
       while read -r item; do
         output::answer "Remove symlink: $item"
         # We use eval to resolve kind of links like ~/my_symlink
-        eval rm -f "$item" 
+        eval rm -f "$item"
       done
   fi
 
@@ -115,7 +116,7 @@ secrets::remove_symlink_by_stored_file() {
 secrets::store_file() {
   local secret_files_path item_symlink_path secret_link
   item_symlink_path="$(secrets::relative_path "$1")"
-  
+
   if [[ -n "$2" ]]; then
     secret_files_path="$DOTFILES_PATH/$DOTLY_SECRETS_MODULE_PATH/files/$2"
     secret_link="$DOTLY_SECRETS_MODULE_PATH/files/$2/$(basename "$1")"
@@ -161,7 +162,7 @@ secrets::restore_by_alias() {
 
   output::answer "Copying the file to '$file_alias'"
   [[ -e "$DOTFILES_PATH/$stored_file" ]] && eval cp -i -R "$DOTFILES_PATH/$stored_file" "$file_alias"
-  
+
   output::answer "Removing the file from secret storage across commits... This could take some time."
   [[ -e "$DOTFILES_PATH/$stored_file" ]] && secrets::remove_file "$stored_file"
 

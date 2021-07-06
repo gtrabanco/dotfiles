@@ -10,11 +10,11 @@ set -eo pipefail
 ##?
 docs::parse "$@"
 
-[[ -n "${video_path:-}" ]] &&\
-  [[ -f "$video_path" ]] &&\
+[[ -n "${video_path:-}" ]] &&
+  [[ -f "$video_path" ]] &&
   ffmpeg \
     -i "${video_path:-}" \
     -r 15 \
     -vf scale=512:-1 \
     "$video_path.gif"
-#   -ss 00:00:00 -to 00:00:01 
+#   -ss 00:00:00 -to 00:00:01

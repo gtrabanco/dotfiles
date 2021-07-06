@@ -11,9 +11,9 @@ if [[ -z "${DOTLY_SECRETS_MODULE_PATH:-}" ]]; then
     output::answer "$DOTLY_PATH/bin/dot" package install sponge
     output::empty_line
     output::yesno "Do you want to execute now and continue" && {
-        "$DOTLY_PATH/bin/dot" package install jq
-        "$DOTLY_PATH/bin/dot" package install sponge
-      } || exit 1
+      "$DOTLY_PATH/bin/dot" package install jq
+      "$DOTLY_PATH/bin/dot" package install sponge
+    } || exit 1
     output::empty_line
   fi
 fi

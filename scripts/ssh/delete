@@ -4,7 +4,7 @@
 dot::get_script_src_path "ssh.sh"
 
 ##? Create ssh configurations, enable or disable them easily
-##? 
+##?
 ##?
 ##? Usage:
 ##?   delete [-h | --help]

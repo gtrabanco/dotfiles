@@ -4,7 +4,7 @@
 SCRIPT_PATH="$(cd -- "$(dirname "$0")" && pwd -P)"
 FULL_SCRIPT_PATH="$SCRIPT_PATH/$(basename "$0")"
 
-mapfile -c 1 -t < <( which -a open | grep -v "$FULL_SCRIPT_PATH" )
+mapfile -c 1 -t < <(which -a open | grep -v "$FULL_SCRIPT_PATH")
 OPEN_BIN=""
 if [[ "${#MAPFILE[@]}" -gt 0 ]]; then
   OPEN_BIN="${MAPFILE[0]}"
@@ -36,7 +36,7 @@ case "$os" in
     fi
     ;;
   *cygwin*)
-    if command -v realpath &>/dev/null; then
+    if command -v realpath &> /dev/null; then
       cygstart "$@"
     else
       echo -e "\033[0;31mNot possible to use \`open\` command in this system\033[0m"

@@ -2,12 +2,19 @@
 
 set -euo pipefail
 
-[[ -z "$DOTLY_PATH" ]] && exit 1
+[[ -z "${SLOTH_PATH:-$DOTLY_PATH}" ]] && exit 1
 
-. "$DOTLY_PATH/scripts/core/_main.sh"
+#shellcheck disable=SC1091
+. "${SLOTH_PATH:-$DOTLY_PATH}/scripts/core/src/_main.sh"
+
+if platform::is_macos && ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &> /dev/null; then
+  script::depends_on gpg-suite-no-mail
+else
+  script::depends_on gpg
+fi
 
 ##? Delete gnupg expired keys
-##? 
+##?
 ##?
 ##? Usage:
 ##?   delete_expired [-h | --help]
@@ -22,7 +29,7 @@ set -euo pipefail
 docs::parse "$@"
 
 SCRIPT_NAME="dot gpg delete_expired"
-SCRIPT_VERSION="1.0.0"
+SCRIPT_VERSION="1.1.0"
 
 # Print name and version
 if ${version:-}; then
@@ -33,8 +40,8 @@ fi
 # Determine which gpg binary
 GPG_BIN="$(which gpg)"
 [[ ! -f "$GPG_BIN" ]] && GPG_BIN="$(which gpg2)"
-[[ ! -f "$GPG_BIN" ]] &&\
-  output::error "GPG Was not detected" &&\
+[[ ! -f "$GPG_BIN" ]] &&
+  output::error "GPG Was not detected" &&
   exit 1
 
 # Expired keys
@@ -46,7 +53,7 @@ output::header "Delete expired public keys"
 for pkey in $("$GPG_BIN" --list-keys --keyid-format LONG | grep "expired" | grep "pub" | tr '/' ' ' | awk '{print $3}'); do
   [[ -z "$pkey" ]] && continue
   "$GPG_BIN" --list-keys --keyid-format LONG "$pkey"
-  output::yesno "Do you want to delete the key '$pkey'?" &&\
+  output::yesno "Do you want to delete the key '$pkey'?" &&
     { "$GPG_BIN" --delete-keys "$pkey" || true; }
 
   output::empty_line
@@ -54,13 +61,12 @@ done
 
 output::empty_line
 
-
 output::header "Delete expired private keys"
 
 for key in $("$GPG_BIN" --list-secret-keys --keyid-format LONG | grep "expired" | grep "sec" | tr '/' ' ' | awk '{print $3}'); do
   [[ -z "$key" ]] && continue
   "$GPG_BIN" --list-keys --keyid-format LONG "$key"
-  output::yesno "Do you want to delete it?" &&\
+  output::yesno "Do you want to delete it?" &&
     { "$GPG_BIN" --delete-secret-keys "$key" || true; }
 
   output::empty_line

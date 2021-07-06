@@ -11,13 +11,12 @@ domain::exists() {
 # npm i -g plist-to-json
 domain::xq() {
   local domain
-  domain="${1:-}"; shift
+  domain="${1:-}"
+  shift
 
-  
-  if which plist-to-json &>/dev/null &&\
-    [[ -n "$domain" ]] &&\
-    domain::exists "$domain"
-  then
+  if which plist-to-json &> /dev/null &&
+    [[ -n "$domain" ]] &&
+    domain::exists "$domain"; then
     defaults export "$domain" - | xq "${@:-.}"
   fi
 }
@@ -34,7 +33,7 @@ domain::get_key() {
   key="${2:-}"
   [[ -z "$domain" || -z "$key" ]] && return 1
 
-  defaults read "$domain" "$key" 2>/dev/null
+  defaults read "$domain" "$key" 2> /dev/null
 }
 
 domain::get_key_type() {
@@ -43,22 +42,22 @@ domain::get_key_type() {
   key="${2:-}"
   [[ -z "$domain" || -z "$key" ]] && return 1
 
-  domain::get_type "$(defaults read-type "$domain" "$key" 2>/dev/null)"
+  domain::get_type "$(defaults read-type "$domain" "$key" 2> /dev/null)"
 }
 
 domain::get_type() {
   local type
   case "${*:-null}" in
-    *boolean*)  type="boolean"  ;;
-    *integer*)  type="integer"  ;;
-    *string*)   type="string"   ;;
-    *array*)    type="array"    ;;
-    *float*)    type="float"    ;;
-    *data*)     type="data"     ;;
-    *date*)     type="date"     ;;
-    *dict*)     type="dict"     ;;
-    null)       type="null"     ;;
-    *)          type="unknown"  ;;
+    *boolean*) type="boolean" ;;
+    *integer*) type="integer" ;;
+    *string*) type="string" ;;
+    *array*) type="array" ;;
+    *float*) type="float" ;;
+    *data*) type="data" ;;
+    *date*) type="date" ;;
+    *dict*) type="dict" ;;
+    null) type="null" ;;
+    *) type="unknown" ;;
   esac
 
   echo "$type"

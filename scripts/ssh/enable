@@ -4,7 +4,7 @@
 dot::get_script_src_path "ssh.sh"
 
 ##? Create ssh configurations, enable or disable them easily
-##? 
+##?
 ##?
 ##? Usage:
 ##?   enable [-h | --help]
@@ -31,7 +31,6 @@ if ${version:-}; then
   output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
   exit
 fi
-
 
 [[ -z "$ssh_alias" ]] && ssh_alias="$(ssh::get_configd_fzf)"
 [[ -n "${ssh_alias[*]}" ]] && ssh::enable "${ssh_alias[@]}"

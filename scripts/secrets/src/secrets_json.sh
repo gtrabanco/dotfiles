@@ -10,10 +10,9 @@ secrets::get_stored_file_by_alias() {
 
 secrets::get_alias_by_stored_file() {
   local item
-  jq -r\
-    ".[] | select( .link != null) | .link | map_values(select(. == \"$1\")) | keys[]"\
+  jq -r ".[] | select( .link != null) | .link | map_values(select(. == \"$1\")) | keys[]" \
     "$SECRETS_JSON" | while read -r item; do
-      echo "$item"
+    echo "$item"
   done
 }
 
@@ -23,8 +22,7 @@ secrets::append_or_update_value_of_link() {
     return 1
   fi
 
-  jq\
-    ". | (.[].link | select(. != null)) |= . + {\"$1\": \"$2\"}"\
+  jq ". | (.[].link | select(. != null)) |= . + {\"$1\": \"$2\"}" \
     "$SECRETS_JSON" | sponge "$SECRETS_JSON"
 }
 
@@ -38,9 +36,8 @@ secrets::remove_secrets_json_link_by_stored_file() {
 
   [[ -z "$1" ]] && return 1
 
-  jq -r\
-    ".[] | select( .link != null) | .link | map_values(select(. == \"$value\")) | keys[]"\
+  jq -r ".[] | select( .link != null) | .link | map_values(select(. == \"$value\")) | keys[]" \
     "$SECRETS_JSON" | while read -r item; do
-      secrets::remove_secrets_json_link_by_symlink "$item"
+    secrets::remove_secrets_json_link_by_symlink "$item"
   done
 }

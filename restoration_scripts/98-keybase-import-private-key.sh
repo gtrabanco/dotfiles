@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-if [[ -z "${DOTLY_PATH:-}" ]] || ! output::empty_line >/dev/null 2>&1; then
+if [[ -z "${DOTLY_PATH:-}" ]] || ! output::empty_line > /dev/null 2>&1; then
   red='\033[0;31m'
   green='\033[0;32m'
   bold_blue='\033[1m\033[34m'
@@ -47,7 +47,7 @@ if [[ -z "${DOTLY_PATH:-}" ]] || ! output::empty_line >/dev/null 2>&1; then
         shift 2
         ;;
     esac
-    output::write --color "${color}" " > ${*:-}";
+    output::write --color "${color}" " > ${*:-}"
   }
   output::error() { output::answer --color "${red}" "${red}${*:-}${normal}"; }
   output::solution() { output::answer --color "${green}" "${green}${*:-}${normal}"; }
@@ -111,7 +111,7 @@ fi
 
 if [[ -z "$(command -v platform::command_exists)" ]]; then
   platform::command_exists() {
-    type "$1" &>/dev/null
+    type "$1" &> /dev/null
   }
 fi
 
@@ -121,13 +121,13 @@ if [[ -z "$(command -v platform::is_macos)" ]]; then
   }
 fi
 
-if ! command -v open &>/dev/null; then
+if ! command -v open &> /dev/null; then
   open() {
     # Open command if open exists in system
     SCRIPT_PATH="$(cd -- "$(dirname "$0")" && pwd -P)"
     FULL_SCRIPT_PATH="$SCRIPT_PATH/$(basename "$0")"
 
-    mapfile -c 1 -t < <( which -a open | grep -v "$FULL_SCRIPT_PATH" )
+    mapfile -c 1 -t < <(which -a open | grep -v "$FULL_SCRIPT_PATH")
     OPEN_BIN=""
     if [[ "${#MAPFILE[@]}" -gt 0 ]]; then
       OPEN_BIN="${MAPFILE[0]}"
@@ -159,7 +159,7 @@ if ! command -v open &>/dev/null; then
         fi
         ;;
       *cygwin*)
-        if command -v realpath &>/dev/null; then
+        if command -v realpath &> /dev/null; then
           cygstart "$@"
         else
           echo -e "\033[0;31mNot possible to use \`open\` command in this system\033[0m"
@@ -174,7 +174,7 @@ if ! command -v open &>/dev/null; then
   }
 fi
 
-if ! command -v pbcopy &>/dev/null; then
+if ! command -v pbcopy &> /dev/null; then
   pbcopy() {
     os=$(uname)
     if [[ "$os" == "Linux" ]]; then
@@ -188,14 +188,14 @@ if ! command -v pbcopy &>/dev/null; then
 fi
 
 call_sed() {
-  if command -v gsed &>/dev/null; then
+  if command -v gsed &> /dev/null; then
     "$(which gsed)" "$@"
   elif [[ -f "/usr/local/opt/gnu-sed/libexec/gnubin/sed" ]]; then
     /usr/local/opt/gnu-sed/libexec/gnubin/sed "$@"
   elif platform::is_macos; then
     # Any other BSD should be added to this check
     "$(which sed)" '' "$@"
-  elif command -v sed &>/dev/null; then
+  elif command -v sed &> /dev/null; then
     "$(which sed)" "$@"
   else
     return 1
@@ -215,12 +215,12 @@ output::list() {
   i=1
   for item in "$@"; do
     output::write "    $i) $item"
-    i=$(( i + 1 ))
+    i=$((i + 1))
   done
 }
 
 sec::fzf() {
-  printf "%s\n" "${@}" | fzf --header "Select a private key"\
+  printf "%s\n" "${@}" | fzf --header "Select a private key" \
     --preview 'echo "Key information\n--\n"; gpg --list-secret-keys --keyid-format LONG {}'
 }
 
@@ -230,27 +230,26 @@ output::header " 🔒 Keybase GPG Key Setup 🔑"
 output::empty_line
 
 # Previous step: Check if we have needed tools
-if platform::command_exists keybase &>/dev/null &&\
-    platform::command_exists gpg &>/dev/null &&\
-    platform::command_exists git &>/dev/null
-then
+if platform::command_exists keybase &> /dev/null &&
+  platform::command_exists gpg &> /dev/null &&
+  platform::command_exists git &> /dev/null; then
   # Ask user if want to execute the script
   if output::yesno "Do you want to configure a Keybase GPG key with GIT"; then
     # Step 0: Delete no-tty from .gnupg/gpg.conf to avoid errors
     if grep -q '^no-tty$' "$HOME/.gnupg/gpg.conf"; then
       call_sed -i '/^no-tty$/d' "$HOME/.gnupg/gpg.conf"
     fi
-    
+
     # Step 1: Check if there are any gpg key
     pgp_list="$(keybase pgp list)"
     if [[ -z "$pgp_list" ]]; then
       output::error "🔐 No private keys found."
       output::empty_line
       {
-        output::yesno "Do you want to generate a new key 🔑 " &&\
-          keybase gpg gen &&\
-          output::answer "🔑 New key generated" &&\
-          pgp_list="$(keybase pgp list)" ||\
+        output::yesno "Do you want to generate a new key 🔑 " &&
+          keybase gpg gen &&
+          output::answer "🔑 New key generated" &&
+          pgp_list="$(keybase pgp list)" ||
           output::error "🚨 Key could not be generated"
       } || true
     fi
@@ -258,7 +257,7 @@ then
     # If we have keys we can continue
     if [[ -n "$pgp_list" ]]; then
       # Step 2: Exporting the key
-      keybase pgp export | gpg --import >/dev/null 2>&1
+      keybase pgp export | gpg --import > /dev/null 2>&1
 
       output::empty_line
       output::write "Now Keybase will show you a window asking for Keybase Password"
@@ -280,16 +279,15 @@ then
       fi
 
       {
-        [[ -z "$sec" ]] &&\
-        output::error "No key selected or found" &&\
-        output::yesno "Do you want to write it manually" &&\
-        sec="$(output::question "Write your key rsa")"
+        [[ -z "$sec" ]] &&
+          output::error "No key selected or found" &&
+          output::yesno "Do you want to write it manually" &&
+          sec="$(output::question "Write your key rsa")"
       } || true
 
       # If selected or provided sec exists continue
-      if gpg --list-secret-keys --keyid-format LONG "$sec" >/dev/null 2>&1 &&\
-        [[ -n "${sec:-}" ]]
-      then
+      if gpg --list-secret-keys --keyid-format LONG "$sec" > /dev/null 2>&1 &&
+        [[ -n "${sec:-}" ]]; then
         # 1. Ask current Keybase Password
         # 2. Ask a new password for pgp key. This will be the password
         #    that you should use to de/encrypt using the imported pgp
@@ -341,23 +339,23 @@ then
             output::yesno "💡 Do you want to receive instructions and add it 💡"
             output::empty_line
             output::write "䷐ You should follow the steps and write:"
-            output::list '`adduid`' 'write your full name' "write the email address: \`$author_email\`"\
-                        "comment is optional, not relevant, its just for you" '`O` (letter)' '`quit`' '`y`'
+            output::list '`adduid`' 'write your full name' "write the email address: \`$author_email\`" \
+              "comment is optional, not relevant, its just for you" '`O` (letter)' '`quit`' '`y`'
             output::empty_line
-            
+
             returned_code_gpg=0
             gpg --edit-key "$sec" || returned_code_gpg=1
-            
+
             # After edited the key, update in the keybase to include the new mail address to
             # avoid this configuration process in the future
             if [[ $returned_code_gpg -eq 0 ]]; then
               output::solution "✅ Key edited and saved"
               {
-                output::yesno "Do you want to update your keybase key with the new address" &&\
-                {
-                  keybase pgp update &&\
-                  output::solution "👍 Keybase key updated"
-                } || output::error "👎 Keybase key could not be updated"
+                output::yesno "Do you want to update your keybase key with the new address" &&
+                  {
+                    keybase pgp update &&
+                      output::solution "👍 Keybase key updated"
+                  } || output::error "👎 Keybase key could not be updated"
               } || true
             else
               output::error "👎 Not saved"
@@ -388,18 +386,16 @@ then
         # Step 6 add it in your github setting
         output::answer "⚙️ Now add your public key in you github settings"
 
-        if platform::command_exists pbcopy &&\
-           output::yesno "Do you want to copy the key to the clipboard"
-        then
+        if platform::command_exists pbcopy &&
+          output::yesno "Do you want to copy the key to the clipboard"; then
           gpg --armor --export "$sec" | "$DOTLY_PATH/bin/pbcopy" && output::solution "Public key is in your clipboard"
         else
           gpg --armor --export "$sec"
           output::empty_line
         fi
 
-        if platform::command_exists open &&\
-           output::yesno "Do you want to open github settings to add your private GPG key"
-        then
+        if platform::command_exists open &&
+          output::yesno "Do you want to open github settings to add your private GPG key"; then
           open "https://github.com/settings/gpg/new"
         else
           output::write "🌍 Open in browser and paste your key:"
