@@ -1,7 +1,3 @@
-alias d='dot'
-alias lazy='dot'
-alias l='dot'
-alias sloth='dot'
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
@@ -30,21 +26,22 @@ alias github='source $DOTLY_PATH/scripts/dotly/tools/github.sh'
 alias codes="cd ${HOME}/MyCodes"
 alias cdc="codes"
 alias projects="cd ${HOME}/MyCodes"
+alias cat="bat"
 
 # Git
 alias g="git"
 alias gaa="git add -A"
-alias gc="$DOTLY_PATH/bin/dot git commit"
+alias gc="${DOTLY_PATH}/bin/dot git commit"
 alias gca="git add --all && git commit --amend --no-edit"
 alias gco="git checkout"
-alias gd="$DOTLY_PATH/bin/dot git pretty-diff"
+alias gd="${DOTLY_PATH}/bin/dot git pretty-diff"
 alias gs="git status -sb"
 alias gf="git fetch --all -p"
 alias gps="git push"
 alias gpsf="git push --force"
 alias gpl="git pull --rebase --autostash"
 alias gb="git branch"
-alias gl="$DOTLY_PATH/bin/dot git pretty-log"
+alias gl="${DOTLY_PATH}/bin/dot git pretty-log"
 alias gti="git"
 
 # Utils
