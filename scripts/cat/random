@@ -9,7 +9,7 @@ set -euo pipefail
 
 script::depends_on catimg jq curl
 
-##? 
+##?
 ##?
 ##?
 ##? Usage:
@@ -38,9 +38,7 @@ RANDOM_CAT_URL="$(curl --silent "http://aws.random.cat/meow" | jq -r '.file')"
 FILE_OUTPUT="$(mktemp)"
 curl --silent "$RANDOM_CAT_URL" --output "$FILE_OUTPUT"
 
-
 [[ -f "$FILE_OUTPUT" ]] && catimg -w 200 -l 0 "$FILE_OUTPUT"
 output::write "\`$RANDOM_CAT_URL\`"
 output::answer "Using: http://aws.random.cat/meow"
 rm -rf "$FILE_OUTPUT"
-
