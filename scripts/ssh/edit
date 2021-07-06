@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 . "$DOTLY_PATH/scripts/core/_main.sh"
-dot::get_script_src_path "ssh.sh"
+dot::load_library "ssh.sh"
 
 ssh_fzf() {
   find "$DOTFILES_SSH_CONFIGD" -name "*" -type f | xargs -I _ basename _ | fzf --extended --header "View your ssh view files" \

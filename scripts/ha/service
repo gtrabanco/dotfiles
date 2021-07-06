@@ -5,7 +5,7 @@ set -euo pipefail
 [[ -z "$DOTLY_PATH" ]] && exit 1
 
 . "$DOTLY_PATH/scripts/core/_main.sh"
-dot::get_script_src_path "ha.sh"
+dot::load_library "ha.sh"
 
 ##? Execute Hassio Service from console
 ##?

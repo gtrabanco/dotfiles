@@ -44,37 +44,37 @@ fi
 # Here begin your script
 
 case ${1:-} in
-# Any subcommand should be here
-"fetch")
-  if [ -z "${url:-}" ]; then
-    exit 1
-  fi
+  # Any subcommand should be here
+  "fetch")
+    if [ -z "${url:-}" ]; then
+      exit 1
+    fi
 
-  if [ -n "${no_cache:-}" ]; then
-    github::curl --no-cache "$url"
-  else
-    github::curl "$url"
-  fi
-  ;;
-"path")
-  _args=(-u "${user:-gtrabanco}" -r "${repository:-dotfiles}")
-  
-  if [ -n "${branch:-}" ]; then
-    _args+=(-b "$branch")
-  fi
-  
-  github::get_api_url "${_args[@]}" "${api_path:-}"
-  ;;
-"call")
-  _args=(-u "${user:-gtrabanco}" -r "${repository:-dotfiles}")
-  
-  if [ -n "${branch:-}" ]; then
-    _args+=(-b "$branch")
-  fi
+    if [ -n "${no_cache:-}" ]; then
+      github::curl --no-cache "$url"
+    else
+      github::curl "$url"
+    fi
+    ;;
+  "path")
+    _args=(-u "${user:-gtrabanco}" -r "${repository:-dotfiles}")
+    
+    if [ -n "${branch:-}" ]; then
+      _args+=(-b "$branch")
+    fi
+    
+    github::get_api_url "${_args[@]}" "${api_path:-}"
+    ;;
+  "call")
+    _args=(-u "${user:-gtrabanco}" -r "${repository:-dotfiles}")
+    
+    if [ -n "${branch:-}" ]; then
+      _args+=(-b "$branch")
+    fi
 
-  "$DOTLY_PATH/bin/dot" github api call "$(github::get_api_url "${_args[@]}" "${api_path:-}")"
-  ;;
-*)
-  echo "$0" --help
-  ;;
+    "$DOTLY_PATH/bin/dot" github api call "$(github::get_api_url "${_args[@]}" "${api_path:-}")"
+    ;;
+  *)
+    echo "$0" --help
+    ;;
 esac

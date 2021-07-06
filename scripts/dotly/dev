@@ -10,17 +10,17 @@ source "$DOTLY_PATH/scripts/core/_main.sh"
 docs::parse "$@"
 
 case $1 in
-"path")
-  echo "export DOTLY_PATH='${new_dotly_path:-$(pwd)}'"
-  ;;
-"dotfiles")
-  echo "export DOTFILES_PATH='${new_dotfiles_path:-$(pwd)}'"
-  ;;
-"both")
-  echo "export DOTLY_PATH='${new_dotly_path:-$(pwd)}'"
-  echo "export DOTFILES_PATH='${new_dotfiles_path:-$(pwd)}'"
-  ;;
-*)
-  exit 1
-  ;;
+  "path")
+    echo "export DOTLY_PATH='${new_dotly_path:-$(pwd)}'"
+    ;;
+  "dotfiles")
+    echo "export DOTFILES_PATH='${new_dotfiles_path:-$(pwd)}'"
+    ;;
+  "both")
+    echo "export DOTLY_PATH='${new_dotly_path:-$(pwd)}'"
+    echo "export DOTFILES_PATH='${new_dotfiles_path:-$(pwd)}'"
+    ;;
+  *)
+    exit 1
+    ;;
 esac

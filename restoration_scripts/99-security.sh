@@ -30,5 +30,6 @@ if is_macos; then
   "$DOTLY_PATH/bin/dot" mac security_mode captive_off
   
   # Disable ocsp checking in macos
-  ! grep -q 'ocsp.apple.com' /etc/hosts && echo "0.0.0.0\tocsp.apple.com" | sudo tee -a /etc/hosts && sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder
+  ! grep -q 'ocsp.apple.com' /etc/hosts && echo "0.0.0.0\tocsp.apple.com" | sudo tee -a /etc/hosts && sudo dscacheutil -flushcache
+  sudo killall -HUP mDNSResponder
 fi

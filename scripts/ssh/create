@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 . "$DOTLY_PATH/scripts/core/_main.sh"
-dot::get_script_src_path "ssh.sh"
+dot::load_library "ssh.sh"
 
 ##? Create ssh configurations, enable or disable them easily
 ##?
@@ -75,9 +75,9 @@ output::question_default "Set the user (write 'null' for no user)" "$USER" "ssh_
 output::question_default "Set the port (write 'null' for no port)" "22" "ssh_port"
 [[ "$ssh_port" == "null" ]] && ssh_port=""
 
-ssh::new_ssh_config_from_tpl "$ssh_alias" "$ssh_hostname" "$ssh_user" "$ssh_port" &&\
+ssh::new_ssh_config_from_tpl "$ssh_alias" "$ssh_hostname" "$ssh_user" "$ssh_port" &&
   output::solution "'$ssh_hostname' file created."
 
-output::yesno "Do you want to enable it" &&\
-  ssh::enable_by_configd_file "$ssh_hostname" &&\
+output::yesno "Do you want to enable it" &&
+  ssh::enable_by_configd_file "$ssh_hostname" &&
   output::solution "'$ssh_hostname' enabled"

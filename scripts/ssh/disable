@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 . "$DOTLY_PATH/scripts/core/_main.sh"
-dot::get_script_src_path "ssh.sh"
+dot::load_library "ssh.sh"
 
 ##? Create ssh configurations, enable or disable them easily
 ##?

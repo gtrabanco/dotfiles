@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 . "$DOTLY_PATH/scripts/core/_main.sh"
-dot::get_script_src_path "dotbot_yaml_edit.sh" "symlinks"
-dot::get_script_src_path "symlinks.sh" "symlinks"
+dot::load_library "dotbot_yaml_edit.sh" "symlinks"
+dot::load_library "symlinks.sh" "symlinks"
 bk_suffix="$(date +%s)"
 
 if [[ -d "$DOTFILES_PATH/ssh" ]]; then
