@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#shellcheck disable=SC2016
 
 set -euo pipefail
 
@@ -302,10 +303,14 @@ if platform::command_exists keybase &> /dev/null &&
         # Step 3: Set our private key as trusted
         output::empty_line
         output::write "ℹ︎ Now we will get the SEC rsa and set our private gpg key as trusted"
-        output::write "䷐ You must type:"
-        output::list '`trust`' '`5`' '`y`' '`quit`'
-        output::empty_line
-        gpg --edit-key "$sec"
+        if platform::command_exists expect; then
+          expect -c "spawn gpg --edit-key $sec trust quit; send \"5\ry\r\"; expect eof"
+        else
+          output::write "䷐ You must type:"
+          output::list '`trust`' '`5`' '`y`' '`quit`'
+          output::empty_line
+          gpg --edit-key "$sec"
+        fi
 
         # Step 3: Check if git email address is configured
         output::empty_line
