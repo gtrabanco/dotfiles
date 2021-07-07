@@ -377,13 +377,15 @@ if platform::command_exists keybase &> /dev/null &&
         fi
 
         # Step 4 Git config
-        output::answer "⚙️ Configuring git"
-        git config --global user.signingkey "$sec"
-        git config --global commit.gpgsign true
-        git config --global tag.gpgsign true
-        git config --global gpg.program "$(which gpg)"
-        output::solution "Git configured"
-        output::empty_line
+        if platform::command_exists git; then
+          output::answer "⚙️ Configuring git"
+          git config --global user.signingkey "$sec"
+          git config --global commit.gpgsign true
+          git config --global tag.gpgsign true
+          git config --global gpg.program "$(which gpg)"
+          output::solution "Git configured"
+          output::empty_line
+        fi
 
         # # Step 5 (Conditional step) Configure GPNUPG
         # if [[ -d "$HOME/.gnupg" ]] &&\
