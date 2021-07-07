@@ -461,16 +461,16 @@ if platform::command_exists keybase &> /dev/null &&
             fi
 
             if ! grep -q "^max-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
-              echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
+              echo "max-cache-ttl 7200" >> "$HOME/.gnupg/gpg-agent.conf"
             fi
 
             call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
 
           # Pinentry Mac
           elif brew::is_installed "pinentry-mac"; then
-            call_sed -i '/^default-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
-            call_sed -i '/^max-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
-            call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
+            call_sed -i '/^default-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
+            call_sed -i '/^max-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
+            call_sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
             echo "pinentry-program $(which pinentry-mac)"
           fi
         fi
