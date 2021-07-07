@@ -5,7 +5,8 @@ set -euo pipefail
 [[ -z "${DOTLY_PATH:-$SLOTH_PATH}" ]] && exit 1
 
 #shellcheck disable=SC1091
-. "${DOTLY_PATH:-$SLOTH_PATH}/scripts/core/src/_main.sh"
+. "${DOTLY_PATH:-$SLOTH_PATH}/scripts/core/_main.sh"
+dot::load_library "sec.sh"
 
 ##?
 ##?
@@ -13,6 +14,9 @@ set -euo pipefail
 ##? Usage:
 ##?   import [-h | --help]
 ##?   import [-v | --version]
+##?   import keybase
+##?   import gpg <private_key_file_path> <public_key_file_path>
+##?   import [<private_key_file_path>] [<public_key_file_path>]
 ##?
 ##? Options:
 ##?   -h --help     Show this help
@@ -34,9 +38,308 @@ fi
 
 # Here begin your script
 
-case ${1-} in
-  # Any subcommand should be here
+if
+  [[ "${1:-}" == "gpg" && ! -f "${private_key_file_path:-}" && ! -f "${public_key_file_path:-}" ]] ||
+    [[ -n "${private_key_file_path:-}" && ! -f "${private_key_file_path:-}" ]] ||
+    [[ -n "${public_key_file_path:-}" && ! -f "${public_key_file_path:-}" ]]
+then
+  output::error "Private or public key were not found"
+  exit 1
+fi
+
+if
+  [[ "${1:-}" == "keybase" ]] ||
+    [[ "${1:-}" != "gpg" && -z "${private_key_file_path:-}" && -z "${public_key_file_path:-}" ]]
+then
+  import_from="keybase"
+elif
+  [[ 
+    -n "${private_key_file_path:-}" && -f "${private_key_file_path:-}" &&
+    -n "${public_key_file_path:-}" && -f "${public_key_file_path:-}" ]]
+then
+
+  import_from="gpg"
+else
+  output::error "Wrong option see \`$SCRIPT_NAME --help\`"
+fi
+
+case ${import_from:-} in
+  "keybase")
+    script::depends_on gnupg keybase
+
+    # Step 1: Delete no-tty if it is
+    sec::sed -i '/^no-tty$/d' "$HOME/.gnupg/gpg.conf"
+
+    # Step 2: Check if there are gpg keys to export in Keybase
+    pgp_list="$(keybase pgp list)"
+    if [[ -z "$pgp_list" ]]; then
+      output::error "🔐 No private keys found."
+      output::empty_line
+      {
+        output::yesno "Do you want to generate a new key 🔑 " &&
+          keybase gpg gen &&
+          output::answer "🔑 New key generated" &&
+          pgp_list="$(keybase pgp list)" ||
+          output::error "🚨 Key could not be generated"
+      } || true
+    fi
+
+    # Strep 3: Exporting and importing the key
+    if [[ -n "$pgp_list" ]]; then
+      # Step 2: Exporting the key
+      keybase pgp export | sec::gpg --import > /dev/null 2>&1
+
+      output::empty_line
+      output::write "Now Keybase will show you a window asking for Keybase Password"
+      output::empty_line
+      output::write "After you correctly put your Keybase Password, you must set a"
+      output::write "password for sign with your imported private key."
+      output::empty_line
+
+      keybase pgp export --secret | sec::gpg --allow-secret-key --import > /dev/null 2>&1
+    else
+      output::error "No key found"
+      exit 1
+    fi
+
+    ;;
+  "gpg")
+    script::depends_on gnupg
+
+    # Step 1: Delete no-tty if it is
+    sec::sed -i '/^no-tty$/d' "$HOME/.gnupg/gpg.conf"
+
+    # Step 2 & 3: Get the keys and import
+    output::empty_line
+    output::answer "🔓 Importing the public key"
+    gpg --import "$public_key_file_path" || {
+      output::error "Error importing the public key"
+      exit 1
+    }
+    
+    output::empty_line
+    output::answer "🔒 Importing the private key (this step will ask you for the private key password)"
+    gpg --import "$private_key_file_path" || {
+      output::error "Error importing the private key"
+    }
+    ;;
   *)
-    exit 1
+    exit
     ;;
 esac
+
+# Step 4: List current private keys if there is only one
+output::empty_line
+mapfile -t all_private_keys < <(sec::list_private_keys)
+
+if [[ ${#all_private_keys[@]} -gt 1 ]]; then
+  sec="$(sec::fzf_keys "${all_private_keys[@]}")"
+elif [[ ${#all_private_keys[@]} -eq 1 ]]; then
+  sec="${all_private_keys[0]}"
+else
+  output::error "The private key could not be choosen"
+  exit 1
+fi
+
+# Step 5: Mark the private key as trusted
+output::empty_line
+output::write "ℹ︎ Now we will get the SEC rsa and set our private gpg key as trusted"
+if
+  platform::command_exists expect &&
+  sec::check_private_key_exists "$sec"
+then
+  sec::trust_key "$sec"
+elif sec::check_private_key_exists "$sec"; then
+  sec::trust_key_wizard "$sec"
+else
+  output::error "Invalic key rsa \`$sec\`"
+  exit 1
+fi
+
+if sec::verify_trust_ultimate "$sec"; then
+  output::answer "Configured"
+else
+  output::error "The rsa \`$sec\` has not the required trust level"
+fi
+
+# Step 6: Configure any email address of the private key
+# TODO Step 6
+output::empty_line
+author_email="$(git config --global --get user.email || echo "")"
+if [[ -z "$author_email" ]]; then
+  output::error "👎 No email address configured in your git configuration"
+  output::empty_line
+
+  # Setup a mail address
+  {
+    # Mail address from the private key
+    output::yesno "Do you want to setup one of the emails of your Private Key"
+    author_email="$(gpg --list-secret-keys --keyid-format LONG | parse_emails | fzf --header "Press Ctrl+C to setup a custom email")"
+    output::empty_line
+    [[ -n "$author_email" ]]
+  } || {
+    # Custom mail address (not used with private key)
+    output::write "🧠 REMEMBER 🧙‍♂️"
+    output::write "If you have configured the privacy of your email address"
+    output::write "in GitHub. Maybe, you want to add yours @users.noreply.github.com"
+    output::write "You can view your GitHub private no reply mail address here:"
+    output::answer "https://github.com/settings/emails"
+    output::empty_line
+    author_email="$(output::question "Write your desired email address")"
+    output::empty_line
+    [[ -z "$author_email" ]] && output::error "⛔️ Email is necessary to use private keys" && exit 1
+  }
+fi
+
+# If the mail address is not in the private key list for use to sign and encrypt
+# give the user instructions to add it. Only if the user want to add it.
+# Not added could result in a sign error in github commits.
+if ! gpg --list-secret-keys --keyid-format LONG | parse_emails | grep -q "$author_email"; then
+  output::error "⚠️ Your git config email address is not in your private key"
+  output::empty_line
+  {
+    output::yesno "💡 Do you want to receive instructions and add it 💡"
+    output::empty_line
+    output::write "䷐ You should follow the steps and write:"
+    output::list '`adduid`' 'write your full name' "write the email address: \`$author_email\`" \
+      "comment is optional, not relevant, its just for you" '`O` (letter)' '`quit`' '`y`'
+    output::empty_line
+
+    returned_code_gpg=0
+    gpg --edit-key "$sec" || returned_code_gpg=1
+
+    # After edited the key, update in the keybase to include the new mail address to
+    # avoid this configuration process in the future
+    if [[ $returned_code_gpg -eq 0 ]]; then
+      output::solution "✅ Key edited and saved"
+      {
+        output::yesno "Do you want to update your keybase key with the new address" &&
+          {
+            keybase pgp update &&
+              output::solution "👍 Keybase key updated"
+          } || output::error "👎 Keybase key could not be updated"
+      } || true
+    else
+      output::error "👎 Not saved"
+    fi
+  } || {
+    output::error "🕵️‍♂️ You will see a fail in commits if you do not add it."
+  }
+fi
+
+# END OF Step 6
+
+# Step 7: Git configuration
+# TODO Step 7
+if platform::command_exists git; then
+  output::answer "⚙️ Configuring git"
+  git config --global user.signingkey "$sec"
+  git config --global commit.gpgsign true
+  git config --global tag.gpgsign true
+  git config --global gpg.program "$(which gpg)"
+  output::solution "Git configured"
+  output::empty_line
+fi
+
+# Step 8: add it in your github setting
+# TODO Step 8
+output::answer "⚙️ Now add your public key in you github settings"
+
+if platform::command_exists pbcopy &&
+  output::yesno "Do you want to copy the key to the clipboard"; then
+  gpg --armor --export "$sec" | "$DOTLY_PATH/bin/pbcopy" && output::solution "Public key is in your clipboard"
+else
+  gpg --armor --export "$sec"
+  output::empty_line
+fi
+
+if platform::command_exists open &&
+  output::yesno "Do you want to open github settings to add your private GPG key"; then
+  open "https://github.com/settings/gpg/new"
+else
+  output::write "🌍 Open in browser and paste your key:"
+  output::answer "https://github.com/settings/gpg/new"
+  output::empty_line
+  output::write "🔎 In case of errors signing commits:"
+  output::answer "https://github.com/gtrabanco/keybase-gpg-github#troubleshooting-gpg-failed-to-sign-the-data"
+  output::empty_line
+fi
+
+# Step 9: No ask password in every commit
+# TODO Step 9
+output::answer "⚙️ Now add your public key in you github settings"
+
+if platform::command_exists pbcopy &&
+  output::yesno "Do you want to copy the key to the clipboard"; then
+  gpg --armor --export "$sec" | "$DOTLY_PATH/bin/pbcopy" && output::solution "Public key is in your clipboard"
+else
+  gpg --armor --export "$sec"
+  output::empty_line
+fi
+
+if platform::command_exists open &&
+  output::yesno "Do you want to open github settings to add your private GPG key"; then
+  open "https://github.com/settings/gpg/new"
+else
+  output::write "🌍 Open in browser and paste your key:"
+  output::answer "https://github.com/settings/gpg/new"
+  output::empty_line
+  output::write "🔎 In case of errors signing commits:"
+  output::answer "https://github.com/gtrabanco/keybase-gpg-github#troubleshooting-gpg-failed-to-sign-the-data"
+  output::empty_line
+fi
+
+# Step 7 (Optional): only macos with brew
+if
+  platform::is_macos &&
+    platform::command_exists brew &&
+    output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
+then
+  output::header "🍎 Optional Configuration for macOS only"
+  if
+    ! brew::is_installed "gpg-suite-no-mail" &&
+      ! brew::is_installed "gpg-suite" &&
+      ! brew::is_installed "pinentry-mac"
+  then
+    PS3="Choose an option: "
+    options=("gpg-suite-no-mail" "gpg-suite" "pinentry" "Quit")
+    select opt in "${options[@]}"; do
+      case "$opt" in
+        Quit)
+          output::answer "User exit"
+          exit
+          ;;
+        *)
+          brew install "$opt"
+          ;;
+      esac
+    done
+  fi
+
+  # GPG Suite
+  if
+    brew::is_installed "gpg-suite-no-mail" ||
+      brew::is_installed "gpg-suite"
+  then
+    output::write "Now the GPG Preferences will be opened and mark the options:"
+    output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
+    open -b com.apple.systempreferences "/Library/PreferencePanes/GPGPreferences.prefPane"
+
+    if ! grep -q "^default-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
+      echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
+    fi
+
+    if ! grep -q "^max-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
+      echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
+    fi
+
+    call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
+
+  # Pinentry Mac
+  elif brew::is_installed "pinentry-mac"; then
+    call_sed -i '/^default-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
+    call_sed -i '/^max-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
+    call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
+    echo "pinentry-program $(which pinentry-mac)"
+  fi
+fi
