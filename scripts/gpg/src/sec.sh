@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+if ! command -v "output::list" &> /dev/null; then
+  output::list() {
+    local item i
+    i=1
+    for item in "$@"; do
+      output::write "    $i) $item"
+      i=$((i + 1))
+    done
+  }
+fi
+
 sec::gpg() {
   if [[ -n "${GPG_BIN:-}" && -x "$GPG_BIN" ]]; then
     "$GPG_BIN" "$@"
@@ -96,6 +107,17 @@ sec::trust_key() {
   [[ -n "${1:-}" ]] && sec::check_private_key_exists "$1" && expect -c "spawn gpg --edit-key ${1} trust quit; send \"5\ry\r\"; expect eof"
 }
 
+sec::trust_key_wizard() {
+  output::write "䷐ You must type:"
+  output::list '`trust`' '`5`' '`y`' '`quit`'
+  output::empty_line
+  [[ -n "${1:-}" ]] && gpg --edit-key "$1"
+}
+
+sec::verify_trust_ultimate() {
+  [[ -n "${1:-}" ]] && gpg --list-keys --list-options show-uid-validity "$1" | grep '^uid' | awk '{print $2}' | head -n1 | grep -q '^\[ultimate\]$'
+}
+
 sec::fzf_keys() {
   local keys
   if [[ -t 0 ]]; then
@@ -105,5 +127,5 @@ sec::fzf_keys() {
   fi
 
   #shellcheck disable=SC2016
-  printf "%s\n" "${keys[@]}" | fzf --header "Choose a key to export" --preview '. "${SLOTH_PATH:-$DOTLY_PATH}/scripts/core/src/_main.sh"; dot::load_library "sec.sh" "gpg"; sec::gpg  --list-secret-keys --keyid-format LONG {} | sec::parse_emails'
+  printf "%s\n" "${keys[@]}" | fzf --header "Choose a key" --preview '. "${SLOTH_PATH:-$DOTLY_PATH}/scripts/core/src/_main.sh"; dot::load_library "sec.sh" "gpg"; sec::gpg  --list-secret-keys --keyid-format LONG {} | sec::parse_emails'
 }
