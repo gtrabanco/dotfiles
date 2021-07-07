@@ -50,11 +50,11 @@ fi
 
 if
   [[ -n "$email_address" ]] &&
-  ! sec::check_private_key_exists "$email_address"
+    ! sec::check_private_key_exists "$email_address"
 then
   output::error "No public key for given email address \`$email_address\`"
 elif [[ -n "$email_address" ]]; then
-  sec_export="$(sec::gpg --list-secret-keys --keyid-format LONG "$email_address" 2>/dev/null | grep "^sec" | tr "/" " " | awk '{print $3}')"
+  sec_export="$(sec::gpg --list-secret-keys --keyid-format LONG "$email_address" 2> /dev/null | grep "^sec" | tr "/" " " | awk '{print $3}')"
 else
   sec_export="$(sec::gpg --list-secret-keys --keyid-format LONG | grep "^sec" | tr "/" " " | awk '{print $3}' | sec::fzf_keys)"
 fi
@@ -66,7 +66,7 @@ private_key_file="${file_path}/${file_name}.key"
 # Export public
 if
   [[ -f "$public_key_file" ]] &&
-  ! output::yesno "The file to export the 🔓 PUBLIC key exists, do you want to overwrite it"
+    ! output::yesno "The file to export the 🔓 PUBLIC key exists, do you want to overwrite it"
 then
   output::error "❌ Provide a different name or accept to overwrite it"
   exit 1
@@ -76,11 +76,10 @@ output::answer "Exporting public key"
 rm -f "$public_key_file"
 sec::gpg --output "$public_key_file" --armor --export "$sec_export"
 
-
 # Export private
 if
   [[ -f "$private_key_file" ]] &&
-  ! output::yesno "The file to export the 🔒 PRIVATE key exists, do you want to overwrite it"
+    ! output::yesno "The file to export the 🔒 PRIVATE key exists, do you want to overwrite it"
 then
   output::error "❌ Provide a different name or accept to overwrite it"
   exit 1

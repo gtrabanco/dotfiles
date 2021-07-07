@@ -85,11 +85,15 @@ sec::list_public_keys() {
 }
 
 sec::check_private_key_exists() {
-  [[ -n "${1:-}" ]] && sec::gpg --list-secret-keys --keyid-format LONG "$1" &>/dev/null
+  [[ -n "${1:-}" ]] && sec::gpg --list-secret-keys --keyid-format LONG "$1" &> /dev/null
 }
 
 sec::check_public_key_exists() {
-  [[ -n "${1:-}" ]] && sec::gpg --list-keys --keyid-format LONG "$1" &>/dev/null
+  [[ -n "${1:-}" ]] && sec::gpg --list-keys --keyid-format LONG "$1" &> /dev/null
+}
+
+sec::trust_key() {
+  [[ -n "${1:-}" ]] && sec::check_private_key_exists "$1" && expect -c "spawn gpg --edit-key ${1} trust quit; send \"5\ry\r\"; expect eof"
 }
 
 sec::fzf_keys() {
@@ -97,7 +101,7 @@ sec::fzf_keys() {
   if [[ -t 0 ]]; then
     keys=("$@")
   else
-    mapfile -t keys < <(echo "$(</dev/stdin)")
+    mapfile -t keys < <(echo "$(< /dev/stdin)")
   fi
 
   #shellcheck disable=SC2016

@@ -423,14 +423,14 @@ if platform::command_exists keybase &> /dev/null &&
         # Step 7 (Optional): only macos with brew
         if
           platform::is_macos &&
-          platform::command_exists brew &&
-          output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
+            platform::command_exists brew &&
+            output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
         then
           output::header "🍎 Optional Configuration for macOS only"
           if
             ! brew::is_installed "gpg-suite-no-mail" &&
-            ! brew::is_installed "gpg-suite" &&
-            ! brew::is_installed "pinentry-mac"
+              ! brew::is_installed "gpg-suite" &&
+              ! brew::is_installed "pinentry-mac"
           then
             PS3="Choose an option: "
             options=("gpg-suite-no-mail" "gpg-suite" "pinentry" "Quit")
@@ -450,7 +450,7 @@ if platform::command_exists keybase &> /dev/null &&
           # GPG Suite
           if
             brew::is_installed "gpg-suite-no-mail" ||
-            brew::is_installed "gpg-suite"
+              brew::is_installed "gpg-suite"
           then
             output::write "Now the GPG Preferences will be opened and mark the options:"
             output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
@@ -465,7 +465,7 @@ if platform::command_exists keybase &> /dev/null &&
             fi
 
             call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
-          
+
           # Pinentry Mac
           elif brew::is_installed "pinentry-mac"; then
             call_sed -i '/^default-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
