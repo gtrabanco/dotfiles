@@ -271,7 +271,7 @@ if
 then
   output::header "🍎 Optional Configuration for macOS only"
   if
-    ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &>/dev/null &&
+    ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &> /dev/null &&
       ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &&
       ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac
   then
@@ -292,8 +292,8 @@ then
 
   # GPG Suite
   if
-    "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "gpg-suite-no-mail" &>/dev/null ||
-    "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "gpg-suite" &>/dev/null
+    "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "gpg-suite-no-mail" &> /dev/null ||
+      "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "gpg-suite" &> /dev/null
   then
     output::write "Now the GPG Preferences will be opened and mark the options:"
     output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
@@ -310,7 +310,7 @@ then
     sec::sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
 
   # Pinentry Mac
-  elif "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "pinentry-mac" &>/dev/null; then
+  elif "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "pinentry-mac" &> /dev/null; then
     sec::sed -i '/^default-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
     sec::sed -i '/^max-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
     sec::sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
