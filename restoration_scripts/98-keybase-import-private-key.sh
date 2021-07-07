@@ -209,6 +209,7 @@ call_sed() {
   fi
 }
 
+#shellcheck disable=SC2120
 parse_emails() {
   if [ -t 0 ]; then
     printf "%s\n" "${@:-}" | grep -i -o '[A-Z0-9._%+-]\+@[A-Z0-9.-]\+\.[A-Z]\{2,4\}'

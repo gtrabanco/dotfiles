@@ -25,7 +25,6 @@ fzf_prompt() {
   )"
 
   printf "%s" "$script"
-  read -r args
 
   echo "$DOTLY_PATH/scripts/$(echo "$script" | tr ' ' '/')"
 }
