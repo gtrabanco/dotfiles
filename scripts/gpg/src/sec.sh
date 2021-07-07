@@ -88,7 +88,7 @@ sec::sed() {
 }
 
 sec::list_private_keys() {
-  sec::gpg --list-secret-keys --keyid-format LONG | grep "^pub" | tr "/" " " | awk '{print $3}'
+  sec::gpg --list-secret-keys --keyid-format LONG | grep "^sec" | tr "/" " " | awk '{print $3}'
 }
 
 sec::list_public_keys() {
@@ -104,7 +104,17 @@ sec::check_public_key_exists() {
 }
 
 sec::trust_key() {
-  [[ -n "${1:-}" ]] && sec::check_private_key_exists "$1" && expect -c "spawn sec::gpg --edit-key ${1} trust quit; send \"5\ry\r\"; expect eof"
+  if [[ -z "${1:-}" ]] || ! sec::check_private_key_exists "$1"; then
+    return 1
+  fi
+
+  if platform::command_exists gpg2; then
+    expect -c "spawn gpg2 --edit-key ${1} trust quit; send \"5\ry\r\"; expect eof"
+  elif platform::command_exists gpg; then
+    expect -c "spawn gpg --edit-key ${1} trust quit; send \"5\ry\r\"; expect eof"
+  else
+    return 1
+  fi
 }
 
 sec::trust_key_wizard() {

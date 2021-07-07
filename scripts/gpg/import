@@ -194,7 +194,7 @@ fi
 # If the mail address is not in the private key list for use to sign and encrypt
 # give the user instructions to add it. Only if the user want to add it.
 # Not added could result in a sign error in github commits.
-if ! gpg --list-secret-keys --keyid-format LONG | parse_emails | grep -q "$author_email"; then
+if ! gpg --list-secret-keys --keyid-format LONG | sec::parse_emails | grep -q "$author_email"; then
   output::error "⚠️ Your git config email address is not in your private key"
   output::empty_line
   {
@@ -263,31 +263,7 @@ else
   output::empty_line
 fi
 
-# Step 9: No ask password in every commit
-output::empty_line
-output::answer "⚙️ Now add your public key in you github settings"
-
-if platform::command_exists pbcopy &&
-  output::yesno "Do you want to copy the key to the clipboard"; then
-  gpg --armor --export "$sec" | "$DOTLY_PATH/bin/pbcopy" && output::solution "Public key is in your clipboard"
-else
-  gpg --armor --export "$sec"
-  output::empty_line
-fi
-
-if platform::command_exists open &&
-  output::yesno "Do you want to open github settings to add your private GPG key"; then
-  open "https://github.com/settings/gpg/new"
-else
-  output::write "🌍 Open in browser and paste your key:"
-  output::answer "https://github.com/settings/gpg/new"
-  output::empty_line
-  output::write "🔎 In case of errors signing commits:"
-  output::answer "https://github.com/gtrabanco/keybase-gpg-github#troubleshooting-gpg-failed-to-sign-the-data"
-  output::empty_line
-fi
-
-# Step 10 (Optional): only macos with brew
+# Step 9 (Optional): only macos with brew
 if
   platform::is_macos &&
     platform::command_exists brew &&
@@ -328,16 +304,16 @@ then
     fi
 
     if ! grep -q "^max-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
-      echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
+      echo "max-cache-ttl 7200" >> "$HOME/.gnupg/gpg-agent.conf"
     fi
 
-    call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
+    sec::sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
 
   # Pinentry Mac
   elif "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "pinentry-mac" &>/dev/null; then
-    call_sed -i '/^default-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
-    call_sed -i '/^max-cache-ttl$/d' "$HOME/.gnupg/gpg-agent.conf"
-    call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
-    echo "pinentry-program $(which pinentry-mac)"
+    sec::sed -i '/^default-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
+    sec::sed -i '/^max-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
+    sec::sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
+    echo "pinentry-program $(which pinentry-mac)" >> "$HOME/.gnupg/gpg-agent.conf"
   fi
 fi

@@ -471,7 +471,7 @@ if platform::command_exists keybase &> /dev/null &&
             call_sed -i '/^default-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
             call_sed -i '/^max-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
             call_sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
-            echo "pinentry-program $(which pinentry-mac)"
+            echo "pinentry-program $(which pinentry-mac)" >> "$HOME/.gnupg/gpg-agent.conf"
           fi
         fi
 
