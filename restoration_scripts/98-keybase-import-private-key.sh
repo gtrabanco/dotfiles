@@ -380,14 +380,14 @@ if platform::command_exists keybase &> /dev/null &&
         output::solution "Git configured"
         output::empty_line
 
-        # Step 5 (Conditional step) Configure GPNUPG
-        if [[ -d "$HOME/.gnupg" ]] &&\
-           [[ -f "$HOME/.gnupg/gpg.conf" ]] &&\
-           ! grep -q "no-tty" "$HOME/.gnupg/gpg.conf"
-        then
-          echo "no-tty" >> "$HOME/.gnupg/gpg.conf"
-          output::solution "⚙️ Configured GNUPG"
-        fi
+        # # Step 5 (Conditional step) Configure GPNUPG
+        # if [[ -d "$HOME/.gnupg" ]] &&\
+        #    [[ -f "$HOME/.gnupg/gpg.conf" ]] &&\
+        #    ! grep -q "no-tty" "$HOME/.gnupg/gpg.conf"
+        # then
+        #   echo "no-tty" >> "$HOME/.gnupg/gpg.conf"
+        #   output::solution "⚙️ Configured GNUPG"
+        # fi
 
         # Step 6 add it in your github setting
         output::answer "⚙️ Now add your public key in you github settings"
