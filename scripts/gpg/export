@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "${DOTLY_PATH:-$SLOTH_PATH}" ]] && exit 1
+
+#shellcheck disable=SC1091
+. "${DOTLY_PATH:-$SLOTH_PATH}/scripts/core/src/_main.sh"
+dot::load_library "sec.sh"
+
+##? Export a gpg private or public key
+##? For private keys this script will add ".key" and for public ".pkey" in
+##? the file name. First email address ocurrence for the key will be the
+##? name of the key if this param is omited.
+##?
+##? Usage:
+##?   export [-h | --help]
+##?   export [-v | --version]
+##?   export [--email <email_address>] [--name <file_name>] [<file_path>]
+##?
+##? Arguments:
+##?   file_name      File name to export. For private keys this script will add
+##?                  ".key" and for public ".pkey". First email address
+##?                  ocurrence for the key will be the name of the key if this
+##?                  param is omited.
+##?   file_path      Directory to export, if none it will be exported in the
+##?                  working directory.
+##?   email_address  Email address of the key to export
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?   --email       Export public/private key for given email address if empty you will see a list to choose one
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+##?
+docs::parse "$@"
+
+SCRIPT_NAME="dot gpg export"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+[[ -z "${file_path:-}" || ! -d "${file_path:-}" ]] && file_path="$(pwd)"
+
+if
+  [[ -n "$email_address" ]] &&
+  ! sec::check_private_key_exists "$email_address"
+then
+  output::error "No public key for given email address \`$email_address\`"
+elif [[ -n "$email_address" ]]; then
+  sec_export="$(sec::gpg --list-secret-keys --keyid-format LONG "$email_address" 2>/dev/null | grep "^sec" | tr "/" " " | awk '{print $3}')"
+else
+  sec_export="$(sec::gpg --list-secret-keys --keyid-format LONG | grep "^sec" | tr "/" " " | awk '{print $3}' | sec::fzf_keys)"
+fi
+
+[[ -z "${file_name:-}" ]] && file_name="$(sec::gpg --list-secret-keys --keyid-format LONG "$sec_export" | sec::parse_emails | head -n1)"
+public_key_file="${file_path}/${file_name}.pkey"
+private_key_file="${file_path}/${file_name}.key"
+
+# Export public
+if
+  [[ -f "$public_key_file" ]] &&
+  ! output::yesno "The file to export the 🔓 PUBLIC key exists, do you want to overwrite it"
+then
+  output::error "❌ Provide a different name or accept to overwrite it"
+  exit 1
+fi
+
+output::answer "Exporting public key"
+rm -f "$public_key_file"
+sec::gpg --output "$public_key_file" --armor --export "$sec_export"
+
+
+# Export private
+if
+  [[ -f "$private_key_file" ]] &&
+  ! output::yesno "The file to export the 🔒 PRIVATE key exists, do you want to overwrite it"
+then
+  output::error "❌ Provide a different name or accept to overwrite it"
+  exit 1
+fi
+
+output::answer "Exporting private key"
+rm -f "$private_key_file"
+sec::gpg --output "$private_key_file" --armor --export-secret-key "$sec_export"
