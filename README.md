@@ -8,46 +8,9 @@ This dotfiles were originally created using <a href="https://github.com/codelytv
 
 This dotfiles are quite close to complete example of the features that Sloth has.
 
-## Migration from DOTLY to SLOTH
+## Migration from DOTLY to .SLOTH
 
-```bash
-call_sed() {
-  if command -v gsed &>/dev/null; then
-    "$(which gsed)" "$@"
-  elif [[ -f "/usr/local/opt/gnu-sed/libexec/gnubin/sed" ]]; then
-    /usr/local/opt/gnu-sed/libexec/gnubin/sed "$@"
-  elif platform::is_macos; then
-    # Any other BSD should be added to this check
-    "$(which sed)" '' "$@"
-  elif command -v sed &>/dev/null; then
-    "$(which sed)" "$@"
-  else
-    return 1
-  fi
-}
-cp -R "$DOTFILES_PATH" "$HOME/.dotfiles.back-$(date +%s)"
-cd "$DOTFILES_PATH"
-# Move dotly to sloth
-git mv "modules/dotly" "modules/sloth"
-# Replace values in .gitmodules: path of module, branch and url
-call_sed -i 's|modules/dotly|modules/sloth|g' .gitmodules
-git config -f .gitmodules submodule."modules/sloth".branch "master"
-git config -f .gitmodules submodule."modules/sloth".url "https://github.com/gtrabanco/sloth"
-# Select master branch
-cd modules/sloth
-git checkout --force master
-cd ../..
-# Sync submodule
-git submodule sync --recursive
-# Define new variables
-export DOTLY_PATH="$DOTFILES_PATH/modules/sloth"
-export SLOTH_PATH="$DOTFILES_PATH/modules/sloth"
-export ZIM_HOME="$SLOTH_PATH/modules/zimfw"
-# Reinstall zim
-zsh "$ZIM_HOME/zimfw.zsh" install
-"$SLOTH_PATH/bin/dot" shell zsh reload_completions
-echo "Restart your terminal to finish the migration"
-```
+See the information in (.Sloth project)[https://github.com/gtrabanco/sloth]
 
 ## About this and any other dotfiles
 
@@ -61,6 +24,17 @@ This requieres a newer version than official DOTLY version which is in [my fork]
 
 ## Restore your Dotfiles
 
+### Short Version
+
+1. Generate ssh key or import the old one (not recommended) and add it to your GitHub or elsewhere you stored your dotfiles (the public key) to import your dotfiles if the repository is private and to be able to modify your dotfiles.
+2. Do the same with the repository you have your secrets (if you have your secrets in a repository :).
+3. Use script to restore `bash <(curl -s https://raw.githubusercontent.com/gtrabanco/sloth/HEAD/restorer)`
+4. Apply your secrets: `dot secrets apply` 
+5. Restart your terminal
+6. Import your packages `dot package import`
+
+### Long version
+
 1. Generate ssh key or import the old one (not recommended) and add it to your GitHub or elsewhere you stored your dotfiles (the public key) to import your dotfiles if the repository is private and to be able to modify your dotfiles.
 2. Do the same with the repository you have your secrets (if you have your secrets in a repository :).
 3. Clone your dotfiles repository `git clone [your repository of dotfiles] $HOME/.dotfiles`
@@ -70,7 +44,6 @@ This requieres a newer version than official DOTLY version which is in [my fork]
 7. Apply your secrets: `dot secrets apply` 
 8. Restart your terminal
 9. Import your packages `dot package import`
-10. Import your settings `dot mac defaults import`. This does not work very well always 😅
 
 ### Install Paragon NTFS
 
