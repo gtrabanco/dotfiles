@@ -456,6 +456,8 @@ if platform::command_exists keybase &> /dev/null &&
             output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
             open -b com.apple.systempreferences "/Library/PreferencePanes/GPGPreferences.prefPane"
 
+            [[ ! -f "$HOME/.gnupg/gpg-agent.conf" ]] && touch "$HOME/.gnupg/gpg-agent.conf"            
+
             if ! grep -q "^default-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
               echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
             fi
@@ -464,7 +466,7 @@ if platform::command_exists keybase &> /dev/null &&
               echo "max-cache-ttl 7200" >> "$HOME/.gnupg/gpg-agent.conf"
             fi
 
-            call_sed -i '/^pinentry-program$/d' "$HOME/.gnupg/gpg-agent.conf"
+            call_sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
 
           # Pinentry Mac
           elif brew::is_installed "pinentry-mac"; then
