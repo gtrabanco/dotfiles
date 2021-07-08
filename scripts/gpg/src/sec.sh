@@ -139,3 +139,16 @@ sec::fzf_keys() {
   #shellcheck disable=SC2016
   printf "%s\n" "${keys[@]}" | fzf --header "Choose a key" --preview '. "${SLOTH_PATH:-$DOTLY_PATH}/scripts/core/src/_main.sh"; dot::load_library "sec.sh" "gpg"; sec::gpg  --list-secret-keys --keyid-format LONG {} | sec::parse_emails'
 }
+
+sec::choose_sec() {
+  local all_private_keys sec
+  mapfile -t all_private_keys < <(sec::list_private_keys)
+
+  if [[ ${#all_private_keys[@]} -gt 1 ]]; then
+    sec="$(sec::fzf_keys "${all_private_keys[@]}")"
+  elif [[ ${#all_private_keys[@]} -eq 1 ]]; then
+    sec="${all_private_keys[0]}"
+  fi
+
+  echo "${sec:-}"
+}

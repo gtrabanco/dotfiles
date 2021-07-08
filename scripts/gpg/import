@@ -131,16 +131,7 @@ esac
 
 # Step 4: List current private keys if there is only one
 output::empty_line
-mapfile -t all_private_keys < <(sec::list_private_keys)
-
-if [[ ${#all_private_keys[@]} -gt 1 ]]; then
-  sec="$(sec::fzf_keys "${all_private_keys[@]}")"
-elif [[ ${#all_private_keys[@]} -eq 1 ]]; then
-  sec="${all_private_keys[0]}"
-else
-  output::error "The private key could not be choosen"
-  exit 1
-fi
+sec="$(sec::choose_sec)"
 
 # Step 5: Mark the private key as trusted
 output::empty_line
