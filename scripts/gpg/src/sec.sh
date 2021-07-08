@@ -73,13 +73,22 @@ sec::parse_emails() {
 }
 
 sec::sed() {
+  local arg opts
   if command -v gsed &> /dev/null; then
     "$(which gsed)" "$@"
   elif [[ -f "/usr/local/opt/gnu-sed/libexec/gnubin/sed" ]]; then
     /usr/local/opt/gnu-sed/libexec/gnubin/sed "$@"
-  elif platform::is_macos; then
-    # Any other BSD should be added to this check
-    "$(which sed)" '' "$@"
+  elif platform::is_macos || platform::is_bsd; then
+    # Because we need to add '' between options and arguments
+    for arg in "$@"; do
+      if [[ "${arg:0:1}" == "-" ]]; then
+        opts+=("$arg")
+      else
+        args+=("$arg")
+      fi
+    done
+
+    "$(which sed)" "${opts[@]}" '' "${args[@]}"
   elif command -v sed &> /dev/null; then
     "$(which sed)" "$@"
   else
