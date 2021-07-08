@@ -1,7 +1,7 @@
 <div align="center">
   <h1>.dotfiles</h1>
   <a href="https://github.com/gtrabanco/sloth" alt="Sloth Github"><img src="https://raw.githubusercontent.com/gtrabanco/sloth/master/sloth.svg" alt="Sloth Logo" width="100px" height="100px"></a>
-  <p>Powered by <a href="https://github.com/gtrabanco/sloth" alt="Sloth Github">Sloth</a></p>
+  <p>Powered by <a href="https://github.com/gtrabanco/sloth" alt="Sloth Github">.Sloth</a></p>
 </div>
 
 This dotfiles were originally created using <a href="https://github.com/codelytv/dotly" alt="Dotly repository">🌚 dotly</a>. But after some time I migrate to use <a href="https://github.com/gtrabanco/sloth" alt="Sloth Github"><img src="https://raw.githubusercontent.com/gtrabanco/sloth/master/sloth.svg" alt="Sloth Logo" width="20px" height="20px" style="fill: green"> Sloth</a> because I develop many features to dotly that were not approved after a while and, because, I could not advance more in the development when I wanted, I made my own fork that I have called it Sloth.
@@ -10,7 +10,7 @@ This dotfiles are quite close to complete example of the features that Sloth has
 
 ## Migration from DOTLY to .SLOTH
 
-See the information in (.Sloth project)[https://github.com/gtrabanco/sloth]
+See the information in [.Sloth project](https://github.com/gtrabanco/sloth)
 
 ## About this and any other dotfiles
 
