@@ -43,6 +43,8 @@ alias gpl="git pull --rebase --autostash"
 alias gb="git branch"
 alias gl="${DOTLY_PATH}/bin/dot git pretty-log"
 alias gti="git"
+#shellcheck disable=SC2142
+alias git-lines="git ls-files | xargs wc -l 2>/dev/null | tail -n1 | awk '{print \$1}'"
 
 # Utils
 alias k='kill -9'
