@@ -65,12 +65,12 @@ else
   output::error "Wrong option see \`$SCRIPT_NAME --help\`"
 fi
 
+# Step 1: Delete no-tty if it is
+[[ -f "$HOME/.gnupg/gpg.conf" ]] && sec::sed -i '/^no-tty/d' "$HOME/.gnupg/gpg.conf"
+
 case ${import_from:-} in
   "keybase")
     script::depends_on keybase
-
-    # Step 1: Delete no-tty if it is
-    sec::sed -i '/^no-tty$/d' "$HOME/.gnupg/gpg.conf"
 
     # Step 2: Check if there are gpg keys to export in Keybase
     pgp_list="$(keybase pgp list)"
@@ -106,9 +106,6 @@ case ${import_from:-} in
 
     ;;
   "gpg")
-
-    # Step 1: Delete no-tty if it is
-    sec::sed -i '/^no-tty$/d' "$HOME/.gnupg/gpg.conf"
 
     # Step 2 & 3: Get the keys and import
     output::empty_line
@@ -289,6 +286,8 @@ then
     output::write "Now the GPG Preferences will be opened and mark the options:"
     output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
     open -b com.apple.systempreferences "/Library/PreferencePanes/GPGPreferences.prefPane"
+
+    [[ ! -f "$HOME/.gnupg/gpg-agent.conf" ]] && touch "$HOME/.gnupg/gpg-agent.conf"
 
     if ! grep -q "^default-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
       echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
