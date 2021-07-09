@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # This is a useful file to have the same aliases/functions in bash and zsh
 # Order to init:
 #       1 Common
@@ -12,12 +13,12 @@ MYSHELL=${SHELL##*/}
 OSNAME="other"
 
 case "$OSTYPE" in
-    linux*)
-        OSNAME="linux"
-        ;;
-    darwin*)
-        OSNAME="macos"
-        ;;
+  linux*)
+    OSNAME="linux"
+    ;;
+  darwin*)
+    OSNAME="macos"
+    ;;
 esac
 
 source_files=(
