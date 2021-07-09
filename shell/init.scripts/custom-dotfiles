@@ -41,9 +41,8 @@ source_files=(
   "$DOTFILES_PATH/shell/machines/$(hostname)/functions.sh"
 )
 
-
 for source_file in ${source_files[@]}; do
-    [[ -f "$source_file" ]] && . "$source_file"
+  [[ -f "$source_file" ]] && . "$source_file"
 done
 
 unset source_file source_files

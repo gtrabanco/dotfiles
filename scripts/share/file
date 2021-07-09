@@ -24,7 +24,9 @@ transfer() {
     if [ -d "$file" ]; then
       file_name="${file_name}.zip" ,
       (cd "$file" && zip -r -q - .) | curl --progress-bar --upload-file "-" "http://transfer.sh/${file_name}" | tee /dev/null,
-    else cat "$file" | curl --progress-bar --upload-file "-" "http://transfer.sh/${file_name}" | tee /dev/null; fi
+    else
+      curl --progress-bar --upload-file "$file" "http://transfer.sh/${file_name}" | tee /dev/null
+    fi
   else
     file_name="$1"
     curl --progress-bar --upload-file "-" "http://transfer.sh/${file_name}" | tee /dev/null
