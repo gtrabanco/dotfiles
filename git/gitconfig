@@ -93,6 +93,7 @@
 	gpgsign = true
 [pull]
 	rebase = true
+	autostash = true
 [init]
 	defaultBranch = master
 [alias]
@@ -112,3 +113,5 @@
 	program = /usr/local/bin/gpg
 [push]
 	default = current
+[rebase]
+	autostash = true
