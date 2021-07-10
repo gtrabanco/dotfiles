@@ -135,11 +135,13 @@ output::empty_line
 output::write "ℹ︎ Now we will get the SEC rsa and set our private gpg key as trusted"
 if
   platform::command_exists expect &&
-    sec::check_private_key_exists "$sec"
+  sec::check_private_key_exists "$sec"
 then
   sec::trust_key "$sec"
+
 elif sec::check_private_key_exists "$sec"; then
   sec::trust_key_wizard "$sec"
+
 else
   output::error "Invalic key rsa \`$sec\`"
   exit 1
@@ -216,94 +218,7 @@ if ! gpg --list-secret-keys --keyid-format LONG | sec::parse_emails | grep -q "$
   }
 fi
 
-# Step 7: Git configuration
+# Final step suggest use dot gpg git
 output::empty_line
-output::answer "⚙️ Configuring git"
-git config --global user.signingkey "$sec"
-git config --global commit.gpgsign true
-git config --global tag.gpgsign true
-git config --global gpg.program "$(which gpg)"
-output::solution "Git configured"
-output::empty_line
-
-# Step 8: add it in your github setting
-output::empty_line
-output::answer "⚙️ Now add your public key in you github settings"
-
-if platform::command_exists pbcopy &&
-  output::yesno "Do you want to copy the key to the clipboard"; then
-  sec::gpg --armor --export "$sec" | "$DOTLY_PATH/bin/pbcopy" && output::solution "Public key is in your clipboard"
-else
-  output::empty_line
-  sec::gpg --armor --export "$sec"
-  output::empty_line
-fi
-
-if platform::command_exists open &&
-  output::yesno "Do you want to open github settings to add your private GPG key"; then
-  open "https://github.com/settings/gpg/new"
-else
-  output::write "🌍 Open in browser and paste your key:"
-  output::answer "https://github.com/settings/gpg/new"
-  output::empty_line
-  output::write "🔎 In case of errors signing commits:"
-  output::answer "https://github.com/gtrabanco/keybase-gpg-github#troubleshooting-gpg-failed-to-sign-the-data"
-  output::empty_line
-fi
-
-# Step 9 (Optional): only macos with brew
-if
-  platform::is_macos &&
-    platform::command_exists brew &&
-    output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
-then
-  output::header "🍎 Optional Configuration for macOS only"
-  if
-    ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &> /dev/null &&
-      ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &&
-      ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac
-  then
-    PS3="Choose an option: "
-    options=("gpg-suite-no-mail" "gpg-suite" "pinentry" "Quit")
-    select opt in "${options[@]}"; do
-      case "$opt" in
-        Quit)
-          output::answer "User exit"
-          exit
-          ;;
-        *)
-          "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package add "$opt"
-          ;;
-      esac
-    done
-  fi
-
-  # GPG Suite
-  if
-    "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "gpg-suite-no-mail" &> /dev/null ||
-      "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "gpg-suite" &> /dev/null
-  then
-    output::write "Now the GPG Preferences will be opened and mark the options:"
-    output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
-    open -b com.apple.systempreferences "/Library/PreferencePanes/GPGPreferences.prefPane"
-
-    [[ ! -f "$HOME/.gnupg/gpg-agent.conf" ]] && touch "$HOME/.gnupg/gpg-agent.conf"
-
-    if ! grep -q "^default-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
-      echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
-    fi
-
-    if ! grep -q "^max-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
-      echo "max-cache-ttl 7200" >> "$HOME/.gnupg/gpg-agent.conf"
-    fi
-
-    sec::sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
-
-  # Pinentry Mac
-  elif "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "pinentry-mac" &> /dev/null; then
-    sec::sed -i '/^default-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
-    sec::sed -i '/^max-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
-    sec::sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
-    echo "pinentry-program $(which pinentry-mac)" >> "$HOME/.gnupg/gpg-agent.conf"
-  fi
-fi
+output::answer "GPG Key imported"
+output::write "If you want to configure pgp key for git and sign commit execute \`dot gpg git\`"
