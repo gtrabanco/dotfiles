@@ -8,16 +8,54 @@ set -euo pipefail
 . "${DOTLY_PATH:-$SLOTH_PATH}/scripts/core/src/_main.sh"
 dot::load_library "sec.sh"
 
+pinentry_config() {
+  script::depends_on pinentry-mac
+
+  touch "$gnu_path/gpg-agent.conf"
+  sec::sed -i '/^default-cache-ttl/d' "$gnu_path/gpg-agent.conf"
+  sec::sed -i '/^max-cache-ttl/d' "$gnu_path/gpg-agent.conf"
+  sec::sed -i '/^pinentry-program/d' "$gnu_path/gpg-agent.conf"
+  echo "pinentry-program $(which pinentry-mac)" >> "$gnu_path/gpg-agent.conf"
+}
+
+gpg_suite_config() {
+  if
+    ! "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &>/dev/null
+  then
+    script::depends_on gpg-suite-no-mail
+  fi
+
+  touch "$gnu_path/gpg-agent.conf"
+  if ! grep -q "^default-cache-ttl" "$gnu_path/gpg-agent.conf"; then
+    echo "default-cache-ttl 600" >> "$gnu_path/gpg-agent.conf"
+  fi
+
+  if ! grep -q "^max-cache-ttl" "$gnu_path/gpg-agent.conf"; then
+    echo "max-cache-ttl 7200" >> "$gnu_path/gpg-agent.conf"
+  fi
+
+  sec::sed -i '/^pinentry-program/d' "$gnu_path/gpg-agent.conf"
+  output::write "Now the GPG Preferences will be opened and mark the options:"
+  output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
+  open -b com.apple.systempreferences "/Library/PreferencePanes/GPGPreferences.prefPane"
+}
+
 ##? Configure git and github to sign commits
 ##?
 ##?
 ##? Usage:
 ##?   git [-h | --help]
 ##?   git [-v | --version]
+##?   git [--gnupg-home <gnupg_path>] [[-p | --pinentry]|[-g | --gpg-suite]]
 ##?
 ##? Options:
-##?   -h --help     Show this help
-##?   -v --version  Show the program version
+##?   -h --help       Show this help
+##?   -v --version    Show the program version
+##?   -p --pinentry   Force to use pintentry (uninstall gpg-suite or
+##?                   gpg-suite-no-mail). Only in OSX.
+##?   -g --gpg-suite  Force to use gpg-suite-no-mail (uninstall pinentry, if
+##?                   you have installed gpg-suit will omit the install of
+##?                   gpg-suite-no-mail). Only in OSX.
 ##?
 ##? Author:
 ##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
@@ -35,9 +73,16 @@ fi
 
 # Here begin your script
 
+# Dependencies
 script::depends_on gnupg git
 
+# Variables
+gnu_path="${gnupg_path:-$HOME/.gnupg}"
 sec="$(sec::choose_sec)"
+
+# Create gnupg path if not exists
+[[ ! -d "$gnu_path" ]] && mkdir -p "$gnu_path" && chmod 0700 "$gnu_path"
+[[ ! -f "$gnu_path/gpg-agent.conf" ]] && touch "$gnu_path/gpg-agent.conf"
 
 # Step 1: Configure git global config
 output::empty_line
@@ -75,58 +120,67 @@ else
 fi
 
 # Step 3 (Optional): configure gpg to avoid asking pgp password every time (only macos)
+
+# Exit if no macOS
+! platform::is_macos && exit
+
+# Exit if no brew
+! platform::command_exists brew && exit
+
+
+output::header "🍎 Optional Configuration for macOS only"
 if
-  platform::is_macos &&
-    platform::command_exists brew &&
-    output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
+  ! ${pinentry:-} &&
+  ! ${gpg_suite:-} &&
+  output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
 then
-  output::header "🍎 Optional Configuration for macOS only"
-  if
-    ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &> /dev/null &&
-      ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &&
-      ! "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac
-  then
-    PS3="Choose an option: "
-    options=("gpg-suite-no-mail" "gpg-suite" "pinentry" "Quit")
-    select opt in "${options[@]}"; do
-      case "$opt" in
-        Quit)
-          output::answer "User exit"
-          exit
-          ;;
-        *)
-          "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package add "$opt"
-          ;;
-      esac
-    done
+  PS3="Choose an option: "
+  options=("gpg-suite-no-mail" "gpg-suite" "pinentry" "Quit")
+  select opt in "${options[@]}"; do
+    case "$opt" in
+      Quit)
+        output::answer "User exit"
+        exit
+        ;;
+      gpg-suite*)
+        pinentry=false
+        gpg_suite=true
+        break
+        ;;
+      pinentry)
+        pinentry=true
+        gpg_suite=false
+        break
+        ;;
+      *)
+        output::error "Unexpected value"
+        exit 1
+        ;;
+    esac
+  done
+fi
+
+if ${pinentry:-false}; then
+  output::answer "Pinentry configuration in process..."
+  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &>/dev/null; then
+    brew uninstall gpg-suite
   fi
 
-  # GPG Suite
-  if
-    "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "gpg-suite-no-mail" &> /dev/null ||
-      "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "gpg-suite" &> /dev/null
-  then
-    output::write "Now the GPG Preferences will be opened and mark the options:"
-    output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
-    open -b com.apple.systempreferences "/Library/PreferencePanes/GPGPreferences.prefPane"
-
-    [[ ! -f "$HOME/.gnupg/gpg-agent.conf" ]] && touch "$HOME/.gnupg/gpg-agent.conf"
-
-    if ! grep -q "^default-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
-      echo "default-cache-ttl 600" >> "$HOME/.gnupg/gpg-agent.conf"
-    fi
-
-    if ! grep -q "^max-cache-ttl" "$HOME/.gnupg/gpg-agent.conf"; then
-      echo "max-cache-ttl 7200" >> "$HOME/.gnupg/gpg-agent.conf"
-    fi
-
-    sec::sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
-
-  # Pinentry Mac
-  elif "${SLOTH_PATH:-$DOTLY_PATH}/bin/dot" package check "pinentry-mac" &> /dev/null; then
-    sec::sed -i '/^default-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
-    sec::sed -i '/^max-cache-ttl/d' "$HOME/.gnupg/gpg-agent.conf"
-    sec::sed -i '/^pinentry-program/d' "$HOME/.gnupg/gpg-agent.conf"
-    echo "pinentry-program $(which pinentry-mac)" >> "$HOME/.gnupg/gpg-agent.conf"
+  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &>/dev/null; then
+    brew uninstall gpg-suite-no-mail
   fi
+  
+  pinentry_config
+
+  output::solution "Pinentry configuration finished"
+fi
+
+if ${gpg_suite:-false}; then
+  output::answer "GPG Suite configuration in process..."
+  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac &>/dev/null; then
+    brew uninstall pinentry-mac
+  fi
+  
+  gpg_suite_config
+  output::solution "GPG Suite configuration finished"
 fi

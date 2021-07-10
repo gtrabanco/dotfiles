@@ -220,5 +220,5 @@ fi
 
 # Final step suggest use dot gpg git
 output::empty_line
-output::answer "GPG Key imported"
+output::answer "🔐 GPG Key imported"
 output::write "If you want to configure pgp key for git and sign commit execute \`dot gpg git\`"
