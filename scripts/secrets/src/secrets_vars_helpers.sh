@@ -51,9 +51,8 @@ secrets::var_delete() {
 
   if platform::is_macos && [[ "${DOTLY_SECRETS_VAR_MACOS_STORE:-filepath}" == "keychain" ]]; then
     "$SECURITY_BIN" delete-generic-password -a "$USER" -s "$var_name" &> /dev/null
-    rm -f "$var_path"
   else
     var_path="$(secrets::var_exists "$var_name")"
-    [[ -n "$var_path" ]] && secrets::remove_file "$var_path"
+    [[ -f "$var_path" ]] && secrets::remove_file "$var_path"
   fi
 }
