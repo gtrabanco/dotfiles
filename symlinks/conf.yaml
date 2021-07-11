@@ -9,9 +9,6 @@
     - shell/bash/themes
     - shell/bash/themes
     - editors/code/snippets
-    - shell/init-scripts
-    - shell/init-scripts
-    - shell/init-scripts.enabled
     - ~/.ssh/control
     - ~/MyCodes
 - link:
