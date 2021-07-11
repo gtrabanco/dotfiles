@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#shellcheck disable=SC1091
+. "$DOTLY_PATH/scripts/core/_main.sh"
+
+remote="${1:-origin}"
+initial_branch="$(git branch --show-current)"
+
+# Check if remote exists, if none, exit with error
+! git remote get-url "$remote" &>/dev/null && outpur::error "Remote \`$remote\` does not exists"  && exit 1
+
+for branch in $(git branch -r | grep "$remote" | grep -v "master" | grep -v "HEAD" | xargs -I _ echo _ | grep "^${remote}" | sed "s#^${remote}/##g"); do
+  git checkout -t "$branch"
+  git branch --set-upstream-to="${remote}/${branch}" "$branch"
+done
+
+git checkout "$initial_branch"
