@@ -23,25 +23,24 @@ alias webstorm='open -na "Webstorm.app"'
 alias intellij='open -na "IntelliJ IDEA"'
 alias chrome-cli='brave-cli'
 alias github='source $DOTLY_PATH/scripts/dotly/tools/github.sh'
-alias codes="cd ${HOME}/MyCodes"
+alias codes='cd ${HOME}/MyCodes'
 alias cdc="codes"
-alias projects="cd ${HOME}/MyCodes"
-alias cat="bat"
+alias projects='cd ${HOME}/MyCodes'
 
 # Git
 alias g="git"
 alias gaa="git add -A"
-alias gc="${DOTLY_PATH}/bin/dot git commit"
+alias gc='${DOTLY_PATH}/bin/dot git commit'
 alias gca="git add --all && git commit --amend --no-edit"
 alias gco="git checkout"
-alias gd="${DOTLY_PATH}/bin/dot git pretty-diff"
+alias gd='${DOTLY_PATH}/bin/dot git pretty-diff'
 alias gs="git status -sb"
 alias gf="git fetch --all -p"
 alias gps="git push"
 alias gpsf="git push --force"
 alias gpl="git pull --rebase --autostash"
 alias gb="git branch"
-alias gl="${DOTLY_PATH}/bin/dot git pretty-log"
+alias gl='${DOTLY_PATH}/bin/dot git pretty-log'
 alias gti="git"
 #shellcheck disable=SC2142
 alias git-lines="git ls-files | xargs wc -l 2>/dev/null | tail -n1 | awk '{print \$1}'"
@@ -69,16 +68,16 @@ else # macOS `ls`
 fi
 
 # List all files colorized in long format
-alias l="ls -lF ${colorflag}"
+alias l='ls -lF ${colorflag}'
 
 # List all files colorized in long format, excluding . and ..
-alias la="ls -lAF ${colorflag}"
+alias la='ls -lAF ${colorflag}'
 
 # List only directories
-alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
+alias lsd='ls -lF ${colorflag} | grep --color=never "^d"'
 
 # Always use color output for `ls`
-alias ls="command ls ${colorflag}"
+alias ls='command ls ${colorflag}'
 
 # Show hidden files
 alias lh='ls -l .??*'
@@ -90,8 +89,8 @@ alias lhd='ls -ld .??*'
 alias please='sudo $(fc -ln -n -1)'
 
 # SSH Stuff
-alias newssh="rm -rf ${HOME}/.ssh/known_hosts && ssh ${@}" # Delete known_hosts and ssh
-alias pkeycopy="cat ${HOME}/.ssh/id_rsa.pub | pbcopy"
+alias newssh='rm -rf ${HOME}/.ssh/known_hosts && ssh' # Delete known_hosts and ssh
+alias pkeycopy='cat ${HOME}/.ssh/id_rsa.pub | pbcopy'
 alias dskClipboard="ssh desktop pbcopy"
 alias dskclipboard="dskClipboard"
 alias getpbkey="ssh-keygen -y -f" # ${HOME}/.ssh/id_rsa
@@ -100,7 +99,7 @@ alias getpbkey="ssh-keygen -y -f" # ${HOME}/.ssh/id_rsa
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
 # Reload the shell (i.e. invoke as a login shell)
-alias reload="exec ${SHELL} -l"
+alias reload='exec ${SHELL} -l'
 
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'

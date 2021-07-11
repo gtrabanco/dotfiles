@@ -5,6 +5,7 @@
 .sloth_updated
 .marketplace_cache
 .cached_github_api_calls
+bin/semver
 # END OF SLOTH GITIGNORE
 
 *.lock.json
