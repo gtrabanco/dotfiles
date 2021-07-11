@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
+#shellcheck disable=SC1091
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 remote="${1:-origin}"
