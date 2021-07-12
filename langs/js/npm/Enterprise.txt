@@ -1,7 +1,7 @@
+typescript
 @vue
+yarn
+nvm
+yo
 editorconfig
 generator-botbuilder
-nvm
-typescript
-yarn
-yo
