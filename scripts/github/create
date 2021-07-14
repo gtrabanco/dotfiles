@@ -54,4 +54,3 @@ if [[ -n "${repository_name:-}" ]]; then
 fi
 
 gh repo create "$repository_name"
-

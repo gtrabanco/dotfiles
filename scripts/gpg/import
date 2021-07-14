@@ -135,7 +135,7 @@ output::empty_line
 output::write "ℹ︎ Now we will get the SEC rsa and set our private gpg key as trusted"
 if
   platform::command_exists expect &&
-  sec::check_private_key_exists "$sec"
+    sec::check_private_key_exists "$sec"
 then
   sec::trust_key "$sec"
 

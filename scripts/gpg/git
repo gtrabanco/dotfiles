@@ -20,7 +20,7 @@ pinentry_config() {
 
 gpg_suite_config() {
   if
-    ! "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &>/dev/null
+    ! "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &> /dev/null
   then
     script::depends_on gpg-suite-no-mail
   fi
@@ -127,12 +127,11 @@ fi
 # Exit if no brew
 ! platform::command_exists brew && exit
 
-
 output::header "🍎 Optional Configuration for macOS only"
 if
   ! ${pinentry:-} &&
-  ! ${gpg_suite:-} &&
-  output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
+    ! ${gpg_suite:-} &&
+    output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
 then
   PS3="Choose an option: "
   options=("gpg-suite-no-mail" "gpg-suite" "pinentry" "Quit")
@@ -162,14 +161,14 @@ fi
 
 if ${pinentry:-false}; then
   output::answer "Pinentry configuration in process..."
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &>/dev/null; then
+  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &> /dev/null; then
     brew uninstall gpg-suite
   fi
 
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &>/dev/null; then
+  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &> /dev/null; then
     brew uninstall gpg-suite-no-mail
   fi
-  
+
   pinentry_config
 
   output::solution "Pinentry configuration finished"
@@ -177,10 +176,10 @@ fi
 
 if ${gpg_suite:-false}; then
   output::answer "GPG Suite configuration in process..."
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac &>/dev/null; then
+  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac &> /dev/null; then
     brew uninstall pinentry-mac
   fi
-  
+
   gpg_suite_config
   output::solution "GPG Suite configuration finished"
 fi

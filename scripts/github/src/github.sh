@@ -129,7 +129,7 @@ github::_command() {
 
 github::curl() {
   local md5command cached_request_file_path _command url cached cache_period
-  
+
   cached=true
   cache_period="$GITHUB_CACHE_PETITIONS_PERIOD_IN_DAYS"
 

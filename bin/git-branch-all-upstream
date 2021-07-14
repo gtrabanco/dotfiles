@@ -8,14 +8,14 @@ remote="${1:-origin}"
 initial_branch="$(git branch --show-current)"
 
 # Check if remote exists, if none, exit with error
-! git remote get-url "$remote" &>/dev/null && outpur::error "Remote \`$remote\` does not exists"  && exit 1
+! git remote get-url "$remote" &> /dev/null && outpur::error "Remote \`$remote\` does not exists" && exit 1
 
 for remote_branch in $(git branch -a | sed -n "/\/HEAD /d; /\/master$/d; /remotes/p;" | xargs -I _ echo _ | grep "^remotes/${remote}"); do
   branch="${remote_branch//remotes\/${remote}\//}"
-  [[ -z "$(git branch --list "$branch")" ]] && git checkout -t "$remote_branch" &>/dev/null
-  [[ -n "$(git branch --list "$branch")" ]] && git branch --set-upstream-to="${remote}/${branch}" "$branch" &>/dev/null
+  [[ -z "$(git branch --list "$branch")" ]] && git checkout -t "$remote_branch" &> /dev/null
+  [[ -n "$(git branch --list "$branch")" ]] && git branch --set-upstream-to="${remote}/${branch}" "$branch" &> /dev/null
 done
 
-git checkout "$initial_branch" &>/dev/null
+git checkout "$initial_branch" &> /dev/null
 
 output::solution "Branches created from \`${remote}\` and tracked"
