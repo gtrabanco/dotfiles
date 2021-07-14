@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -z "${DOTLY_PATH:-$SLOTH_PATH}" ]] && exit 1
+
+#shellcheck disable=SC1091
+. "${DOTLY_PATH:-$SLOTH_PATH}/scripts/core/src/_main.sh"
+dot::load_library "github.sh"
+
+script::depends_on gh
+
+##? Create a github empty repository
+##?
+##?
+##? Usage:
+##?   create [-h | --help]
+##?   create [-v | --version]
+##?   create [<repository_name>]
+##?
+##? Arguments:
+##?   user  The user to be used to create the repository. If it is not defined
+##?         it will use the var GITHUB_USER and finally if it is not \$USER.
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+##?
+docs::parse "$@"
+
+SCRIPT_NAME="dot gh create"
+SCRIPT_VERSION="1.0.0"
+
+# Print name and version
+if ${version:-}; then
+  output::write "$SCRIPT_NAME v$SCRIPT_VERSION"
+  exit
+fi
+
+if [[ -n "${repository_name:-}" ]]; then
+  current_dir_name="$(dirname "$(pwd)")"
+
+  if [[ "$current_dir_name" != "$repository_name" ]]; then
+    mkdir -p "$repository_name"
+    cd "$repository_name" || exit 1
+    touch README.md
+    git init
+    git add .
+    git commit -m "Initial commit"
+  fi
+fi
+
+gh repo create "$repository_name"
+

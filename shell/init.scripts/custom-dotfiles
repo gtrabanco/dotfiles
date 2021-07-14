@@ -41,7 +41,8 @@ source_files=(
   "$DOTFILES_PATH/shell/machines/$(hostname)/functions.sh"
 )
 
-for source_file in ${source_files[@]}; do
+for source_file in "${source_files[@]}"; do
+  #shellcheck disable=SC1090
   [[ -f "$source_file" ]] && . "$source_file"
 done
 

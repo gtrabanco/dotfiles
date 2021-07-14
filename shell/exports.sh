@@ -15,6 +15,9 @@ export DOTLY_SECRETS_VAR_MACOS_STORE="keychain" # filepath or keychain (only mac
 # Avoid touching any of my dotfiles while installing something
 export PROFILE="/dev/null"
 
+# Debug for autocompletions
+export BASH_COMP_DEBUG_FILE="$HOME/bash-autocompletions.log"
+
 # Homebrew
 export HOMEBREW_AUTO_UPDATE_SECS=259300 # 3 days
 export HOMEBREW_NO_ANALYTICS=true
