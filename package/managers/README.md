@@ -1,0 +1,1 @@
+You can add your package manager wrapper for .Sloth, see [brew](https://github.com/gtrabanco/sloth/blob/HEAD/scripts/package/src/package_managers/brew.sh) or [apt](https://github.com/gtrabanco/sloth/blob/HEAD/scripts/package/src/package_managers/apt.sh) wrappers as a good example of implementations.
