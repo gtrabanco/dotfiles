@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+git reflog expire --expire=now --all
+git gc --prune=all --aggressive
