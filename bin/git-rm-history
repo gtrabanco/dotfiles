@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
+#shellcheck disable=SC1091
 . "$DOTLY_PATH/scripts/core/_main.sh"
 
 if git::is_in_repo; then
   git push . :refs/original/refs/heads/master &> /dev/null
-  git filter-branch --index-filter "git rm -r --cached --ignore-unmatch $1" HEAD
+  git filter-branch --force --index-filter "git rm -r --cached --ignore-unmatch $1" --prune-empty --tag-name-filter cat -- --all
+
+  output::empty_line
+  output::write "Remember to execute git push --force to update your remote repository history"
+  output::empty_line
 else
   output::error "This can be executed only in a directory which is a git repository and"
   output::error "you must be also in the root directory of the git repository."
