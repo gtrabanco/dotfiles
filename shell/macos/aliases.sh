@@ -1,7 +1,7 @@
 alias dl="cd ${HOME}/Downloads"
 alias dc="cd ${HOME}/Documents"
 alias iCloud="cd ${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
-alias tasmotizer="cd ${HOME}/.tasmotizer && $(which tasmotizer.py)"
+alias tasmotizer="cd ${HOME}/.tasmotizer && $(command -v tasmotizer.py)"
 
 alias flushDNS="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 alias flush=flushDNS
