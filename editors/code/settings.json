@@ -23,5 +23,6 @@
         "configurations": [],
         "compounds": []
     },
-    "redhat.telemetry.enabled": true
+    "redhat.telemetry.enabled": true,
+    "editor.inlineSuggest.enabled": true
 }
