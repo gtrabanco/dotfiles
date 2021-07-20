@@ -7,8 +7,8 @@ if [[ -z "${DOTLY_SECRETS_MODULE_PATH:-}" ]]; then
 
   if ! platform::command_exists jq || ! platform::command_exists sponge; then
     output::error "The commands 'jq' and 'sponge' are needed, try by executing:"
-    output::answer "$DOTLY_PATH/bin/dot" package install jq
-    output::answer "$DOTLY_PATH/bin/dot" package install sponge
+    output::answer "$DOTLY_PATH/bin/dot" package reinstall jq
+    output::answer "$DOTLY_PATH/bin/dot" package reinstall moreutils
     output::empty_line
     output::yesno "Do you want to execute now and continue" && {
       "$DOTLY_PATH/bin/dot" package install jq
