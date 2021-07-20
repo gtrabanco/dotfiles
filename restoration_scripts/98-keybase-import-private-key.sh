@@ -196,14 +196,14 @@ fi
 
 call_sed() {
   if command -v gsed &> /dev/null; then
-    "$(which gsed)" "$@"
+    "$(commad -v gsed)" "$@"
   elif [[ -f "/usr/local/opt/gnu-sed/libexec/gnubin/sed" ]]; then
     /usr/local/opt/gnu-sed/libexec/gnubin/sed "$@"
-  elif platform::is_macos; then
+  elif platform::is_macos && command -v sed &>/dev/null; then
     # Any other BSD should be added to this check
-    "$(which sed)" '' "$@"
+    "$(command -v sed)" '' "$@"
   elif command -v sed &> /dev/null; then
-    "$(which sed)" "$@"
+    "$(command -v sed)" "$@"
   else
     return 1
   fi
