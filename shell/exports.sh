@@ -12,6 +12,9 @@ export SLOTH_INIT_SCRIPTS=true       # This makes slower the initialization
 # Secrets config
 export DOTLY_SECRETS_VAR_MACOS_STORE="keychain" # filepath or keychain (only macos)
 
+# Do you want to make .Sloth loader 12ms faster?
+export BREW_BIN="/usr/local/bin/brew"
+
 # Avoid touching any of my dotfiles while installing something
 export PROFILE="/dev/null"
 
