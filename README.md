@@ -61,3 +61,6 @@ I recommend and are running very well for TOKEN variables without exposing the t
 
 Go [Secrets scripts folder](https://github.com/gtrabanco/dotfiles/tree/master/scripts/secrets) to view more information.
 
+
+## Other cool dotfiles
+* https://github.com/holman/dotfiles
