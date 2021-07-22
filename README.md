@@ -64,3 +64,5 @@ Go [Secrets scripts folder](https://github.com/gtrabanco/dotfiles/tree/master/sc
 
 ## Other cool dotfiles
 * https://github.com/holman/dotfiles
+* https://github.com/webpro/awesome-dotfiles
+* https://dotfiles.github.io/
