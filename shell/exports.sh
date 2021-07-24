@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Dotly configuration
 export DOTLY_THEME=codely
-export SLOTH_THEME=codely
+export SLOTH_THEME=sloth
 export CODELY_THEME_MODE=dark # Dark mode is default one
 export CODELY_THEME_MINIMAL=false
+export SLOTH_ENV="development" # Avoids updating if .Sloth path is dirty. Important
+# to not loosing time developing stuff that will ends in /dev/null
 export SLOTH_AUTO_UPDATE_PERIOD_IN_DAYS=7
 export SLOTH_AUTO_UPDATE_MODE="auto" # silent, auto (default), info, prompt
 export SLOTH_UPDATE_VERSION="latest" # latest, stable (default), minor
