@@ -4,6 +4,7 @@ export DOTLY_THEME=codely
 export SLOTH_THEME=sloth
 export SLOTH_THEME_MULTILINE=true
 export SLOTH_THEME_MINIMAL=false
+export SLOTH_THEME_NOT_SHOW_UNTRACKED=false
 
 export SLOTH_ENV="development" # Avoids updating if .Sloth path is dirty. Important
 # to not loosing time developing stuff that will ends in /dev/null
