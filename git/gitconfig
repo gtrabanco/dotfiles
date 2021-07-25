@@ -23,6 +23,7 @@
 	precomposeunicode = false
 	pager = delta --dark
 	ignorecase = false
+	untrackedCache = true
 
 [delta]
     features = line-numbers decorations
