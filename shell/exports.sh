@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Dotly configuration
 export DOTLY_THEME=codely
-export SLOTH_THEME=codely
+export SLOTH_THEME=sloth
 export SLOTH_THEME_MULTILINE=true
 export SLOTH_THEME_MINIMAL=false
 export SLOTH_THEME_NOT_SHOW_UNTRACKED=false
