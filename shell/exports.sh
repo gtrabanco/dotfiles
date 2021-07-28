@@ -5,6 +5,7 @@ export SLOTH_THEME_MULTILINE=false
 export SLOTH_THEME_MINIMAL=false
 export SLOTH_THEME_SHOW_UNTRACKED=true
 export SLOTH_THEME_SHOW_BEHIND=true
+export SLOTH_USE_RIGHT_PROMPT=false # Only when no minimal is set
 
 export SLOTH_ENV="development" # Avoids updating if .Sloth path is dirty. Important
 # to not loosing time developing stuff that will ends in /dev/null
