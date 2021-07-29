@@ -6,7 +6,7 @@
 # @raycast.mode fullOutput
 
 # Optional parameters:
-# @raycast.icon 🤖
+# @raycast.icon 🦥
 # @raycast.argument1 { "type": "text", "placeholder": "Context", "optional": false }
 # @raycast.argument2 { "type": "text", "placeholder": "Script", "optional": false }
 # @raycast.argument3 { "type": "text", "placeholder": "Arguments for .Sloth script", "optional": true }
@@ -14,7 +14,7 @@
 # @raycast.needsConfirmation true
 
 # Documentation:
-# @raycast.description Execute dot command
+# @raycast.description Executes lazy .Sloth shell scripts
 # @raycast.author Gabriel Trabanco
 # @raycast.authorURL https://github.com/gtrabanco
 

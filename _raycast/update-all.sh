@@ -12,7 +12,7 @@
 # @raycast.needsConfirmation false
 
 # Documentation:
-# @raycast.description Update all system applications from package managers that are supported by .Sloth
+# @raycast.description Update all applications of all package managers that are supported by .Sloth
 # @raycast.author Gabriel Trabanco
 # @raycast.authorURL https://github.com/gtrabanco
 
