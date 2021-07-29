@@ -6,3 +6,6 @@
 	path = modules/secrets
 	url = keybase://private/gtrabanco/secrets
 	branch = master
+[submodule "modules/raycast_commands"]
+	path = modules/raycast_commands
+	url = https://github.com/raycast/script-commands
