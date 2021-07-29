@@ -23,3 +23,6 @@ ssh/config.d-enabled/*
 !ssh/config.d-enabled/multiplexer
 !ssh/config.d-enabled/remote
 shell/init-scripts/secrets_autoload
+
+# Ignore enabled Raycast scripts
+# modules/raycast_commands/_enabled-commands/*
