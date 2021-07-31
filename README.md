@@ -66,3 +66,5 @@ Go [Secrets scripts folder](https://github.com/gtrabanco/dotfiles/tree/master/sc
 * https://github.com/holman/dotfiles
 * https://github.com/webpro/awesome-dotfiles
 * https://dotfiles.github.io/
+* https://github.com/thedaviddias/Mac-OS-Setup-Applications
+* https://github.com/kcrawford/dockutil
