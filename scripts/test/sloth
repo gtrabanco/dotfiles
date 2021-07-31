@@ -19,6 +19,5 @@ case ${1:-} in
   # Any subcommand should be here
   *)
     output::error "Exit with error: no content yet"
-    exit 1
     ;;
 esac
