@@ -7,11 +7,11 @@ terminalizer::install() {
   fi
   script::depends_on nvm
 
-  if paltform::command_exists yum && sudo -v -B; then
+  if platform::command_exists yum && sudo -v -B; then
     sudo yum install -y libXScrnSaver
   fi
 
-  if paltform::command_exists apt-get && sudo -v -B; then
+  if platform::command_exists apt-get && sudo -v -B; then
     sudo apt-get install -y libgconf-2-4
   fi
 
@@ -21,5 +21,5 @@ terminalizer::install() {
 }
 
 terminalizer::is_installed() {
-  paltform::command_exists terminalizer
+  platform::command_exists terminalizer
 }
