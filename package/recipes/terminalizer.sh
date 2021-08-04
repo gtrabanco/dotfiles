@@ -21,5 +21,7 @@ terminalizer::install() {
 }
 
 terminalizer::is_installed() {
+  #shellcheck disable=SC1091
+  . "${SLOTH_PATH:-${DOTLY_PATH:-}}/shell/init.scripts/nvm"
   platform::command_exists terminalizer
 }
