@@ -24,5 +24,11 @@
         "compounds": []
     },
     "redhat.telemetry.enabled": true,
-    "editor.inlineSuggest.enabled": true
+    "editor.inlineSuggest.enabled": true,
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": true,
+        "plaintext": false,
+        "markdown": false
+    }
 }
