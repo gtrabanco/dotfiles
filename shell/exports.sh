@@ -20,6 +20,7 @@ export DOTLY_SECRETS_VAR_MACOS_STORE="keychain" # filepath or keychain (only mac
 
 # Do you want to make .Sloth loader 12ms faster?
 export BREW_BIN="/usr/local/bin/brew"
+export HOMEBREW_PREFIX="/usr/local"
 
 # Git binary we want to use
 export GIT_EXECUTABLE="/usr/local/bin/git"
