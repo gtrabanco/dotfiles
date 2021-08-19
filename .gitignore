@@ -8,6 +8,8 @@
 bin/semver
 # END OF SLOTH GITIGNORE
 
+.gitsecrets
+
 *.lock.json
 *.private*
 known_hosts
