@@ -19,10 +19,6 @@ export SLOTH_INIT_SCRIPTS=true       # This makes slower the initialization
 # Secrets config
 export DOTLY_SECRETS_VAR_MACOS_STORE="keychain" # filepath or keychain (only macos)
 
-# Do you want to make .Sloth loader 12ms faster?
-export BREW_BIN="/usr/local/bin/brew"
-export HOMEBREW_PREFIX="/usr/local"
-
 # Git binary we want to use
 export GIT_EXECUTABLE="/usr/local/bin/git"
 
@@ -32,9 +28,15 @@ export PROFILE="/dev/null"
 # Debug for autocompletions
 export BASH_COMP_DEBUG_FILE="${HOME}/bash-autocompletions.log"
 
+# Do you want to make .Sloth loader 12ms faster?
+export BREW_BIN="/usr/local/bin/brew"
+export HOMEBREW_PREFIX="/usr/local"
+
 # Homebrew
 export HOMEBREW_AUTO_UPDATE_SECS=259300 # 3 days
 export HOMEBREW_NO_ANALYTICS=true
+export HOMEBREW_NO_INSECURE_REDIRECT=1
+export HOMEBREW_CASK_OPTS=--require-sha
 
 export HISTCONTROL=ignoredups
 
