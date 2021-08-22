@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # .Sloth configuration
-export SLOTH_THEME=sloth
+#export SLOTH_THEME=sloth
+export SLOTH_THEME=codely
 export SLOTH_THEME_MULTILINE=false
 export SLOTH_THEME_MINIMAL=false
 export SLOTH_THEME_SHOW_UNTRACKED=true
@@ -29,7 +30,7 @@ export GIT_EXECUTABLE="/usr/local/bin/git"
 export PROFILE="/dev/null"
 
 # Debug for autocompletions
-export BASH_COMP_DEBUG_FILE="$HOME/bash-autocompletions.log"
+export BASH_COMP_DEBUG_FILE="${HOME}/bash-autocompletions.log"
 
 # Homebrew
 export HOMEBREW_AUTO_UPDATE_SECS=259300 # 3 days
@@ -37,9 +38,9 @@ export HOMEBREW_NO_ANALYTICS=true
 
 export HISTCONTROL=ignoredups
 
-export GEM_HOME="$HOME/.gem"
+export GEM_HOME="${HOME}/.gem"
 
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="${HOME}/.nvm"
 # Enable persistent REPL history for `node`.
 export NODE_REPL_HISTORY=~/.node_history
 # Allow 32³ entries; the default is 1000.
@@ -47,7 +48,7 @@ export NODE_REPL_HISTORY_SIZE='32768'
 # Use sloppy mode by default, matching web browsers.
 export NODE_REPL_MODE='sloppy'
 # nvm
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="${HOME}/.nvm"
 
 # Java
 JAVA_8_HOME=$(/usr/libexec/java_home -v1.8 /dev/null 2>&1)
@@ -61,7 +62,8 @@ export FZF_DEFAULT_OPTS='
   --reverse
 '
 
-EDITOR="$(which vim)"
+#EDITOR="/usr/local/bin/code"
+EDITOR="/usr/bin/vim"
 export EDITOR
 
 export LANG=en_GB.UTF-8
