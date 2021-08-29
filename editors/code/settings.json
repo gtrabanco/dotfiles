@@ -1,34 +1,5 @@
 {
-    "deno.unstable": true,
-    "deno.lint": true,
-    "todo-tree.tree.showScanModeButton": false,
-    "yaml.schemas": {
-        "file:///toc.schema.json": "/toc\\.yml/i"
-    },
-    "todo-tree.general.tags": [
-        "BUG",
-        "HACK",
-        "FIXME",
-        "TODO",
-        "XXX",
-        "[ ]",
-        "[x]"
-    ],
-    "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "workbench.startupEditor": "none",
-    "security.workspace.trust.untrustedFiles": "open",
-    "launch": {
-        "configurations": [],
-        "compounds": []
-    },
-    "redhat.telemetry.enabled": true,
-    "editor.inlineSuggest.enabled": true,
-    "github.copilot.enable": {
-        "*": true,
-        "yaml": true,
-        "plaintext": false,
-        "markdown": false
-    }
+    "editor.inlineSuggest.enabled": true
 }
