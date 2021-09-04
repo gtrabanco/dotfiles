@@ -33,6 +33,8 @@ export BREW_BIN="/usr/local/bin/brew"
 export HOMEBREW_PREFIX="/usr/local"
 
 # Homebrew
+# https://docs.brew.sh/Manpage#environment
+# export HOMEBREW_GITHUB_API_TOKEN # This variable is set with tokens
 export HOMEBREW_AUTO_UPDATE_SECS=259300 # 3 days
 export HOMEBREW_NO_ANALYTICS=true
 export HOMEBREW_NO_INSECURE_REDIRECT=1
