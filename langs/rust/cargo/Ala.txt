@@ -1,2 +1,7 @@
 bashdoc
+cargo-update
+cloc
 deno
+git-cliff
+hyperfine
+ripgrep
