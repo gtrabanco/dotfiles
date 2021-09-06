@@ -1,4 +1,5 @@
 # If you modify this execute `zimfw uninstall & zimfw install`
+# zmodule spaceship-prompt/spaceship-prompt --name spaceship
 zmodule zimfw/environment
 zmodule zimfw/git-info
 #zmodule zimfw/history

@@ -2,6 +2,7 @@
 # .Sloth configuration
 #export SLOTH_THEME=sloth
 export SLOTH_THEME=codely
+#export SLOTH_THEME=spaceship
 export SLOTH_THEME_MULTILINE=false
 export SLOTH_THEME_MINIMAL=false
 export SLOTH_THEME_SHOW_UNTRACKED=true
