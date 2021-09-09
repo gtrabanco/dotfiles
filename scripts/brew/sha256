@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+##? Gives help to get sha256 hash
+##?
+##?
+##? Usage:
+##?   sha256 [-h | --help]
+##?   sha256 [-v | --version]
+##?   sha256 how
+##?   sha256 formula <formula_name_or_file>
+##?   sha256 file <file_path>
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+##?
+#? v1.0.0
+
+script::depends_on brew
+
+case "${1:-}" in
+  how)
+    output::write "Option 1"
+    output::answer "\`brew fetch <formula> --build-from-source\`"
+    output::empty_line
+
+    output::write "Option 2"
+    output::answer "\`openssl sha256 < \"/path/to/file\"\`"
+    output::empty_line
+
+    output::write "Option 3"
+    output::answer "see \`dot brew sha256 --help\` for abstraction way"
+    output::empty_line
+    ;;
+  formula)
+    if [[ -f "${formula_name_or_file:-}" ]]; then
+      brew fetch "$formula_name_or_file" --build-from-source
+    else
+      "${SLOTH_PATH}/bin/dot" brew sha256 --help
+    fi
+    ;;
+  file)
+    if [[ -f "${file_path:-}" ]]; then
+      script::depends_on openssl
+
+      openssl sha256 < "$file_path"
+    else
+      output::error "404 - File not found: \`$file_path\`"
+      exit 4
+    fi
+    ;;
+  *)
+    docs::parse_script "$BASH_SOURCE" --help
+    ;;
+esac
