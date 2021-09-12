@@ -27,6 +27,7 @@ alias github='source $DOTLY_PATH/scripts/dotly/tools/github.sh'
 alias codes='cd ${HOME}/MyCodes'
 alias cdc="codes"
 alias projects='cd ${HOME}/MyCodes'
+alias cdhttp="python3 -m http.server"
 
 # Git
 alias g="git"
