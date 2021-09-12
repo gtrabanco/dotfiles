@@ -25,10 +25,10 @@ codes() {
     output::yesno "Do you want to create it" && just_created=true || return 0
   fi
 
-  if $just_created; then
-    mkdir -p "$project_dir"
-    cd "$project_dir" || return 1
+  mkdir -p "$project_dir"
+  cd "$project_dir" || return 1
 
+  if $just_created; then
     ! git::is_in_repo -C "$project_dir" &&
       output::yesno "Do you want to init \`$dir\` as new git repository" &&
       git::git -C "$project_dir" init
