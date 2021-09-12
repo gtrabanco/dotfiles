@@ -1,0 +1,20 @@
+#compdef codes cdc=codes project=codes projects=codes
+
+_codes() {
+  #setopt local_options xtrace
+  local curcontext="$curcontext" state
+  PROJECTS_SRC_PATH="${PROJECTS_SRC_PATH:-${HOME}/MyProjects}"
+
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "-- Start Autocompletion log --" >> "$BASH_COMP_DEBUG_FILE"
+
+  _arguments \
+    '1: :->project'
+
+  case $state in
+    *)
+      _arguments "1:project:($(find "$PROJECTS_SRC_PATH" -mindepth 1 -maxdepth 1 -name "${project:-}*" -not -iname ".*" -type d -print0 | xargs -0 -I _ basename _))"
+      ;;
+  esac
+}
+
+_codes "$@"

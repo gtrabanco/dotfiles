@@ -1,0 +1,32 @@
+function _codes_completion() {
+  PROJECTS_SRC_PATH="${PROJECTS_SRC_PATH:-${HOME}/MyProjects}"
+
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "-- Start Autocompletion log --" >> "$BASH_COMP_DEBUG_FILE"
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "No: ${#COMP_WORDS[@]}" >> "$BASH_COMP_DEBUG_FILE"
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "1: ${COMP_WORDS[1]}" >> "$BASH_COMP_DEBUG_FILE"
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "2: ${COMP_WORDS[2]}" >> "$BASH_COMP_DEBUG_FILE"
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "#: ${COMP_CWORD}" >> "$BASH_COMP_DEBUG_FILE"
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "Args: ${*}" >> "$BASH_COMP_DEBUG_FILE"
+
+  if [[ $COMP_CWORD -le 2 && -d "$PROJECTS_SRC_PATH" ]]; then
+    [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "Inside if" >> "$BASH_COMP_DEBUG_FILE"
+
+    if
+      [[
+        -z "${COMP_WORDS[1]}" ||
+        ! -d "${PROJECTS_SRC_PATH}/${COMP_WORDS[1]}" &&
+        -n "${COMP_WORDS[1]}"
+      ]]
+    then
+      [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "Inside if if ${COMP_WORDS[1]:-none}" >> "$BASH_COMP_DEBUG_FILE"
+      COMPREPLY=($(compgen -W "$(find "$PROJECTS_SRC_PATH" -mindepth 1 -maxdepth 1 -name "${COMP_WORDS[1]:-}*" -not -iname ".*" -type d -print0 | xargs -0 -I _ basename _)" "${COMP_WORDS[$COMP_CWORD]}"))
+    fi
+  fi
+
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "REPLY: $COMPREPLY" >> "$BASH_COMP_DEBUG_FILE"
+  [[ -n "${BASH_COMP_DEBUG_FILE:-}" ]] && echo "-- End autocompletion log --" >> "$BASH_COMP_DEBUG_FILE"
+}
+complete -o default -F _codes_completion codes
+complete -o default -F _codes_completion cdc
+complete -o default -F _codes_completion project
+complete -o default -F _codes_completion projects

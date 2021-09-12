@@ -24,9 +24,9 @@ alias webstorm='open -na "Webstorm.app"'
 alias intellij='open -na "IntelliJ IDEA"'
 alias chrome-cli='brave-cli'
 alias github='source $DOTLY_PATH/scripts/dotly/tools/github.sh'
-alias codes='cd ${HOME}/MyCodes'
 alias cdc="codes"
-alias projects='cd ${HOME}/MyCodes'
+alias project='codes'
+alias projects='codes'
 alias cdhttp="python3 -m http.server"
 
 # Git
