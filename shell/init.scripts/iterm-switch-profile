@@ -1,9 +1,18 @@
-iterm2_shell_integration_path="$HOME/.iterm2_shell_integration.zsh"
+#!/usr/bin/env bash
+#shellcheck disable=SC1090
 
-if [[ ! -f "$iterm2_shell_integration_path" ]]; then
+iterm2_shell_integration_path="${HOME}/.iterm2_shell_integration.zsh"
+
+if [[ ! -f "$iterm2_shell_integration_path" && $TERM_PROGRAM == "iTerm.app" ]]; then
   bash <(curl -s -f -L https://iterm2.com/shell_integration/install_shell_integration.sh)
 fi
 
-test -e "$iterm2_shell_integration_path" && source "$iterm2_shell_integration_path" || true
+{
+    [[
+      -e "$iterm2_shell_integration_path" &&
+      ${TERM_PROGRAM:-} == "iTerm.app"
+    ]] &&
+    . "$iterm2_shell_integration_path" 
+} || true
 
 unset iterm2_shell_integration_path
