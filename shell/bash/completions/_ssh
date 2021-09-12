@@ -7,7 +7,7 @@ _ssh_config_completions()
 	#local suggestions=($(compgen -W "$ssh_hosts" "${COMP_WORDS[$COMP_CWORD]}"))
 	suggestions=($(compgen -W "$ssh_hosts" "${COMP_WORDS[$COMP_CWORD]}"))
 
-	[ "${#suggestions[@]}" == "1" ] && COMPREPLY=($(echo ${suggestions[0]})) || COMPREPLY=("${suggestions[@]}")
+	[ "${#suggestions[@]}" == "1" ] && COMPREPLY=("${suggestions[0]}") || COMPREPLY=("${suggestions[@]}")
 }
 
-complete -F _ssh_config_completions ssh
+complete -o default -F _ssh_config_completions ssh
