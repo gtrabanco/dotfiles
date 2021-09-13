@@ -30,8 +30,8 @@ export PROFILE="/dev/null"
 export BASH_COMP_DEBUG_FILE="${HOME}/bash-autocompletions.log"
 
 # Do you want to make .Sloth loader 12ms faster?
-export BREW_BIN="/usr/local/bin/brew"
-export HOMEBREW_PREFIX="/usr/local"
+export BREW_BIN="/Users/gtrabanco/.homebrew/bin/brew"
+export HOMEBREW_PREFIX="/Users/gtrabanco/.homebrew"
 
 # Homebrew
 # https://docs.brew.sh/Manpage#environment
