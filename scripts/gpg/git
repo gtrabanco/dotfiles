@@ -8,6 +8,24 @@ set -euo pipefail
 . "${DOTLY_PATH:-$SLOTH_PATH}/scripts/core/src/_main.sh"
 dot::load_library "sec.sh"
 
+if command -v brew &> /dev/null; then
+  HOMEBREW_PREFIX="$(command brew --prefix)"
+elif command -vp brew &> /dev/null; then
+  HOMEBREW_PREFIX="$(command -p brew --prefix)"
+elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+  HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+elif [[ -x "${HOME}/.linuxbrew/bin/brew" ]]; then
+  HOMEBREW_PREFIX="${HOME}/.linuxbrew"
+elif [[ -x "${HOME}/.homebrew/bin/brew" ]]; then
+  HOMEBREW_PREFIX="${HOME}/.homebrew"
+elif [[ -x "${HOME}/.brew/bin/brew" ]]; then
+  HOMEBREW_PREFIX="${HOME}/.brew"
+elif [[ -x "/opt/homebrew/bin/brew" ]]; then
+  HOMEBREW_PREFIX="/opt/homebrew"
+elif [[ -x "/usr/local/bin/brew" ]]; then
+  HOMEBREW_PREFIX="/usr/local"
+fi
+
 pinentry_config() {
   script::depends_on pinentry-mac
 
@@ -35,10 +53,18 @@ gpg_suite_config() {
   fi
 
   sec::sed -i '/^pinentry-program/d' "$gnu_path/gpg-agent.conf"
+
   output::write "Now the GPG Preferences will be opened and mark the options:"
   output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
   open -b com.apple.systempreferences "/Library/PreferencePanes/GPGPreferences.prefPane"
 }
+
+# gpg_suite_pinentry() {
+#   script::depends_on gpg-suite-pinentry
+
+#   sec::sed -i '/^pinentry-program/d' "$gnu_path/gpg-agent.conf"
+#   echo "pinentry-program ${HOMEBREW_PREFIX}/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac" | tee -a "$gnu_path/gpg-agent.conf"
+# }
 
 ##? Configure git and github to sign commits
 ##?
@@ -108,7 +134,8 @@ else
 fi
 
 if platform::command_exists open &&
-  output::yesno "Do you want to open github settings to add your private GPG key"; then
+  output::yesno "Do you want to open github settings to add your private GPG key"
+then
   open "https://github.com/settings/gpg/new"
 else
   output::write "🌍 Open in browser and paste your key:"
@@ -133,22 +160,39 @@ if
     ! ${gpg_suite:-} &&
     output::yesno "Do you want to setup gpg-suite or pinentry to avoid asking the gpg key password every time"
 then
+  pinentry=false
+  gpg_suite=false
+  gpg_suite_no_mail=false
+  gpg_suite_pinentry=false
+
   PS3="Choose an option: "
-  options=("gpg-suite-no-mail" "gpg-suite" "pinentry" "Quit")
+
+  # macOS Monterey is not compatible with gpg-suite mail
+  if [[ $(platform::macos_version_name) == "Monterey" ]]; then
+    options=("gpg-suite-no-mail" "gpg-suite-pinentry" "pinentry" "Quit")
+  else
+    options=("gpg-suite-no-mail" "gpg-suite" "gpg-suite-pinentry" "pinentry" "Quit")
+  fi
+
   select opt in "${options[@]}"; do
     case "$opt" in
       Quit)
         output::answer "User exit"
         exit
         ;;
-      gpg-suite*)
-        pinentry=false
+      gpg-suite-no-mail)
+        gpg_suite_no_mail=true
+        break
+        ;;
+      gpg-suite)
         gpg_suite=true
         break
         ;;
+      gpg-suite-pinentry)
+        gpg_suite_pinentry=true
+        ;;
       pinentry)
         pinentry=true
-        gpg_suite=false
         break
         ;;
       *)
@@ -161,25 +205,38 @@ fi
 
 if ${pinentry:-false}; then
   output::answer "Pinentry configuration in process..."
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &> /dev/null; then
-    brew uninstall gpg-suite
-  fi
+  # if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &> /dev/null; then
+  #   brew uninstall gpg-suite
+  # fi
 
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &> /dev/null; then
-    brew uninstall gpg-suite-no-mail
-  fi
+  # if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &> /dev/null; then
+  #   brew uninstall gpg-suite-no-mail
+  # fi
 
   pinentry_config
 
   output::solution "Pinentry configuration finished"
 fi
 
-if ${gpg_suite:-false}; then
+if ${gpg_suite:-false} || ${gpg_suite_no_mail:-false}; then
   output::answer "GPG Suite configuration in process..."
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac &> /dev/null; then
-    brew uninstall pinentry-mac
+  # if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac &> /dev/null; then
+  #   package::uninstall pinentry-mac
+  # fi
+
+  if ${gpg_suite:-false}; then
+    package::install gpg-suite brew
+  elif ${gpg_suite_no_mail:-false}; then
+    package::install gpg-suite-no-mail brew
   fi
 
   gpg_suite_config
   output::solution "GPG Suite configuration finished"
 fi
+
+# if ${gpg_suite_pinentry:-false}; then
+#   # brew install --cask gpg-suite-pinentry
+#   package::install gpg-suite-pinentry
+
+#   gpg_suite_pinentry
+# fi

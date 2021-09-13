@@ -111,7 +111,7 @@
 	process = git-lfs filter-process
 	required = true
 [gpg]
-	program = /usr/local/bin/gpg
+	program = /Users/gtrabanco/.homebrew/bin/gpg
 [push]
 	default = current
 [rebase]
