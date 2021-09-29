@@ -8,3 +8,5 @@ Host *
 	IdentityFile /Volumes/Keybase/private/gtrabanco/my_ssh_keys/mbp2016.key
 	UseKeychain yes
 	AddKeysToAgent yes
+	ForwardAgent yes
+	ForwardAgent yes
