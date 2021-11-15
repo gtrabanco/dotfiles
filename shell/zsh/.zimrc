@@ -9,4 +9,4 @@ zmodule zsh-users/zsh-autosuggestions
 zmodule zsh-users/zsh-syntax-highlighting
 zmodule zimfw/completion
 
-zhighlighters=(main brackets)
+# zhighlighters=(main brackets)
