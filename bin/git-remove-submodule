@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-source "$DOTLY_PATH/scripts/core/_main.sh"
+#!/usr/bin/env sloth
 
 if [[ -d ".git" ]] && [[ -f ".gitmodules" ]]; then
   git submodule deinit -f -- "$1"
