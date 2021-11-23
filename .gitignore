@@ -26,5 +26,8 @@ ssh/config.d-enabled/*
 !ssh/config.d-enabled/remote
 shell/init-scripts/secrets_autoload
 
+# Ignore zimfw folder
+shell/zimfw
+
 # Ignore enabled Raycast scripts
 # modules/raycast_commands/_enabled-commands/*
