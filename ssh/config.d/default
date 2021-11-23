@@ -5,7 +5,7 @@ Host *
 	TCPKeepAlive yes
 	ServerAliveInterval 20
 	ServerAliveCountMax 10
-	IdentityFile /Volumes/Keybase/private/gtrabanco/my_ssh_keys/mbp2016.key
+	IdentityFile ~/.ssh/mbp2016.key
 	UseKeychain yes
 	AddKeysToAgent yes
 	ForwardAgent yes
