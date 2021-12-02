@@ -31,3 +31,4 @@ shell/zimfw
 
 # Ignore enabled Raycast scripts
 # modules/raycast_commands/_enabled-commands/*
+shell/zsh/.zimfw
