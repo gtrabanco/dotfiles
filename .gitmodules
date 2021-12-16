@@ -9,3 +9,8 @@
 [submodule "modules/raycast_commands"]
 	path = modules/raycast_commands
 	url = https://github.com/raycast/script-commands
+[submodule "modules/dotbot"]
+	path = modules/dotbot
+	url = https://github.com/anishathalye/dotbot
+	branch = master
+	ignore = dirty
