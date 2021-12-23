@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+#? Description: Describe your script here
+#? Author: Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 <chat_id> <message>..."
+  exit 1
+fi
+
+TELEGRAM_API_KEY="${TELEGRAM_API_KEY:-${BOT_API_KEY:-}}"
+
+if [ -z "${TELEGRAM_API_KEY:-}" ]; then
+  echo "Please set the TELEGRAM_API_KEY environment variable" 1>&2
+  exit 1
+fi
+
+chat_id="$1"
+shift
+message="$*"
+
+
+data=$(curl --silent "https://api.telegram.org/bot${TELEGRAM_API_KEY}/sendMessage" --data-urlencode "chat_id=${chat_id}" --data-urlencode "text=${message}")
+
+echo "$data" | grep -q 'true' && echo "Message sent" || echo "Error sending message" && exit 1
