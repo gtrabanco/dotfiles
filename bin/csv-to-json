@@ -1,0 +1,133 @@
+#!/usr/bin/env sloth
+
+##? Convert CSV to JSON
+##?
+##? Usage:
+##?   $0 --help | -h
+##?   $0 --version | -v
+##?   $0 [--skip-columns <skip_columns>|--only-columns <only_columns>] [--file-columns <file_columns>] [--separator <separator>] <csv-file>
+##?
+##? Options:
+##?   --help -h                      Show this screen.
+##?   --version -v                   Show version.
+##?   --skip-columns <columns>       Skip columns by comman separated.
+##?   --only-columns <columns>       Only columns by comman separated.
+##?   --file-columns <file_columns>  File columns by comman separated if it is not the first row.
+##?   --separator <separator_char>   Separator character. Default is "," (comma).
+##?
+##? Arguments:
+##?   <csv-file>                CSV file.
+##?
+##? Examples:
+##?
+##?   $ $0 /path/to/invoice-summary.csv
+##?   $ $0 --skip-columns tax,total /path/to/invoice-summary.csv
+##?   $ $0 --only-columns description /path/to/invoice-summary.csv
+
+separator="${separator:-,}"
+action="default"
+start_row=2
+
+if [[ -z "${csv_file:-}" || ! -r "${csv_file}" ]]; then
+  output::error "Missing or invalid CSV file."
+  docs::parse "${BASH_SOURCE[0]}" --help
+  exit 1
+fi
+
+if [[ -n ${skip_columns:-} ]]; then
+  columns="$skip_columns"
+  action="skip"
+elif [[ -n ${only_columns:-} ]]; then
+  columns="$only_columns"
+  action="only"
+fi
+
+if [[ -n "${file_columns:-}" ]]; then
+  start_row=1
+  readarray -t file_columns < <(echo "${file_columns}" | tr ',' '\n')
+else
+  readarray -t file_columns < <(head -n 1 "${csv_file}" | tr "$separator" '\n')
+fi
+
+readarray -t file_lines < <(cat "$csv_file")
+previous_row=false
+
+printf "[\n"
+
+for row_index in "${!file_lines[@]}"; do
+  [[ $row_index -lt $start_row ]] && continue
+  unset row_array
+  declare -a row_array
+  readarray -t row_array < <(echo "${file_lines[$row_index]}" | tr "$separator" '\n')
+
+  ${previous_row} && printf ",\n"
+  printf "  {\n"
+  previous_row=true
+  previous_column=false
+
+  for c in "${!file_columns[@]}"; do
+    ## Rewrite column names
+    file_columns[$c]="${file_columns[$c]// /_}"
+    file_columns[$c]="${file_columns[$c]//\$/DOLLAR}"
+    file_columns[$c]="${file_columns[$c]//\€/EURO}"
+    file_columns[$c]="${file_columns[$c]//\%/PERCENTAGE}"
+    ## Only allow valid characters for variables
+    file_columns[$c]="$(printf "%s" "${file_columns[$c]//\n/}" | sed -e 's/[^[:alnum:]_]//g')"
+
+    ## Check if we have to skip this column
+    case "$action" in
+      "skip")
+        if [[ "${separator}$columns${separator}" == *"${separator}${file_columns[$c]}${separator}"* ]]; then
+          continue
+        fi
+        ;;
+      "only")
+        if [[ "${separator}$columns${separator}" != *"${separator}${file_columns[$c]}${separator}"* ]]; then
+          continue
+        fi
+        ;;
+    esac
+
+    ${previous_column} && printf ",\n"
+    previous_column=true
+    printf "    \"%s\": " "${file_columns[$c]}"
+
+    if
+      [[ "${row_array[$c]}" == "true" || "${row_array[$c]}" == false ]] ||
+      [[ "${row_array[$c]}" == "TRUE" || "${row_array[$c]}" == FALSE ]] ||
+      [[ "${row_array[$c]}" =~ ^[0-9]+$ || "${row_array[$c]}" =~ ^[0-9]+\.[0-9]+$ || "${row_array[$c]}" =~ ^[0-9]+\,[0-9]+$ ]]
+      then
+      printf "%s" "${row_array[$c]//\,/\.}" | tr '[:upper:]' '[:lower:]'
+    ## Percentage as float
+    elif
+      [[ "${row_array[$c]}" =~ ^[0-9]+\%$ || "${row_array[$c]}" =~ ^[0-9]+\.[0-9]+\%$ || "${row_array[$c]}" =~ ^[0-9]+\,[0-9]+\%$ ]]
+      then
+      row_array[$c]="${row_array[$c]//\%/}"
+      printf "%s" "${row_array[$c]//\,/\.}"
+    ## Json Array
+    elif
+      [[ "${row_array[$c]}" =~ ^\[.*\]$ ]]
+      then
+      printf "%s" "${row_array[$c]}"
+    ## Json Object
+    elif
+      [[ "${row_array[$c]}" =~ ^\{.*\}$ ]]
+      then
+      printf "%s" "${row_array[$c]}"
+    ## Callback
+    elif
+      [[ "${row_array[$c]}" =~ ^[a-zA-Z0-9-_]+\(.*\)$ ]]
+      then
+      printf "%s" "${row_array[$c]}"
+    ## Is a string
+    else
+      #shellcheck disable=SC2001
+      printf "\"%s\"" "$(echo "${row_array[$c]}" | sed -e 's/[\n\r]//g')"
+    fi
+
+  done
+
+  printf "\n  }"
+done
+
+printf "\n]"
