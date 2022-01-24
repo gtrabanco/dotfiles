@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
+#shellcheck disable=SC1091
 
 . "$DOTFILES_PATH/scripts/secrets/src/install_needed_soft_and_vars.sh"
 . "$DOTFILES_PATH/scripts/secrets/src/secrets_helpers.sh"
 . "$DOTFILES_PATH/scripts/secrets/src/secrets_json.sh"
+
+# Core symlinks libraries
+dot::load_library "dotbot.sh" "symlinks"
+dot::load_library "symlinks.sh" "symlinks"
 
 secrets::find() {
   local find_relative_path exclude_itself arguments
@@ -40,6 +45,7 @@ secrets::fzf() {
   local piped_values
   piped_values="$(< /dev/stdin)"
 
+  #shellcheck disable=SC2068
   printf "%s\n" ${piped_values[@]} | fzf -m --extended \
     --header "$1" \
     --preview "source \"$DOTFILES_PATH/scripts/secrets/lib/secrets_fzf_preview.sh\";secrets::preview {}" # CHANGE FOR DOTLY_PATH
@@ -47,10 +53,10 @@ secrets::fzf() {
 
 secrets::apply() {
   local file_path
-  file_path="$DOTFILES_PATH/$DOTLY_SECRETS_MODULE_PATH/symlinks/secrets.json"
+  file_path="${DOTFILES_PATH}/${DOTLY_SECRETS_MODULE_PATH}/symlinks/secrets.json"
   if [[ -f "$file_path" ]]; then
     echo
-    "$DOTLY_PATH/modules/dotbot/bin/dotbot" -d "$DOTFILES_PATH" -c "$file_path" "$@"
+    dotbot::exec -d "$DOTFILES_PATH" -c "$file_path" "$@"
     echo
   fi
 }

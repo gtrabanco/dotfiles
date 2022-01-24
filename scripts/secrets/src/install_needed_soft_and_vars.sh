@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#shellcheck disable=SC2034
 
 # Stuff we want to execute just once
 if [[ -z "${DOTLY_SECRETS_MODULE_PATH:-}" ]]; then
