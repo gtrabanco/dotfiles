@@ -32,3 +32,4 @@ shell/zimfw
 
 # Ignore enabled Raycast scripts
 # modules/raycast_commands/_enabled-commands/*
+/Users/gtrabanco/.dotfiles/shell/zsh/.z/z.sh
