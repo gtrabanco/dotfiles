@@ -7,7 +7,7 @@
 # Stable:
 # FFMPEG_URL_ZIP="${FFMPEG_URL_ZIP:-https://evermeet.cx/ffmpeg/ffmpeg-5.0.zip}"
 # Latest
-FFMPEG_URL_ZIP="${FFMPEG_URL_ZIP:-https://evermeet.cx/ffmpeg/get/zip}"
+# FFMPEG_URL_ZIP="${FFMPEG_URL_ZIP:-https://evermeet.cx/ffmpeg/get/zip}"
 FFMPEG_URL_INFO="${FFMPEG_URL_INFO:-https://evermeet.cx/ffmpeg/info}"
 FFMPEG_INSTALL_PATH="${FFMPEG_INSTALL_PATH:-${HOME}/bin}"
 
