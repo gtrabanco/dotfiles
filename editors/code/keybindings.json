@@ -25,5 +25,15 @@
       "key": "alt+`",
       "command": "-markdownExtended.toggleCodeInline",
       "when": "editorTextFocus && editorLangId == 'markdown'"
+    },
+    {
+      "key": "tab",
+      "command": "-editor.emmet.action.expandAbbreviation",
+      "when": "config.emmet.triggerExpansionOnTab && editorTextFocus && !editorReadonly && !editorTabMovesFocus"
+    },
+    {
+      "key": "tab",
+      "command": "editor.emmet.action.expandAbbreviation",
+      "when": "config.emmet.triggerExpansionOnTab && editorTextFocus && !editorReadonly && !editorTabMovesFocus"
     }
   ]
