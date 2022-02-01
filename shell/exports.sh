@@ -40,6 +40,7 @@ export HOMEBREW_AUTO_UPDATE_SECS=259300 # 3 days
 export HOMEBREW_NO_ANALYTICS=true
 export HOMEBREW_NO_INSECURE_REDIRECT=1
 export HOMEBREW_CASK_OPTS=--require-sha
+export HOMEBREW_NO_ENV_HINTS=true
 
 export HISTCONTROL=ignoredups
 

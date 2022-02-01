@@ -1,4 +1,7 @@
 {
+    "editor.codeActionsOnSave": {
+        "source.fixAll.esLint": true
+    },
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "editor.inlineSuggest.enabled": true,
@@ -13,7 +16,6 @@
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
-    "redhat.telemetry.enabled": true,
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
@@ -35,5 +37,9 @@
         "javascript": "javascriptreact",
         "typescript": "typescriptreact"
     },
-    "emmet.triggerExpansionOnTab": true
+    "emmet.triggerExpansionOnTab": true,
+    "editor.bracketPairColorization.enabled": true,
+    "files.autoSave": "afterDelay",
+    "telemetry.telemetryLevel": "off",
+    "docsYaml.telemetry.enableTelemetry": false
 }
