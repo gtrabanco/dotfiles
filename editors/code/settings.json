@@ -1,6 +1,7 @@
 {
     "editor.codeActionsOnSave": {
-        "source.fixAll.esLint": true
+        "source.fixAll.esLint": true,
+        "source.organizeImports": true
     },
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
@@ -14,10 +15,12 @@
         }
     ],
     "[json]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
+        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.formatOnSave": true
     },
     "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
     },
     "github.copilot.enable": {
         "*": true,
@@ -28,7 +31,8 @@
     "editor.tabSize": 2,
     "javascript.updateImportsOnFileMove.enabled": "always",
     "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
     },
     "editor.unicodeHighlight.invisibleCharacters": false,
     "editor.accessibilitySupport": "off",
@@ -44,8 +48,8 @@
     "docsYaml.telemetry.enableTelemetry": false,
     "security.workspace.trust.untrustedFiles": "open",
     "[javascriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
     },
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.formatOnSave": false
 }
