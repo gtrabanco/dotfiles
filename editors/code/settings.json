@@ -41,5 +41,11 @@
     "editor.bracketPairColorization.enabled": true,
     "files.autoSave": "afterDelay",
     "telemetry.telemetryLevel": "off",
-    "docsYaml.telemetry.enableTelemetry": false
+    "docsYaml.telemetry.enableTelemetry": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
