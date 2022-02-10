@@ -1,4 +1,6 @@
 {
+    "editor.fontFamily": "Cascadia Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.esLint": true,
         "source.organizeImports": true
@@ -51,5 +53,8 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true
     },
-    "editor.formatOnSave": false
+    "editor.formatOnSave": false,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

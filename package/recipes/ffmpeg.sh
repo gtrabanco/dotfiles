@@ -88,11 +88,11 @@ ffmpeg::is_outdated() {
   #shellcheck disable=SC2207
   local -r latest=($(ffmpeg::latest | awk '{gsub(/[.-]/, "\n", $0); print}'))
 
-  if [ "${current[1]}" -lt "${latest[1]}" ]; then
+  if [ "${current[0]}" -lt "${latest[0]}" ]; then
     return 0
   fi
 
-  if [ "${current[1]}" -eq "${latest[1]}" ] && [ "${current[2]}" -lt "${latest[1]}" ]; then
+  if [ "${current[1]:-0}" -lt "${latest[1]:-0}" ]; then
     return 0
   fi
 
