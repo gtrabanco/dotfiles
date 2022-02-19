@@ -1,60 +1,63 @@
 {
-    "editor.fontFamily": "Cascadia Mono, Menlo, Monaco, 'Courier New', monospace",
-    "editor.fontLigatures": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.esLint": true,
-        "source.organizeImports": true
-    },
-    "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "editor.inlineSuggest.enabled": true,
-    "mssql.connections": [
-        {
-            "server": "{{put-server-name-here}}",
-            "database": "{{put-database-name-here}}",
-            "user": "{{put-username-here}}",
-            "password": ""
-        }
-    ],
-    "[json]": {
-        "editor.defaultFormatter": "vscode.json-language-features",
-        "editor.formatOnSave": true
-    },
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "github.copilot.enable": {
-        "*": true,
-        "yaml": false,
-        "plaintext": true,
-        "markdown": false
-    },
-    "editor.tabSize": 2,
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "editor.unicodeHighlight.invisibleCharacters": false,
-    "editor.accessibilitySupport": "off",
-    "html.format.indentInnerHtml": true,
-    "emmet.includeLanguages": {
-        "javascript": "javascriptreact",
-        "typescript": "typescriptreact"
-    },
-    "emmet.triggerExpansionOnTab": true,
-    "editor.bracketPairColorization.enabled": true,
-    "files.autoSave": "afterDelay",
-    "telemetry.telemetryLevel": "off",
-    "docsYaml.telemetry.enableTelemetry": false,
-    "security.workspace.trust.untrustedFiles": "open",
-    "[javascriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "editor.formatOnSave": false,
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "[javascript]" : {
+    "editor.defaultFormatter" : "esbenp.prettier-vscode",
+    "editor.formatOnSave" : true
+  },
+  "editor.inlineSuggest.enabled" : true,
+  "emmet.includeLanguages" : {
+    "typescript" : "typescriptreact",
+    "javascript" : "javascriptreact"
+  },
+  "[typescript]" : {
+    "editor.defaultFormatter" : "esbenp.prettier-vscode"
+  },
+  "docsYaml.telemetry.enableTelemetry" : false,
+  "mssql.connections" : [
+    {
+      "user" : "{{put-username-here}}",
+      "password" : "",
+      "server" : "{{put-server-name-here}}",
+      "database" : "{{put-database-name-here}}"
     }
+  ],
+  "[javascriptreact]" : {
+    "editor.defaultFormatter" : "esbenp.prettier-vscode",
+    "editor.formatOnSave" : true
+  },
+  "editor.bracketPairColorization.enabled" : true,
+  "editor.unicodeHighlight.invisibleCharacters" : false,
+  "editor.accessibilitySupport" : "off",
+  "editor.fontFamily" : "Cascadia Mono, Menlo, Monaco, 'Courier New', monospace",
+  "html.format.indentInnerHtml" : true,
+  "editor.suggestSelection" : "first",
+  "github.copilot.enable" : {
+    "markdown" : false,
+    "*" : true,
+    "plaintext" : true,
+    "yaml" : false
+  },
+  "javascript.updateImportsOnFileMove.enabled" : "always",
+  "editor.tabSize" : 2,
+  "[html]" : {
+    "editor.defaultFormatter" : "esbenp.prettier-vscode",
+    "editor.formatOnSave" : true
+  },
+  "editor.fontLigatures" : true,
+  "[json]" : {
+    "editor.defaultFormatter" : "vscode.json-language-features",
+    "editor.formatOnSave" : true
+  },
+  "editor.formatOnSave" : false,
+  "security.workspace.trust.untrustedFiles" : "open",
+  "telemetry.telemetryLevel" : "off",
+  "files.autoSave" : "afterDelay",
+  "editor.codeActionsOnSave" : {
+    "source.fixAll.esLint" : true,
+    "source.organizeImports" : true
+  },
+  "emmet.triggerExpansionOnTab" : true,
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "terminal.integrated.env.osx": {
+    "FIG_NEW_SESSION": "1"
+  }
 }

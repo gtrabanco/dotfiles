@@ -114,7 +114,9 @@ ffmpeg::url() {
 }
 
 ffmpeg::version() {
-  ffmpeg --help 2>&1 | awk '/ffmpeg version ([01-9]+\.[01-9]+){1}/ {gsub(/[^\.0-9]*$/, "", $3); print $3}'
+  {
+    ffmpeg::is_installed && ffmpeg --help 2>&1 | awk '/ffmpeg version ([01-9]+\.[01-9]+){1}/ {gsub(/[^\.0-9]*$/, "", $3); print $3}'
+  } || true
 }
 
 ffmpeg::title() {
