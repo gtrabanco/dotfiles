@@ -1,66 +1,75 @@
 {
-  "[javascript]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode",
-    "editor.formatOnSave" : true
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   },
-  "editor.inlineSuggest.enabled" : true,
-  "emmet.includeLanguages" : {
-    "typescript" : "typescriptreact",
-    "javascript" : "javascriptreact"
+  "editor.inlineSuggest.enabled": true,
+  "emmet.includeLanguages": {
+    "typescript": "typescriptreact",
+    "javascript": "javascriptreact"
   },
-  "[typescript]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode"
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "docsYaml.telemetry.enableTelemetry" : false,
-  "mssql.connections" : [
+  "docsYaml.telemetry.enableTelemetry": false,
+  "mssql.connections": [
     {
-      "user" : "{{put-username-here}}",
-      "password" : "",
-      "server" : "{{put-server-name-here}}",
-      "database" : "{{put-database-name-here}}"
+      "user": "{{put-username-here}}",
+      "password": "",
+      "server": "{{put-server-name-here}}",
+      "database": "{{put-database-name-here}}"
     }
   ],
-  "[javascriptreact]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode",
-    "editor.formatOnSave" : true
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   },
-  "editor.bracketPairColorization.enabled" : true,
-  "editor.unicodeHighlight.invisibleCharacters" : false,
-  "editor.accessibilitySupport" : "off",
-  "editor.fontFamily" : "Cascadia Mono, Menlo, Monaco, 'Courier New', monospace",
-  "html.format.indentInnerHtml" : true,
-  "editor.suggestSelection" : "first",
-  "github.copilot.enable" : {
-    "markdown" : false,
-    "*" : true,
-    "plaintext" : true,
-    "yaml" : false
+  "editor.bracketPairColorization.enabled": true,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "editor.accessibilitySupport": "off",
+  "editor.fontFamily": "Cascadia Mono, Menlo, Monaco, 'Courier New', monospace",
+  "html.format.indentInnerHtml": true,
+  "editor.suggestSelection": "first",
+  "github.copilot.enable": {
+    "markdown": false,
+    "*": true,
+    "plaintext": true,
+    "yaml": false
   },
-  "javascript.updateImportsOnFileMove.enabled" : "always",
-  "editor.tabSize" : 2,
-  "[html]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode",
-    "editor.formatOnSave" : true
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "editor.tabSize": 2,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   },
-  "editor.fontLigatures" : true,
-  "[json]" : {
-    "editor.defaultFormatter" : "vscode.json-language-features",
-    "editor.formatOnSave" : true
+  "editor.fontLigatures": true,
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": true
   },
-  "editor.formatOnSave" : false,
-  "security.workspace.trust.untrustedFiles" : "open",
-  "telemetry.telemetryLevel" : "off",
-  "files.autoSave" : "afterDelay",
-  "editor.codeActionsOnSave" : {
-    "source.fixAll.esLint" : true,
-    "source.organizeImports" : true
+  "editor.formatOnSave": true,
+  "security.workspace.trust.untrustedFiles": "open",
+  "telemetry.telemetryLevel": "off",
+  "files.autoSave": "afterDelay",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.esLint": true,
+    "source.organizeImports": true
   },
-  "emmet.triggerExpansionOnTab" : true,
+  "emmet.triggerExpansionOnTab": true,
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
   "terminal.integrated.env.osx": {
     "FIG_NEW_SESSION": "1"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.requireConfig": true,
+  "standard.run": "onSave",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.external.osxExec": "iTerm2.app",
+  "terminal.integrated.confirmOnExit": "hasChildProcesses",
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
   }
 }
