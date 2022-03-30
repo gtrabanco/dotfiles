@@ -2,29 +2,19 @@
 
 set -euo pipefail
 
-[[ -z "${DOTLY_PATH:-$SLOTH_PATH}" ]] && exit 1
+if [[ -z "${SLOTH_PATH:-}" ]]; then
+  cat <<EOF
+  .Sloth required:
+    https://github.com/gtrabanco/dotSloth
+
+  bash <(curl -s https://raw.githubusercontent.com/gtrabanco/dotSloth/HEAD/installer)
+EOF
+  exit 1
+fi
 
 #shellcheck disable=SC1091
-. "${DOTLY_PATH:-$SLOTH_PATH}/scripts/core/src/_main.sh"
+. "${SLOTH_PATH:-}/scripts/core/src/_main.sh"
 dot::load_library "sec.sh"
-
-if command -v brew &> /dev/null; then
-  HOMEBREW_PREFIX="$(command brew --prefix)"
-elif command -vp brew &> /dev/null; then
-  HOMEBREW_PREFIX="$(command -p brew --prefix)"
-elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-  HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-elif [[ -x "${HOME}/.linuxbrew/bin/brew" ]]; then
-  HOMEBREW_PREFIX="${HOME}/.linuxbrew"
-elif [[ -x "${HOME}/.homebrew/bin/brew" ]]; then
-  HOMEBREW_PREFIX="${HOME}/.homebrew"
-elif [[ -x "${HOME}/.brew/bin/brew" ]]; then
-  HOMEBREW_PREFIX="${HOME}/.brew"
-elif [[ -x "/opt/homebrew/bin/brew" ]]; then
-  HOMEBREW_PREFIX="/opt/homebrew"
-elif [[ -x "/usr/local/bin/brew" ]]; then
-  HOMEBREW_PREFIX="/usr/local"
-fi
 
 sec::delete_line() {
   [[ $# -gt 1 && -f "$2" ]] && sec::sed -i "/^${1}/d" "${2}" && return $?
@@ -38,27 +28,27 @@ pinentry_config() {
   sec::delete_line "default-cache-ttl" "${gnu_path}/gpg-agent.conf"
   sec::delete_line "max-cache-ttl" "${gnu_path}/gpg-agent.conf"
   sec::delete_line "pinentry-program" "${gnu_path}/gpg-agent.conf"
-  echo "pinentry-program $(which pinentry-mac)" >> "${gnu_path}/gpg-agent.conf"
+  echo "pinentry-program $(which pinentry-mac)" >>"${gnu_path}/gpg-agent.conf"
 }
 
 gpg_suite_config() {
   if
-    ! "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &> /dev/null
+    ! "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &>/dev/null
   then
     script::depends_on gpg-suite-no-mail
   fi
 
   touch "${gnu_path}/gpg-agent.conf"
   if ! grep -q "^default-cache-ttl" "${gnu_path}/gpg-agent.conf"; then
-    echo "default-cache-ttl 600" >> "${gnu_path}/gpg-agent.conf"
+    echo "default-cache-ttl 600" >>"${gnu_path}/gpg-agent.conf"
   fi
 
   if ! grep -q "^max-cache-ttl" "${gnu_path}/gpg-agent.conf"; then
-    echo "max-cache-ttl 7200" >> "${gnu_path}/gpg-agent.conf"
+    echo "max-cache-ttl 7200" >>"${gnu_path}/gpg-agent.conf"
   fi
 
   sec::delete_line "pinentry-program" "${gnu_path}/gpg-agent.conf"
-  echo "pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac" | tee -a "${gnu_path}/gpg-agent.conf" &> /dev/null
+  echo "pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac" | tee -a "${gnu_path}/gpg-agent.conf" &>/dev/null
 
   output::write "Now the GPG Preferences will be opened and mark the options:"
   output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
@@ -70,6 +60,34 @@ gpg_suite_pinentry() {
 
   sec::delete_line "pinentry-program" "${gnu_path}/gpg-agent.conf"
   echo "pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac" | tee -a "${gnu_path}/gpg-agent.conf"
+}
+
+uninstall_gpg_suite_if_needed() {
+  if package::is_installed gpg-suite &>/dev/null; then
+    output::answer "gpg-suite is installed. Uninstalling..."
+    package::uninstall gpg-suite
+  fi
+}
+
+uninstall_gpg_suite_no_mail_if_needed() {
+  if package::is_installed gpg-suite-no-mail &>/dev/null; then
+    output::answer "gpg-suite-no-mail is installed. Uninstalling..."
+    package::uninstall gpg-suite-no-mail
+  fi
+}
+
+uninstall_pinentry_mac_if_needed() {
+  if package::is_installed pinentry-mac &>/dev/null; then
+    output::answer "pinentry-mac is installed. Uninstalling..."
+    package::uninstall pinentry-mac
+  fi
+}
+
+uninstall_gpg_suite_pinentry_if_needed() {
+  if package::is_installed gpg-suite-pinentry &>/dev/null; then
+    output::answer "gpg-suite-pinentry is installed. Uninstalling..."
+    package::uninstall gpg-suite-pinentry
+  fi
 }
 
 ##? Configure git and github to sign commits
@@ -117,7 +135,7 @@ if ! platform::command_exists brew; then
 fi
 
 # Dependencies
-script::depends_on gnupg git
+script::depends_on gnupg git brew
 
 # Variables
 gnu_path="${gnupg_path:-$HOME/.gnupg}"
@@ -151,8 +169,7 @@ else
 fi
 
 if platform::command_exists open &&
-  output::yesno "Do you want to open github settings to add your private GPG key"
-then
+  output::yesno "Do you want to open github settings to add your private GPG key"; then
   open "https://github.com/settings/gpg/new"
 else
   output::write "🌍 Open in browser and paste your key:"
@@ -194,43 +211,44 @@ then
 
   select opt in "${options[@]}"; do
     case "$opt" in
-      Quit)
-        output::answer "User exit"
-        exit
-        ;;
-      gpg-suite-no-mail)
-        gpg_suite_no_mail=true
-        break
-        ;;
-      gpg-suite)
-        gpg_suite=true
-        break
-        ;;
-      gpg-suite-pinentry)
-        gpg_suite_pinentry=true
-        ;;
-      pinentry)
-        pinentry=true
-        break
-        ;;
-      *)
-        output::error "Unexpected value"
-        exit 1
-        ;;
+    Quit)
+      output::answer "User exit"
+      exit
+      ;;
+    gpg-suite-no-mail)
+      output::answer "gpg-suite-no-mail"
+      gpg_suite_no_mail=true
+      break
+      ;;
+    gpg-suite)
+      output::answer "gpg-suite"
+      gpg_suite=true
+      break
+      ;;
+    gpg-suite-pinentry)
+      output::answer "gpg-suite-pinentry"
+      gpg_suite_pinentry=true
+      break
+      ;;
+    pinentry)
+      output::answer "pinentry"
+      pinentry=true
+      break
+      ;;
+    *)
+      output::error "Unexpected value"
+      exit 1
+      ;;
     esac
   done
 fi
 
 if ${pinentry:-false}; then
-  output::answer "Pinentry configuration in process..."
+  output::header "Pinentry configuration in process..."
 
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &> /dev/null; then
-    brew uninstall gpg-suite
-  fi
-
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite-no-mail &> /dev/null; then
-    brew uninstall gpg-suite-no-mail
-  fi
+  uninstall_gpg_suite_if_needed
+  uninstall_gpg_suite_no_mail_if_needed
+  uninstall_gpg_suite_pinentry_if_needed
 
   pinentry_config
 
@@ -238,11 +256,10 @@ if ${pinentry:-false}; then
   output::solution "Pinentry configuration finished"
 
 elif ${gpg_suite:-false} || ${gpg_suite_no_mail:-false}; then
-  output::answer "GPG Suite configuration in process..."
+  output::header "GPG Suite configuration in process..."
 
-  if "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check pinentry-mac &> /dev/null; then
-    package::uninstall pinentry-mac
-  fi
+  uninstall_pinentry_mac_if_needed
+  uninstall_gpg_suite_pinentry_if_needed
 
   if ${gpg_suite:-false}; then
     package::install gpg-suite brew
@@ -256,7 +273,11 @@ elif ${gpg_suite:-false} || ${gpg_suite_no_mail:-false}; then
   output::solution "GPG Suite configuration finished"
 
 elif ${gpg_suite_pinentry:-false}; then
-  output::answer "GPG Suite pinentry configuration in process..."
+  output::header "GPG Suite pinentry configuration in process..."
+
+  uninstall_gpg_suite_if_needed
+  uninstall_gpg_suite_no_mail_if_needed
+  uninstall_pinentry_mac_if_needed
 
   brew install --cask gpg-suite-pinentry
   #package::install gpg-suite-pinentry brew
