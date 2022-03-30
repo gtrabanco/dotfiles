@@ -29,11 +29,12 @@ pinentry_config() {
   sec::delete_line "max-cache-ttl" "${gnu_path}/gpg-agent.conf"
   sec::delete_line "pinentry-program" "${gnu_path}/gpg-agent.conf"
   echo "pinentry-program $(which pinentry-mac)" >>"${gnu_path}/gpg-agent.conf"
+  gpgconf --kill all
 }
 
 gpg_suite_config() {
   if
-    ! "${SLOT_PATH:-$DOTLY_PATH}/bin/dot" package check gpg-suite &>/dev/null
+    ! package::is_installed gpg-suite &>/dev/null
   then
     script::depends_on gpg-suite-no-mail
   fi
@@ -49,6 +50,7 @@ gpg_suite_config() {
 
   sec::delete_line "pinentry-program" "${gnu_path}/gpg-agent.conf"
   echo "pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac" | tee -a "${gnu_path}/gpg-agent.conf" &>/dev/null
+  gpgconf --kill all
 
   output::write "Now the GPG Preferences will be opened and mark the options:"
   output::list "\`Store in macOS Keychain\`" "\`Remember for 600 seconds\`"
@@ -60,6 +62,7 @@ gpg_suite_pinentry() {
 
   sec::delete_line "pinentry-program" "${gnu_path}/gpg-agent.conf"
   echo "pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac" | tee -a "${gnu_path}/gpg-agent.conf"
+  gpgconf --kill all
 }
 
 uninstall_gpg_suite_if_needed() {
@@ -268,6 +271,7 @@ elif ${gpg_suite:-false} || ${gpg_suite_no_mail:-false}; then
   fi
 
   gpg_suite_config
+  gpgconf --kill all
 
   output::empty_line
   output::solution "GPG Suite configuration finished"
