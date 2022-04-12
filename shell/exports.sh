@@ -56,6 +56,9 @@ export NODE_REPL_MODE='sloppy'
 # nvm
 export NVM_DIR="${HOME}/.nvm"
 
+# BUN and BUN_PATH
+export BUN_PATH="${HOME}/.bun"
+
 # Java
 JAVA_8_HOME=$(/usr/libexec/java_home -v1.8 /dev/null 2>&1)
 JAVA_11_HOME=$(/usr/libexec/java_home -v11 /dev/null 2>&1)
