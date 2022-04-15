@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+[ -s "/Users/gtrabanco/.bun/_bun" ] && source "/Users/gtrabanco/.bun/_bun"
