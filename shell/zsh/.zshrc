@@ -11,5 +11,3 @@ else
 fi
 ###### End of .Sloth loader ######
 
-. "/Users/gtrabanco/.acme.sh/acme.sh.env"
-
