@@ -1,7 +1,8 @@
 {
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.foldingImportsByDefault": false
   },
   "editor.inlineSuggest.enabled": true,
   "emmet.includeLanguages": {
@@ -52,8 +53,10 @@
   "telemetry.telemetryLevel": "off",
   "files.autoSave": "afterDelay",
   "editor.codeActionsOnSave": {
+    "source.fixAll": true,
     "source.fixAll.esLint": true,
-    "source.organizeImports": true
+    "source.organizeImports": true,
+    "source.sortMembers": true
   },
   "emmet.triggerExpansionOnTab": true,
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
@@ -74,6 +77,18 @@
   },
   "standard.options": {},
   "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": true,
+    "https://x.nest.land": true,
+    "https://crux.land": true
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+  "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   }
 }
