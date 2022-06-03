@@ -56,7 +56,8 @@
     "source.fixAll": true,
     "source.fixAll.esLint": true,
     "source.organizeImports": true,
-    "source.sortMembers": true
+    "source.sortMembers": true,
+    "format.formatDocument": true
   },
   "emmet.triggerExpansionOnTab": true,
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
@@ -90,5 +91,8 @@
   },
   "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": []
   }
 }

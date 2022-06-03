@@ -3,5 +3,6 @@ cargo-update
 cloc
 deno
 git-cliff
+htmlq
 hyperfine
 ripgrep
