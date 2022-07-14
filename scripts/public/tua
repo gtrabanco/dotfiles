@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+##? Script to check next time a bus will pass in Oviedo. Sample:
+##? dot public tua 1266
+##?
+##?
+##? Usage:
+##?   tua [-h | --help]
+##?   tua [-v | --version]
+##?   tua <stop>
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+##?
+#? v1.0.0
+
+first="$(curl "http://www.tua.es/rest/estimaciones/${stop}" --silent --insecure | jq -r '.estimaciones.value.publicEstimation[0].vh_first.seconds')"
+second="$(curl "http://www.tua.es/rest/estimaciones/${stop}" --silent --insecure | jq -r '.estimaciones.value.publicEstimation[0].vh_second.seconds')"
+
+if [[ $first -eq 0 ]]; then
+  output::answer "The bus is on the stop or will arrive soon"
+elif [[ $first -gt 0 ]]; then
+  output::answer "The next bus will pass in Oviedo at $(date -d "now + ${first} seconds" +%H:%M:%S)"
+else
+  output::answer "No bus available"
+fi
+
+if [[ $second -gt 0 ]]; then
+  output::answer "The following bus will pass in Oviedo at $(date -d "now + ${second} seconds" +%H:%M:%S)"
+fi
