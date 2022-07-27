@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-[ -s "/Users/gtrabanco/.bun/_bun" ] && source "/Users/gtrabanco/.bun/_bun"
+if [ -s "${HOME}/.bun/_bun" ]; then
+  #shellcheck disable=SC1091
+  . "${HOME}/.bun/_bun"
+fi
