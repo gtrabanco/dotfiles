@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 #? Author:
 #?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
-#? This file contains instrucctions to install the package bun
+#? This file contains instrucctions to install the package bun. If you
+#? want install fish completions for bun, you should do it manually or
+#? use the script in the official bun page, bun.sh.
 #? v1.0.0
 
 BUN_GITHUB_REPOSITORY="${BUN_GITHUB_REPOSITORY:-oven-sh/bun}"
