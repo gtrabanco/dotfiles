@@ -46,6 +46,8 @@ bun::install_script() {
   unzip -o "${tmp_path}/${release_filename}"
   mv "${tmp_path}/bun-${target}/bun" "$BUN_BIN_FILE"
   chmod u+x "$BUN_BIN_FILE"
+
+  dot::add_to_path_file "$BUN_BIN_DIR"
 }
 
 bun::init_script() {
@@ -120,6 +122,7 @@ bun::uninstall() {
 
   # Disable init script if it exists and is enable
   bun::disable_init_script
+  bun::remove_from_path_file "$BUN_BIN_DIR"
 
   ! bun::is_installed &&
     output::solution "bun uninstalled" &&
