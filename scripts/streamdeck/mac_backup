@@ -38,7 +38,6 @@ if ${version:-}; then
   exit
 fi
 
-
 STREAMDECK_PATH="$HOME/Library/Application Support/com.elgato.StreamDeck/ProfilesV2"
 
 TIME=$(date +%s)
@@ -46,5 +45,5 @@ FILENAME="StreamDeckProfiles-${TIME}.tar.bz2"
 
 tar --create --bzip2 --file "${SAVE_DIR}/${FILENAME}" "$CONFIG_DIR:t"
 
-	# check to see if 'tar' reported success
+# check to see if 'tar' reported success
 EXIT="$?"

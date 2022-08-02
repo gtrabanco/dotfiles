@@ -8,11 +8,10 @@ if [[ ! -f "$iterm2_shell_integration_path" && $TERM_PROGRAM == "iTerm.app" ]]; 
 fi
 
 {
-    [[
-      -e "$iterm2_shell_integration_path" &&
-      ${TERM_PROGRAM:-} == "iTerm.app"
-    ]] &&
-    . "$iterm2_shell_integration_path" 
+  [[ 
+    -e "$iterm2_shell_integration_path" &&
+    ${TERM_PROGRAM:-} == "iTerm.app" ]] &&
+    . "$iterm2_shell_integration_path"
 } || true
 
 unset iterm2_shell_integration_path

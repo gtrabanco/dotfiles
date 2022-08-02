@@ -5,7 +5,6 @@
 
 SECURITY_BIN="$(command -v security || true)"
 
-
 secrets::store_var() {
   local -r var_name="${1:-}"
   local -r value="${2:-}"
@@ -15,7 +14,7 @@ secrets::store_var() {
     if "$SECURITY_BIN" find-generic-password -s "$var_name" -w &> /dev/null; then
       "$SECURITY_BIN" delete-generic-password -a "$USER" -s "$var_name" &> /dev/null
     fi
-    
+
     "$SECURITY_BIN" add-generic-password -a "$USER" -s "$var_name" -w "$value" 2> /dev/null
     touch "$var_file_path"
   else

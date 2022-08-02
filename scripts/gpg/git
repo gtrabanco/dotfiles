@@ -3,7 +3,7 @@
 set -euo pipefail
 
 if [[ -z "${SLOTH_PATH:-}" ]]; then
-  cat <<EOF
+  cat << EOF
   .Sloth required:
     https://github.com/gtrabanco/dotSloth
 
@@ -28,28 +28,28 @@ pinentry_config() {
   sec::delete_line "default-cache-ttl" "${gnu_path}/gpg-agent.conf"
   sec::delete_line "max-cache-ttl" "${gnu_path}/gpg-agent.conf"
   sec::delete_line "pinentry-program" "${gnu_path}/gpg-agent.conf"
-  echo "pinentry-program $(which pinentry-mac)" >>"${gnu_path}/gpg-agent.conf"
+  echo "pinentry-program $(which pinentry-mac)" >> "${gnu_path}/gpg-agent.conf"
   gpgconf --kill all
 }
 
 gpg_suite_config() {
   if
-    ! package::is_installed gpg-suite &>/dev/null
+    ! package::is_installed gpg-suite &> /dev/null
   then
     script::depends_on gpg-suite-no-mail
   fi
 
   touch "${gnu_path}/gpg-agent.conf"
   if ! grep -q "^default-cache-ttl" "${gnu_path}/gpg-agent.conf"; then
-    echo "default-cache-ttl 600" >>"${gnu_path}/gpg-agent.conf"
+    echo "default-cache-ttl 600" >> "${gnu_path}/gpg-agent.conf"
   fi
 
   if ! grep -q "^max-cache-ttl" "${gnu_path}/gpg-agent.conf"; then
-    echo "max-cache-ttl 7200" >>"${gnu_path}/gpg-agent.conf"
+    echo "max-cache-ttl 7200" >> "${gnu_path}/gpg-agent.conf"
   fi
 
   sec::delete_line "pinentry-program" "${gnu_path}/gpg-agent.conf"
-  echo "pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac" | tee -a "${gnu_path}/gpg-agent.conf" &>/dev/null
+  echo "pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac" | tee -a "${gnu_path}/gpg-agent.conf" &> /dev/null
   gpgconf --kill all
 
   output::write "Now the GPG Preferences will be opened and mark the options:"
@@ -66,28 +66,28 @@ gpg_suite_pinentry() {
 }
 
 uninstall_gpg_suite_if_needed() {
-  if package::is_installed gpg-suite &>/dev/null; then
+  if package::is_installed gpg-suite &> /dev/null; then
     output::answer "gpg-suite is installed. Uninstalling..."
     package::uninstall gpg-suite
   fi
 }
 
 uninstall_gpg_suite_no_mail_if_needed() {
-  if package::is_installed gpg-suite-no-mail &>/dev/null; then
+  if package::is_installed gpg-suite-no-mail &> /dev/null; then
     output::answer "gpg-suite-no-mail is installed. Uninstalling..."
     package::uninstall gpg-suite-no-mail
   fi
 }
 
 uninstall_pinentry_mac_if_needed() {
-  if package::is_installed pinentry-mac &>/dev/null; then
+  if package::is_installed pinentry-mac &> /dev/null; then
     output::answer "pinentry-mac is installed. Uninstalling..."
     package::uninstall pinentry-mac
   fi
 }
 
 uninstall_gpg_suite_pinentry_if_needed() {
-  if package::is_installed gpg-suite-pinentry &>/dev/null; then
+  if package::is_installed gpg-suite-pinentry &> /dev/null; then
     output::answer "gpg-suite-pinentry is installed. Uninstalling..."
     package::uninstall gpg-suite-pinentry
   fi
@@ -214,34 +214,34 @@ then
 
   select opt in "${options[@]}"; do
     case "$opt" in
-    Quit)
-      output::answer "User exit"
-      exit
-      ;;
-    gpg-suite-no-mail)
-      output::answer "gpg-suite-no-mail"
-      gpg_suite_no_mail=true
-      break
-      ;;
-    gpg-suite)
-      output::answer "gpg-suite"
-      gpg_suite=true
-      break
-      ;;
-    gpg-suite-pinentry)
-      output::answer "gpg-suite-pinentry"
-      gpg_suite_pinentry=true
-      break
-      ;;
-    pinentry)
-      output::answer "pinentry"
-      pinentry=true
-      break
-      ;;
-    *)
-      output::error "Unexpected value"
-      exit 1
-      ;;
+      Quit)
+        output::answer "User exit"
+        exit
+        ;;
+      gpg-suite-no-mail)
+        output::answer "gpg-suite-no-mail"
+        gpg_suite_no_mail=true
+        break
+        ;;
+      gpg-suite)
+        output::answer "gpg-suite"
+        gpg_suite=true
+        break
+        ;;
+      gpg-suite-pinentry)
+        output::answer "gpg-suite-pinentry"
+        gpg_suite_pinentry=true
+        break
+        ;;
+      pinentry)
+        output::answer "pinentry"
+        pinentry=true
+        break
+        ;;
+      *)
+        output::error "Unexpected value"
+        exit 1
+        ;;
     esac
   done
 fi
