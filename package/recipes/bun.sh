@@ -11,6 +11,7 @@ BUN_INSTALL="${BUN_INSTALL:-${HOME}/.bun}"
 BUN_BIN_DIR="${BUN_BIN_DIR:-${BUN_INSTALL}/bin}"
 BUN_BIN_FILE="${BUN_BIN_FILE:-${BUN_BIN_DIR}/bun}"
 BUN_COMPLETIONS_INIT_SCRIPT="${BUN_COMPLETIONS_INIT_SCRIPT:-bun-completions}"
+BUN_VERSION="${BUN_VERSION:-latest}"
 
 bun::target() {
   case $(uname -sm) in
@@ -31,6 +32,20 @@ bun::target() {
   printf "%s" "$target"
 }
 
+#shellcheck disable=SC2120
+bun::download_url_version() {
+  local version="${1:-${BUN_VERSION:-latest}}"
+  local -r target="$(bun::target)"
+  local -r release_filename="bun-${target}.zip"
+  local -r BASE_DOWNLOAD_URL="https://github.com/${BUN_GITHUB_REPOSITORY}/releases"
+
+  if [[ "$version" == "latest" ]]; then
+    printf "%s" "${BASE_DOWNLOAD_URL}/latest/download/${release_filename}"
+  else
+    printf "%s" "${BASE_DOWNLOAD_URL}/download/${version##[vV]#}/${release_filename}"
+  fi
+}
+
 bun::install_script() {
   local target download_url tmp_path release_filename
   script::depends_on unzip
@@ -38,10 +53,7 @@ bun::install_script() {
 
   target="$(bun::target)"
   release_filename="bun-${target}.zip"
-  download_url="$(github::get_latest_package_release_download_url "$BUN_GITHUB_REPOSITORY" | grep "${release_filename}$")"
-  if [[ -z "$download_url" ]]; then
-    return 1
-  fi
+  download_url="$(bun::download_url_version "${BUN_VERSION:-latest}")"
 
   tmp_path="$(mktemp -d)"
   curl --fail --location --silent --output "${tmp_path}/${release_filename}" "$download_url"
