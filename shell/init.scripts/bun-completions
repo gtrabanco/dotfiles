@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [ -s "/Users/gtrabanco/.bun/_bun" ]; then
+  #shellcheck disable=SC1091
+  . "/Users/gtrabanco/.bun/_bun"
+fi
+
+
+export BUN_VERSION="0.1.5"
+
