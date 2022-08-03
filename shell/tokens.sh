@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # TOKENS are loaded in init-scripts because we need dot
-if command -v dot >/dev/null 2>&1; then
+if command -v dot > /dev/null 2>&1; then
   [[ -z "$HASS_FQDN" ]] && HASS_FQDN="$(dot secrets var HASS_FQDN)"
   [[ -z "$HASS_TOKEN" ]] && HASS_TOKEN="$(dot secrets var HASS_TOKEN)"
   [[ -z "$GITHUB_TOKEN" ]] && GITHUB_TOKEN="$(dot secrets var GITHUB_TOKEN)" && HOMEBREW_GITHUB_API_TOKEN="$GITHUB_TOKEN"
