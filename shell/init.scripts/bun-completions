@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-if [ -s "${HOME}/.bun/_bun" ]; then
-  #shellcheck disable=SC1091
-  . "${HOME}/.bun/_bun"
-fi
