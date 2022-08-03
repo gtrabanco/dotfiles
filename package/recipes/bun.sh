@@ -6,6 +6,7 @@
 #? use the script in the official bun page, bun.sh.
 #? v1.0.0
 
+GITHUB_BASE_URL="${GITHUB_BASE_URL:-https://github.com}"
 BUN_GITHUB_REPOSITORY="${BUN_GITHUB_REPOSITORY:-oven-sh/bun}"
 BUN_INSTALL="${BUN_INSTALL:-${HOME}/.bun}"
 BUN_BIN_DIR="${BUN_BIN_DIR:-${BUN_INSTALL}/bin}"
@@ -18,6 +19,8 @@ bun::target() {
   "Darwin x86_64")
     if sysctl sysctl.proc_translated >/dev/null 2>&1; then
       target="darwin-aarch64"
+    elif [[ $(sysctl -n machdep.cpu.features) != *avx2* ]]; then
+      target="darwin-x64-baseline"
     else
       target="darwin-x64"
     fi
@@ -29,36 +32,50 @@ bun::target() {
   *) target="linux-x64" ;;
   esac
 
+  if [[ $target == linux-x64 ]] && grep --no-messages avx2 /proc/cpu; then
+    target="linux-x64-baseline"
+  fi
+
   printf "%s" "$target"
+}
+
+bun::filename() {
+  printf "bun-%s.zip" "$(bun::target)"
 }
 
 #shellcheck disable=SC2120
 bun::download_url_version() {
-  local version="${1:-${BUN_VERSION:-latest}}"
-  local -r target="$(bun::target)"
-  local -r release_filename="bun-${target}.zip"
-  local -r BASE_DOWNLOAD_URL="https://github.com/${BUN_GITHUB_REPOSITORY}/releases"
+  dot::load_library "github"
+  local -r version="$(echo "${1:-${BUN_VERSION:-latest}}" | awk '{gsub(/^(bun-)?[vV]/, "",$0); print $0}' | xargs)"
+  local -r filename="$(bun::filename)"
 
   if [[ "$version" == "latest" ]]; then
-    printf "%s" "${BASE_DOWNLOAD_URL}/latest/download/${release_filename}"
+    printf "%s" "${GITHUB_BASE_URL:-https://github.com}/${BUN_GITHUB_REPOSITORY}/releases/latest/download/${filename}" | xargs
   else
-    printf "%s" "${BASE_DOWNLOAD_URL}/download/${version##[vV]#}/${release_filename}"
+    local -r files="$(github::get_release_download_url_tag "$BUN_GITHUB_REPOSITORY" "bun-v${version##bun-[vV]}")"
+    local -r result="$(printf "%s" "$(echo "$files" | grep "$filename")" | xargs)"
+
+    if [ -z "$result" ]; then
+      printf "%s" "$files" | grep -E "${filename//\-baseline/}"
+    else
+      printf "%s" "$result"
+    fi
   fi
 }
 
 bun::install_script() {
-  local target download_url tmp_path release_filename
   script::depends_on unzip
-  dot::load_library github
+  local -r download_url="$(bun::download_url_version "${BUN_VERSION:-latest}")"
+  local -r filename="$(basename "$download_url")"
+  local -r tmp_path="$(mktemp -d)"
 
-  target="$(bun::target)"
-  release_filename="bun-${target}.zip"
-  download_url="$(bun::download_url_version "${BUN_VERSION:-latest}")"
-
-  tmp_path="$(mktemp -d)"
-  curl --fail --location --silent --output "${tmp_path}/${release_filename}" "$download_url"
-  unzip -o "${tmp_path}/${release_filename}"
-  mv "${tmp_path}/bun-${target}/bun" "$BUN_BIN_FILE"
+  echo "Downloading ${download_url} to ${tmp_path}/${filename%%.*}"
+  open "$tmp_path"
+  sleep 5
+  curl --fail --location --silent --output "${tmp_path}/${filename}" "$download_url"
+  unzip -o "${tmp_path}/${filename}" -d "${tmp_path}"
+  mkdir -p "${BUN_BIN_DIR}"
+  mv "${tmp_path}/${filename%%.*}/bun" "$BUN_BIN_DIR"
   chmod u+x "$BUN_BIN_FILE"
 
   dot::add_to_path_file "$BUN_BIN_DIR"
@@ -124,11 +141,7 @@ bun::install() {
 
 # OPTIONAL
 bun::uninstall() {
-  local bun_path="${BUN_INSTALL}"
-
-  if [[ -d "${bun_path}" ]]; then
-    rm -rf "${bun_path}"
-  fi
+  rm -rf "${BUN_INSTALL}"
 
   if command -v bun &>/dev/null; then
     dirname "$(dirname "$(command -v bun)")" | xargs rm -rf
@@ -136,7 +149,7 @@ bun::uninstall() {
 
   # Disable init script if it exists and is enable
   bun::disable_init_script
-  bun::remove_from_path_file "$BUN_BIN_DIR"
+  dot::remove_from_path_file "$BUN_BIN_DIR"
 
   ! bun::is_installed &&
     output::solution "bun uninstalled" &&
