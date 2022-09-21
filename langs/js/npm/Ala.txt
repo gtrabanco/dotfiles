@@ -1,1 +1,7 @@
+ajv-cli
+json-schema-to-typescript
+yo
+generator-nodecg
+nodecg-cli
+lighthouse
 corepack
