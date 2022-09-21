@@ -5,18 +5,19 @@
 ##? Usage:
 ##?   flash [-h | --help]
 ##?   flash [-v | --version]
-##?   flash [<id> [<kbversion>]]
+##?   flash [--open] [<id> [<kbversion>]]
 ##?
 ##? Options:
 ##?   -h --help     Show this help
 ##?   -v --version  Show the program version
+##?   --open        Open keyboard id with `open` command, so must open in the browser.
 ##?   <id>          Keyboard id, if not defined try to use ZSA_KEYBOARD_ID if defined
 ##?   <version>     Keyboard version, if not defined use latest
 ##?
 ##? Author:
 ##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
 ##?
-#? v1.1.0
+#? v1.2.0
 
 keyboard_id="${id:-${ZSA_KEYBOARD_ID:-}}"
 if [[ -z "${keyboard_id:-}" ]]; then
@@ -29,6 +30,11 @@ zsa_url() {
   # ZSA_URL="https://oryx.zsa.io/{layout ID}/latest/binary"
   printf "https://oryx.zsa.io/%s/%s/binary" "${1:-}" "${2:-latest}"
 }
+
+if ${open:-false}; then
+  open "$(printf "https://configure.zsa.io/moonlander/layouts/%s/%s" "${keyboard_id}" "${kbversion:-latest}")"
+  exit
+fi
 
 tmp_file="$(mktemp)"
 mv "${tmp_file}" "${tmp_file}.bin"
