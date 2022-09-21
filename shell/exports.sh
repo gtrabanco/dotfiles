@@ -81,4 +81,4 @@ export LANG=en_GB.UTF-8
 #export HASS_SCHEME="https"
 #export HASS_PORT="443"
 
-export ZSA_KEYBOARD="r5Pzw"
+export ZSA_KEYBOARD_ID="r5Pzw"

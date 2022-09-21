@@ -5,17 +5,20 @@
 ##? Usage:
 ##?   flash [-h | --help]
 ##?   flash [-v | --version]
+##?   flash [<id>]
 ##?
 ##? Options:
 ##?   -h --help     Show this help
 ##?   -v --version  Show the program version
+##?   <id>          Keyboard id, if not defined try to use ZSA_KEYBOARD_ID if defined
 ##?
 ##? Author:
 ##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
 ##?
 #? v1.0.0
 
-if [[ -z "${ZSA_KEYBOARD:-}" ]]; then
+keyboard_id="${id:-${ZSA_KEYBOARD_ID:-}}"
+if [[ -z "${keyboard_id:-}" ]]; then
   output::error "\`ZSA_KEYBOARD\` is not set"
   exit 1
 fi
@@ -29,11 +32,11 @@ zsa_url() {
 tmp_file="$(mktemp)"
 mv "${tmp_file}" "${tmp_file}.bin"
 tmp_file="${tmp_file}.bin"
-curl -sfL "$(zsa_url "${ZSA_KEYBOARD}")" -o "${tmp_file}"
+curl -sL "$(zsa_url "${keyboard_id}")" -o "${tmp_file}"
 
 if [[ -f "${tmp_file}" ]]; then
   wally-cli "${tmp_file}"
 fi
 rm "${tmp_file}"
 
-output::success "Done!"
+output::solution "Done!"

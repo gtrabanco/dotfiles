@@ -109,4 +109,3 @@ alias path='echo -e ${PATH//:/\\n}'
 alias yt='yt-dlp'
 alias youtube-dl="echo 'Changed youtube-dl for yt-dlp, use it instead.'"
 alias kb="dot kb flash"
-
