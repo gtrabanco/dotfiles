@@ -65,8 +65,8 @@
                                     "key_code": "spacebar",
                                     "modifiers": {
                                         "mandatory": [
-                                            "left_command",
-                                            "left_control"
+                                            "right_command",
+                                            "right_option"
                                         ]
                                     }
                                 },

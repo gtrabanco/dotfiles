@@ -39,7 +39,7 @@ fi
 tmp_file="$(mktemp)"
 mv "${tmp_file}" "${tmp_file}.bin"
 tmp_file="${tmp_file}.bin"
-if ! curl -sfL "$(zsa_url "${keyboard_id}" "${kbversion:-latest}")" -o "${tmp_file}"; then
+if ! curl -fsL "$(zsa_url "${keyboard_id}" "${kbversion:-latest}")" -o "${tmp_file}"; then
   output::error "Error downloading the firmware"
   exit 1
 fi
