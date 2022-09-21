@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+##? Flash by using wally-cli a keyboard
+##?
+##?
+##? Usage:
+##?   flash [-h | --help]
+##?   flash [-v | --version]
+##?
+##? Options:
+##?   -h --help     Show this help
+##?   -v --version  Show the program version
+##?
+##? Author:
+##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
+##?
+#? v1.0.0
+
+if [[ -z "${ZSA_KEYBOARD:-}" ]]; then
+  output::error "\`ZSA_KEYBOARD\` is not set"
+  exit 1
+fi
+
+zsa_url() {
+  # latest can be replaced by a specific version
+  # ZSA_URL="https://oryx.zsa.io/{layout ID}/latest/binary"
+  printf "https://oryx.zsa.io/%s/%s/binary" "${1:-}" "${2:-latest}"
+}
+
+tmp_file="$(mktemp)"
+mv "${tmp_file}" "${tmp_file}.bin"
+tmp_file="${tmp_file}.bin"
+curl -sfL "$(zsa_url "${ZSA_KEYBOARD}")" -o "${tmp_file}"
+
+if [[ -f "${tmp_file}" ]]; then
+  wally-cli "${tmp_file}"
+fi
+rm "${tmp_file}"
+
+output::success "Done!"
