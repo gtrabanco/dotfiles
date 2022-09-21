@@ -5,17 +5,18 @@
 ##? Usage:
 ##?   flash [-h | --help]
 ##?   flash [-v | --version]
-##?   flash [<id>]
+##?   flash [<id> [<kbversion>]]
 ##?
 ##? Options:
 ##?   -h --help     Show this help
 ##?   -v --version  Show the program version
 ##?   <id>          Keyboard id, if not defined try to use ZSA_KEYBOARD_ID if defined
+##?   <version>     Keyboard version, if not defined use latest
 ##?
 ##? Author:
 ##?   Gabriel Trabanco Llano <gtrabanco@users.noreply.github.com>
 ##?
-#? v1.0.0
+#? v1.1.0
 
 keyboard_id="${id:-${ZSA_KEYBOARD_ID:-}}"
 if [[ -z "${keyboard_id:-}" ]]; then
@@ -32,7 +33,10 @@ zsa_url() {
 tmp_file="$(mktemp)"
 mv "${tmp_file}" "${tmp_file}.bin"
 tmp_file="${tmp_file}.bin"
-curl -sL "$(zsa_url "${keyboard_id}")" -o "${tmp_file}"
+if ! curl -sfL "$(zsa_url "${keyboard_id}" "${kbversion:-latest}")" -o "${tmp_file}"; then
+  output::error "Error downloading the firmware"
+  exit 1
+fi
 
 if [[ -f "${tmp_file}" ]]; then
   wally-cli "${tmp_file}"
