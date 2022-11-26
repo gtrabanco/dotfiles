@@ -6,5 +6,5 @@ if [ -s "/Users/gtrabanco/.bun/_bun" ]; then
 fi
 
 
-export BUN_VERSION="0.1.5"
+export BUN_VERSION="0.2.2"
 
