@@ -42,7 +42,14 @@ export HOMEBREW_NO_INSECURE_REDIRECT=1
 export HOMEBREW_CASK_OPTS=--require-sha
 export HOMEBREW_NO_ENV_HINTS=true
 
-export HISTCONTROL=ignoredups
+# History
+export HISTCONTROL="ignoredups"               # no duplicate entries, but keep space-prefixed commands
+export HISTSIZE=100000                        # big big history (default is 500)
+export HISTFILESIZE=${HISTSIZE}               # big big history
+type shopt &>/dev/null && shopt -s histappend # append to history, don't overwrite it
+
+# Don't record some commands
+export HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
 
 export GEM_HOME="${HOME}/.gem"
 
@@ -59,10 +66,13 @@ export NVM_DIR="${HOME}/.nvm"
 # BUN and BUN_PATH
 export BUN_PATH="${HOME}/.bun"
 
+# PNPM Path
+export PNPM_HOME="${HOME}/Library/pnpm"
+
 # Java
-JAVA_8_HOME=$(/usr/libexec/java_home -v1.8 /dev/null 2>&1)
-JAVA_11_HOME=$(/usr/libexec/java_home -v11 /dev/null 2>&1)
-JAVA_LATEST=$(/usr/libexec/java_home 2>&1 /dev/null)
+JAVA_8_HOME="$(/usr/libexec/java_home -v1.8 /dev/null 2>&1)"
+JAVA_11_HOME="$(/usr/libexec/java_home -v11 /dev/null 2>&1)"
+JAVA_LATEST="$(/usr/libexec/java_home 2>&1 /dev/null)"
 export JAVA_8_HOME JAVA_11_HOME JAVA_LATEST
 export JAVA_HOME="$JAVA_LATEST"
 

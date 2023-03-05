@@ -12,3 +12,8 @@ fi
 
 # bun completions
 [ -s "/Users/gtrabanco/.bun/_bun" ] && source "/Users/gtrabanco/.bun/_bun"
+
+# pnpm
+export PNPM_HOME="/Users/gtrabanco/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+# pnpm end

@@ -7,4 +7,6 @@ export path=(
   "${HOME}/.config/yarn/global/node_modules/.bin"
   "${HOME}/.local/bin"
   "${HOME}/.bun/bin"
+  "${HOME}/Library/pnpm"
+  "/Library/Apple/usr/bin/"
 )
