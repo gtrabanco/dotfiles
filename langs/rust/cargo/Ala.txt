@@ -2,6 +2,7 @@ bashdoc
 cargo-update
 cloc
 deno
+docpars
 git-cliff
 htmlq
 hyperfine
