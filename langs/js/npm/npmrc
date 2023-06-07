@@ -2,4 +2,3 @@ save-prefix=
 registry=https://registry.npmjs.org/
 audit=false
 fund=false
-//registry.npmjs.org/:_authToken=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

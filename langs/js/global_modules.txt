@@ -1,5 +1,1 @@
 editorconfig
-generator-botbuilder
-typescript
-yarn
-yo

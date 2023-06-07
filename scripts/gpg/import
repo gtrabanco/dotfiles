@@ -8,15 +8,11 @@ set -euo pipefail
 . "${DOTLY_PATH:-$SLOTH_PATH}/scripts/core/_main.sh"
 dot::load_library "sec.sh"
 
-##?
-##?
+##? Description:
+##?   Import a gpg key from Keybase or from a file.
 ##?
 ##? Usage:
-##?   import [-h | --help]
-##?   import [-v | --version]
-##?   import keybase
-##?   import gpg <private_key_file_path> <public_key_file_path>
-##?   import [<private_key_file_path>] [<public_key_file_path>]
+##?   import [options] (keybase | gpg <private_key_file_path> <public_key_file_path>)
 ##?
 ##? Options:
 ##?   -h --help     Show this help
@@ -41,17 +37,8 @@ fi
 script::depends_on git fzf gnupg
 
 if
-  [[ "${1:-}" == "gpg" && ! -f "${private_key_file_path:-}" && ! -f "${public_key_file_path:-}" ]] ||
-    [[ -n "${private_key_file_path:-}" && ! -f "${private_key_file_path:-}" ]] ||
-    [[ -n "${public_key_file_path:-}" && ! -f "${public_key_file_path:-}" ]]
-then
-  output::error "Private or public key were not found"
-  exit 1
-fi
-
-if
   [[ "${1:-}" == "keybase" ]] ||
-    [[ "${1:-}" != "gpg" && -z "${private_key_file_path:-}" && -z "${public_key_file_path:-}" ]]
+    [[ "${1:-}" != "gpg" && -z "${public_key_file_path:-}" ]]
 then
   import_from="keybase"
 elif
@@ -69,61 +56,61 @@ fi
 [[ -f "$HOME/.gnupg/gpg.conf" ]] && sec::sed -i '/^no-tty/d' "$HOME/.gnupg/gpg.conf"
 
 case ${import_from:-} in
-  "keybase")
-    script::depends_on keybase
+"keybase")
+  script::depends_on keybase
 
-    # Step 2: Check if there are gpg keys to export in Keybase
-    pgp_list="$(keybase pgp list)"
-    if [[ -z "$pgp_list" ]]; then
-      output::error "🔐 No private keys found."
-      output::empty_line
-      {
-        output::yesno "Do you want to generate a new key 🔑 " &&
-          keybase gpg gen &&
-          output::answer "🔑 New key generated" &&
-          pgp_list="$(keybase pgp list)" ||
-          output::error "🚨 Key could not be generated"
-      } || true
-    fi
-
-    # Strep 3: Exporting and importing the key
-    if [[ -n "$pgp_list" ]]; then
-      # Step 2: Exporting the key
-      keybase pgp export | sec::gpg --import > /dev/null 2>&1
-
-      output::empty_line
-      output::write "Now Keybase will show you a window asking for Keybase Password"
-      output::empty_line
-      output::write "After you correctly put your Keybase Password, you must set a"
-      output::write "password for sign with your imported private key."
-      output::empty_line
-
-      keybase pgp export --secret | sec::gpg --allow-secret-key --import > /dev/null 2>&1
-    else
-      output::error "No key found"
-      exit 1
-    fi
-
-    ;;
-  "gpg")
-
-    # Step 2 & 3: Get the keys and import
+  # Step 2: Check if there are gpg keys to export in Keybase
+  pgp_list="$(keybase pgp list)"
+  if [[ -z "$pgp_list" ]]; then
+    output::error "🔐 No private keys found."
     output::empty_line
-    output::answer "🔓 Importing the public key"
-    sec::gpg --import "$public_key_file_path" || {
-      output::error "Error importing the public key"
-      exit 1
-    }
+    {
+      output::yesno "Do you want to generate a new key 🔑 " &&
+        keybase gpg gen &&
+        output::answer "🔑 New key generated" &&
+        pgp_list="$(keybase pgp list)" ||
+        output::error "🚨 Key could not be generated"
+    } || true
+  fi
+
+  # Strep 3: Exporting and importing the key
+  if [[ -n "$pgp_list" ]]; then
+    # Step 2: Exporting the key
+    keybase pgp export | sec::gpg --import >/dev/null 2>&1
 
     output::empty_line
-    output::answer "🔒 Importing the private key (this step will ask you for the private key password)"
-    sec::gpg --import "$private_key_file_path" || {
-      output::error "Error importing the private key"
-    }
-    ;;
-  *)
-    exit
-    ;;
+    output::write "Now Keybase will show you a window asking for Keybase Password"
+    output::empty_line
+    output::write "After you correctly put your Keybase Password, you must set a"
+    output::write "password for sign with your imported private key."
+    output::empty_line
+
+    keybase pgp export --secret | sec::gpg --allow-secret-key --import >/dev/null 2>&1
+  else
+    output::error "No key found"
+    exit 1
+  fi
+
+  ;;
+"gpg")
+
+  # Step 2 & 3: Get the keys and import
+  output::empty_line
+  output::answer "🔓 Importing the public key"
+  sec::gpg --import "$public_key_file_path" || {
+    output::error "Error importing the public key"
+    exit 1
+  }
+
+  output::empty_line
+  output::answer "🔒 Importing the private key (this step will ask you for the private key password)"
+  sec::gpg --import "$private_key_file_path" || {
+    output::error "Error importing the private key"
+  }
+  ;;
+*)
+  exit
+  ;;
 esac
 
 # Step 4: List current private keys if there is only one
