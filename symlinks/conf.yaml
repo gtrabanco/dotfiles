@@ -32,5 +32,4 @@
     ~/.gnupg/gpg-agent.conf: os/common/gnupg/gpg-agent.conf
     ~/.gnupg/trustdb.gpg: os/common/gnupg/trustdb.gpg
     ~/bin/dotbot: modules/dotbot/bin/dotbot
-    ~/.npmrc: langs/js/npm/npmrc
     ~/.huskyrc: shell/huskyrc
