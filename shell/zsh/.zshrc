@@ -16,4 +16,4 @@ fi
 # pnpm
 export PNPM_HOME="/Users/gtrabanco/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
-# pnpm end
+# pnpm endexport PATH="/Users/gtrabanco/.homebrew/opt/sqlite/bin:$PATH"
