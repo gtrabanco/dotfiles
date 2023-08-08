@@ -3,7 +3,7 @@
 if command -v dot > /dev/null 2>&1; then
   [[ -z "$HASS_FQDN" ]] && HASS_FQDN="$(dot secrets var HASS_FQDN)"
   [[ -z "$HASS_TOKEN" ]] && HASS_TOKEN="$(dot secrets var HASS_TOKEN)"
-  [[ -z "$GITHUB_TOKEN" ]] && GITHUB_TOKEN="$(dot secrets var GITHUB_TOKEN)" && HOMEBREW_GITHUB_API_TOKEN="$GITHUB_TOKEN"
+  [[ -z "$GITHUB_TOKEN" ]] && GITHUB_TOKEN="$(dot secrets var GITHUB_TOKEN)" && HOMEBREW_GITHUB_API_TOKEN="$(dot secrets var GITHUB_TOKEN || echo "${GITHUB_TOKEN}")"
   [[ -z "$NTFY_PUSHOVER_TOKEN" ]] && NTFY_PUSHOVER_TOKEN="$(dot secrets var NTFY_PUSHOVER_TOKEN)"
   [[ -z "$TELEGRAM_API_KEY" ]] && TELEGRAM_API_KEY="$(dot secrets var TELEGRAM_API_KEY)"
   [[ -z "$TELEGRAM_GROUP_ID" ]] && TELEGRAM_GROUP_ID="$(dot secrets var TELEGRAM_GROUP_ID)"
