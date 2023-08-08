@@ -10,7 +10,7 @@ secrets::store_var() {
   local -r value="${2:-}"
   local -r var_file_path="$DOTFILES_PATH/$DOTLY_SECRETS_MODULE_PATH/vars/$var_name"
 
-  if platfor::is_macos && [[ "${DOTLY_SECRETS_VAR_MACOS_STORE:-filepath}" == "keychain" ]]; then
+  if platform::is_macos && [[ "${DOTLY_SECRETS_VAR_MACOS_STORE:-filepath}" == "keychain" ]]; then
     if "$SECURITY_BIN" find-generic-password -s "$var_name" -w &> /dev/null; then
       "$SECURITY_BIN" delete-generic-password -a "$USER" -s "$var_name" &> /dev/null
     fi
