@@ -8,5 +8,6 @@ export path=(
   "${HOME}/.local/bin"
   "${HOME}/.bun/bin"
   "${HOME}/Library/pnpm"
+  "${HOME}/.docker/bin"
   "/Library/Apple/usr/bin/"
 )
