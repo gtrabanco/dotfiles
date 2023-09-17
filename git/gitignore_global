@@ -110,3 +110,6 @@ DerivedData/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+# Playgrounds I usually have in project to see doubts
+**/playground*
+
