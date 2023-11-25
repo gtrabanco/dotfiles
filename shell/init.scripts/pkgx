@@ -1,0 +1,168 @@
+pkgx() {
+  case "$1" in
+  install)
+    if [ $# -gt 1 ]; then
+      command pkgx "$@"
+    elif type _pkgx_install >/dev/null 2>&1; then
+      _pkgx_install
+    else
+      echo "pkgx: nothing to install" >&2
+      return 1
+    fi;;
+  unload)
+    if type _pkgx_reset >/dev/null 2>&1; then
+      _pkgx_reset
+    fi
+    unset -f _pkgx_chpwd_hook _pkgx_should_deactivate_devenv pkgx x command_not_found_handler command_not_found_handle pkgx@latest _pkgx_commit _pkgx_dev_off _pkgx_provider >/dev/null 2>&1
+    echo "pkgx: shellcode unloaded" >&2;;
+  *)
+    command pkgx "$@";;
+  esac
+}
+
+x() {
+  case $1 in
+  "")
+    if [ -f "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/x.$$" ]; then
+      if foo="$("/Users/gtrabanco/Library/Application Support/pkgx/shellcode/u.$$")"; then
+        eval "$foo"
+        ${SHELL:-/bin/sh} "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/x.$$"
+        unset foo
+      fi
+      rm "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/"?.$$
+    else
+      echo "pkgx: nothing to run" >&2
+      return 1
+    fi;;
+  *)
+    command pkgx -- "$@";;
+  esac
+}
+
+env() {
+  for arg in "$@"; do
+    case $arg in
+    --*)
+      command env "$@"
+      return;;
+    -*);;
+    +*);;
+    *)
+      command env "$@"
+      return;;
+    esac
+  done
+  if [ $# -eq 0 ]; then
+    command env
+  fi
+  if type _pkgx_reset >/dev/null 2>&1; then
+    _pkgx_reset
+  fi
+  eval "$(command pkgx --internal.use "$@")"
+}
+
+dev() {
+  if [ "$1" = 'off' ]; then
+    _pkgx_dev_off
+  elif type _pkgx_dev_off >/dev/null 2>&1; then
+    echo 'dev: environment already active' >&2
+    return 1
+  else
+    if type _pkgx_reset >/dev/null 2>&1; then
+      _pkgx_reset
+    fi
+    eval "$(command pkgx --internal.activate "$PWD" "$@")"
+  fi
+}
+
+_pkgx_provider() {
+  if ! command pkgx --silent --provider "$1"; then
+    command pkgx --sync --keep-going --silent --provider "$1"
+  fi
+}
+
+command_not_found_handler() {
+  if [ $1 = pkgx ]; then
+    echo 'fatal: `pkgx` not in PATH' >&2
+    return 1
+  elif [ -t 2 ] && _pkgx_provider $1; then
+    echo -e '\e[2m^^ type `\e[0mx\e[2m` to run that\e[0m' >&2
+
+    d="/Users/gtrabanco/Library/Application Support/pkgx/shellcode"
+    mkdir -p "$d"
+    echo "#!${SHELL:-/bin/sh}" > "$d/u.$$"
+    echo "echo -e \"\033[38;5;63menv\033[0m +$1 \e[2m&&\e[0m $@ \" >&2" >> "$d/u.$$"
+    echo "exec pkgx --internal.use +\"$1\"" >> "$d/u.$$"
+    chmod u+x "$d/u.$$"
+    echo -n "exec " > "$d/x.$$"
+    for arg in "$@"; do
+      printf "%q " "$arg" >> "$d/x.$$"
+    done
+
+    return 127
+  else
+    echo "cmd not found: $1" >&2
+    return 127
+  fi
+}
+
+_pkgx_chpwd_hook() {
+  if _pkgx_should_deactivate_devenv >/dev/null 2>&1; then
+    _pkgx_dev_off --shy
+  fi
+  if ! type _pkgx_dev_off >/dev/null 2>&1; then
+    dir="$PWD"
+    while [ "$dir" != "/" ]; do
+      if [ -f "/Users/gtrabanco/Library/Application Support/pkgx/dev/$dir/dev.pkgx.activated" ]; then
+        if type _pkgx_reset >/dev/null 2>&1; then
+          _pkgx_reset
+        fi
+        eval "$(command pkgx --internal.activate "$dir")"
+        break
+      fi
+      dir="$(dirname "$dir")"
+    done
+  fi
+}
+
+if [ -n "$ZSH_VERSION" ] && [ $(emulate) = zsh ]; then
+  eval 'typeset -ag chpwd_functions
+
+        if [[ -z "${chpwd_functions[(r)_pkgx_chpwd_hook]+1}" ]]; then
+          chpwd_functions=( _pkgx_chpwd_hook ${chpwd_functions[@]} )
+        fi
+
+        if [ "$TERM_PROGRAM" != Apple_Terminal ]; then
+          _pkgx_chpwd_hook
+        fi
+
+        _pkgx() {
+          local words
+          words=($(pkgx --shell-completion $1))
+          reply=($words)
+        }
+        compctl -K _pkgx pkgx'
+elif [ -n "$BASH_VERSION" ] && [ "$POSIXLY_CORRECT" != y ] ; then
+  eval 'cd() {
+          builtin cd "$@" || return
+          _pkgx_chpwd_hook
+        }
+
+        command_not_found_handle() {
+          command_not_found_handler "$@"
+        }
+
+        _pkgx_chpwd_hook'
+else
+  POSIXLY_CORRECT=y
+  echo "pkgx: warning: unsupported shell" >&2
+fi
+
+if [ "$POSIXLY_CORRECT" != y ]; then
+  eval 'pkgx@latest() {
+          command pkgx pkgx@latest "$@"
+        }'
+  if [[ "$PATH" != *"$HOME/.local/bin"* ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
+  fi
+fi
