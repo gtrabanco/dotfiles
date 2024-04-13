@@ -116,3 +116,4 @@ alias jq="yq -p=json"
 # Other stuff
 alias kb="dot kb flash" #Flash ergodox
 alias icloud="cd '${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs/'"
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
