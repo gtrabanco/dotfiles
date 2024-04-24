@@ -3,6 +3,10 @@
 echo "Caveats"
 echo "======="
 echo
+echo " · Install packages that can fail"
+echo "       dot package remove moreutils"
+echo "       dot package add sponge gpg-suite-no-mail"
+echo
 echo " · Enable use of TouchId when use root"
 echo "       sudo vi /etc/pam.d/sudo"
 echo
