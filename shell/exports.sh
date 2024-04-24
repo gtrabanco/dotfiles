@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # .Sloth configuration
 #export SLOTH_THEME=sloth
-export SLOTH_THEME=codely
+export SLOTH_THEME=codelytv
 #export SLOTH_THEME=spaceship
 export SLOTH_THEME_MULTILINE=false
 export SLOTH_THEME_MINIMAL=false
@@ -30,8 +30,8 @@ export PROFILE="/dev/null"
 export BASH_COMP_DEBUG_FILE="${HOME}/bash-autocompletions.log"
 
 # Do you want to make .Sloth loader 12ms faster?
-export BREW_BIN="/Users/gtrabanco/.homebrew/bin/brew"
-export HOMEBREW_PREFIX="/Users/gtrabanco/.homebrew"
+export HOMEBREW_PREFIX="${HOME}/.homebrew"
+export BREW_BIN="${HOMEBREW_PREFIX}/bin/brew"
 
 # Homebrew
 # https://docs.brew.sh/Manpage#environment
@@ -60,8 +60,6 @@ export NODE_REPL_HISTORY=~/.node_history
 export NODE_REPL_HISTORY_SIZE='32768'
 # Use sloppy mode by default, matching web browsers.
 export NODE_REPL_MODE='sloppy'
-# nvm
-export NVM_DIR="${HOME}/.nvm"
 
 # BUN and BUN_PATH
 export BUN_PATH="${HOME}/.bun"

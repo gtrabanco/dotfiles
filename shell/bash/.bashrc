@@ -16,10 +16,3 @@ else
 fi
 ###### End of .Sloth loader ######
 
-
-PATH=~/.console-ninja/.bin:$PATH
-
-# CLEAN MY MAC Settings
-export CLEAN_MY_MAC=/Users/gtrabanco/.clean-my-mac
-export PATH=$CLEAN_MY_MAC/bin:$PATH
-

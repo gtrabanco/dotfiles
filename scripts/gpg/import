@@ -34,7 +34,7 @@ fi
 
 # Here begin your script
 
-script::depends_on git fzf gnupg
+script::depends_on git fzf gpg
 
 if
   [[ "${1:-}" == "keybase" ]] ||

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+export BUN_PATH="${HOME}/.bun"
+export PATH="${PATH:+${PATH}:}${HOME}/.bun/bin"
+
+if [ -s "${HOME}/.bun/_bun" ]; then
+  #shellcheck disable=SC1091
+  . "${HOME}/.bun/_bun"
+fi
+
+export BUN_VERSION="1.1.14"
+
+# export PATH="${PATH:+${PATH}:}$HOME/.bun/bin:$HOME/bin"
+# PATH="${PATH:+${PATH}:}$HOME/bin" DOTLY_INSTALL=true DOTFILES_PATH="${HOME}/.dotfiles" SLOTH_PATH="${HOME}/.dotfiles/modules/sloth" "${HOME}/.dotfiles/modules/sloth/bin/dot"

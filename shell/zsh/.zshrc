@@ -10,10 +10,5 @@ else
 fi
 ###### End of .Sloth loader ######
 
-# bun completions
-[ -s "/Users/gtrabanco/.bun/_bun" ] && source "/Users/gtrabanco/.bun/_bun"
-
-# pnpm
-export PNPM_HOME="/Users/gtrabanco/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
 # pnpm endexport PATH="/Users/gtrabanco/.homebrew/opt/sqlite/bin:$PATH"
+
