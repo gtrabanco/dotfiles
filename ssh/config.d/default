@@ -1,11 +1,11 @@
 Host *
+	IdentityFile ~/.ssh/id_ed25519
 	Protocol 2
 	Compression yes
 	LogLevel INFO
 	TCPKeepAlive yes
 	ServerAliveInterval 20
 	ServerAliveCountMax 10
-	IdentityFile ~/.ssh/mbp2016.key
 	UseKeychain yes
 	AddKeysToAgent yes
 	ForwardAgent yes
