@@ -8,54 +8,61 @@ pkgx() {
     else
       echo "pkgx: nothing to install" >&2
       return 1
-    fi;;
+    fi
+    ;;
   unload)
     if type _pkgx_reset >/dev/null 2>&1; then
       _pkgx_reset
     fi
     unset -f _pkgx_chpwd_hook _pkgx_should_deactivate_devenv pkgx x command_not_found_handler command_not_found_handle pkgx@latest _pkgx_commit _pkgx_dev_off _pkgx_provider >/dev/null 2>&1
-    echo "pkgx: shellcode unloaded" >&2;;
+    echo "pkgx: shellcode unloaded" >&2
+    ;;
   *)
-    command pkgx "$@";;
+    command pkgx "$@"
+    ;;
   esac
 }
 
-x() {
-  case $1 in
-  "")
-    if [ -f "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/x.$$" ]; then
-      if foo="$("/Users/gtrabanco/Library/Application Support/pkgx/shellcode/u.$$")"; then
-        eval "$foo"
-        ${SHELL:-/bin/sh} "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/x.$$"
-        unset foo
-      fi
-      rm "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/"?.$$
-    else
-      echo "pkgx: nothing to run" >&2
-      return 1
-    fi;;
-  *)
-    command pkgx -- "$@";;
-  esac
-}
+if ! type x >/dev/null 2>&1; then
+  eval 'x() {
+    case $1 in
+    "")
+      if [ -f "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/x.$$" ]; then
+        if foo="$("/Users/gtrabanco/Library/Application Support/pkgx/shellcode/u.$$")"; then
+          eval "$foo"
+          ${SHELL:-/bin/sh} "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/x.$$"
+          unset foo
+        fi
+        rm "/Users/gtrabanco/Library/Application Support/pkgx/shellcode/"?.$$
+      else
+        echo "pkgx: nothing to run" >&2
+        return 1
+      fi;;
+    *)
+      command pkgx -- "$@";;
+    esac
+  }'
+fi
 
 env() {
   for arg in "$@"; do
     case $arg in
     --*)
       command env "$@"
-      return;;
-    -*);;
-    +*);;
+      return
+      ;;
+    -*) ;;
+    +*) ;;
     *)
       command env "$@"
-      return;;
+      return
+      ;;
     esac
   done
   if [ $# -eq 0 ]; then
     command env
-  fi
-  if type _pkgx_reset >/dev/null 2>&1; then
+    return
+  elif type _pkgx_reset >/dev/null 2>&1; then
     _pkgx_reset
   fi
   eval "$(command pkgx --internal.use "$@")"
@@ -88,15 +95,15 @@ command_not_found_handler() {
   elif [ -t 2 ] && _pkgx_provider $1; then
     echo -e '\e[2m^^ type `\e[0mx\e[2m` to run that\e[0m' >&2
 
-    d="/Users/gtrabanco/Library/Application Support/pkgx/shellcode"
+    d="${HOME}/Library/Application Support/pkgx/shellcode"
     mkdir -p "$d"
-    echo "#!${SHELL:-/bin/sh}" > "$d/u.$$"
-    echo "echo -e \"\033[38;5;63menv\033[0m +$1 \e[2m&&\e[0m $@ \" >&2" >> "$d/u.$$"
-    echo "exec pkgx --internal.use +\"$1\"" >> "$d/u.$$"
+    echo "#!${SHELL:-/bin/sh}" >"$d/u.$$"
+    echo "echo -e \"\033[38;5;63menv\033[0m +$1 \e[2m&&\e[0m $@ \" >&2" >>"$d/u.$$"
+    echo "exec pkgx --internal.use +\"$1\"" >>"$d/u.$$"
     chmod u+x "$d/u.$$"
-    echo -n "exec " > "$d/x.$$"
+    echo -n "exec " >"$d/x.$$"
     for arg in "$@"; do
-      printf "%q " "$arg" >> "$d/x.$$"
+      printf "%q " "$arg" >>"$d/x.$$"
     done
 
     return 127
@@ -113,7 +120,7 @@ _pkgx_chpwd_hook() {
   if ! type _pkgx_dev_off >/dev/null 2>&1; then
     dir="$PWD"
     while [ "$dir" != "/" ]; do
-      if [ -f "/Users/gtrabanco/Library/Application Support/pkgx/dev/$dir/dev.pkgx.activated" ]; then
+      if [ -f "${HOME}/Library/Application Support/pkgx/dev/$dir/dev.pkgx.activated" ]; then
         if type _pkgx_reset >/dev/null 2>&1; then
           _pkgx_reset
         fi
@@ -142,7 +149,7 @@ if [ -n "$ZSH_VERSION" ] && [ $(emulate) = zsh ]; then
           reply=($words)
         }
         compctl -K _pkgx pkgx'
-elif [ -n "$BASH_VERSION" ] && [ "$POSIXLY_CORRECT" != y ] ; then
+elif [ -n "$BASH_VERSION" ] && [ "$POSIXLY_CORRECT" != y ]; then
   eval 'cd() {
           builtin cd "$@" || return
           _pkgx_chpwd_hook
