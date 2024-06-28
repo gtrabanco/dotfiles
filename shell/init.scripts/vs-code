@@ -1,1 +1,2 @@
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path bash)"
+shell_name="$(echo "$SHELL" | awk -F'/' '{print tolower($NF)}')"
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path "$shell_name")"

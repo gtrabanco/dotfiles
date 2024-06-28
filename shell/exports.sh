@@ -62,6 +62,7 @@ export NODE_REPL_HISTORY_SIZE='32768'
 export NODE_REPL_MODE='sloppy'
 
 # BUN and BUN_PATH
+export BUN_VERSION="canary"
 export BUN_PATH="${HOME}/.bun"
 
 # PNPM Path
