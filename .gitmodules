@@ -1,16 +1,16 @@
 [submodule "modules/sloth"]
-	path = modules/sloth
-	url = git@github.com:gtrabanco/sloth.git
-	branch = master
+path = modules/sloth
+url = git@github.com:gtrabanco/sloth.git
+branch = main
 [submodule "modules/secrets"]
-	path = modules/secrets
-	url = keybase://private/gtrabanco/secrets
-	branch = master
+path = modules/secrets
+url = keybase://private/gtrabanco/secrets
+branch = master
 [submodule "modules/raycast_commands"]
-	path = modules/raycast_commands
-	url = https://github.com/raycast/script-commands
+path = modules/raycast_commands
+url = https://github.com/raycast/script-commands
 [submodule "dotbot"]
-	path = modules/dotbot
-	url = https://github.com/anishathalye/dotbot
-	branch = master
-	ignore = dirty
+path = modules/dotbot
+url = https://github.com/anishathalye/dotbot
+branch = master
+ignore = dirty
