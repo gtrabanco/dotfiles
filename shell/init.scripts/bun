@@ -2,10 +2,32 @@
 
 export BUN_PATH="${BUN_PATH:-${HOME}/.bun}"
 
-if [ -s "${BUN_PATH}/_bun" ]; then
+if [ -d "${BUN_PATH}" ]; then
   export PATH="${PATH:+${PATH}:}${HOME}/.bun/bin"
-  #shellcheck disable=SC1091
-  . "${BUN_PATH}/_bun"
+
+  case $SHELL in
+  */zsh)
+    if [ ! -s "${BUN_PATH}/_bun.zsh" ]; then
+      curl -fsSL https://raw.githubusercontent.com/oven-sh/bun/HEAD/completions/bun.zsh >"${BUN_PATH}/_bun.zsh"
+    fi
+    . "${BUN_PATH}/_bun.zsh"
+    ;;
+
+  */bash)
+    if [ ! -s "${BUN_PATH}/_bun.bash" ]; then
+      curl -fsSL https://raw.githubusercontent.com/oven-sh/bun/HEAD/completions/bun.bash >"${BUN_PATH}/_bun.bash"
+    fi
+    . "${BUN_PATH}/_bun.bash"
+    ;;
+
+  */fish)
+
+    if [ ! -s "${BUN_PATH}/_bun.fish" ]; then
+      curl -fsSL https://raw.githubusercontent.com/oven-sh/bun/HEAD/completions/bun.fish >"${BUN_PATH}/_bun.fish"
+    fi
+    . "${BUN_PATH}/_bun.fish"
+    ;;
+  esac
 fi
 
 # export PATH="${PATH:+${PATH}:}$HOME/.bun/bin:$HOME/bin"
