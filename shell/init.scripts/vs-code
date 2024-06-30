@@ -1,2 +1,4 @@
-shell_name="$(echo "$SHELL" | awk -F'/' '{print tolower($NF)}')"
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path "$shell_name")"
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  shell_name="$(echo "$SHELL" | awk -F'/' '{print tolower($NF)}')"
+  . "$(code --locate-shell-integration-path "$shell_name")"
+fi
