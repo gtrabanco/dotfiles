@@ -111,7 +111,7 @@ alias youtube-dl="echo 'Changed youtube-dl for yt-dlp, use it instead.'"
 alias ytdl='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
 
 # Replace jq with yq
-alias jq="yq -p=json"
+# alias jq="yq -p=json"
 
 # Other stuff
 alias kb="dot kb flash" #Flash ergodox
