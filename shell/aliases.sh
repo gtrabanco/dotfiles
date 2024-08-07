@@ -106,7 +106,6 @@ alias reload='exec ${SHELL} -l'
 alias npath='echo -e ${PATH//:/\\n}'
 
 # Youtube-dl
-alias yt='yt-dlp'
 alias youtube-dl="echo 'Changed youtube-dl for yt-dlp, use it instead.'"
 alias ytdl='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
 
