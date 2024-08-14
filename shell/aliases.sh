@@ -117,3 +117,6 @@ alias kb="dot kb flash" #Flash ergodox
 alias icloud="cd '${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs/'"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 alias docker=podman
+
+# Cloudflare api calls
+alias cf="curl -H 'Authorization: Bearer ${CLOUDFLARE_API_KEY}'' -H 'Content-Type:application/json'"
