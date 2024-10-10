@@ -91,3 +91,6 @@ export LANG=en_GB.UTF-8
 #export HASS_PORT="443"
 
 export ZSA_KEYBOARD_ID="r5Pzw"
+
+# VSCode
+export USER_ZDOTDIR="${HOME}"

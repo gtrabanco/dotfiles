@@ -1,4 +1,7 @@
+
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+echo "Loading vscode shell integration"
   shell_name="$(echo "$SHELL" | awk -F'/' '{print tolower($NF)}')"
   . "$(code --locate-shell-integration-path "$shell_name")"
+  HISTFILE="${ZDOTDIR}/.vscode_history"
 fi

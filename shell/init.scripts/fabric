@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+if [ -f "/Users/gtrabanco/.config/fabric/fabric-bootstrap.inc" ]; then . "/Users/gtrabanco/.config/fabric/fabric-bootstrap.inc"; fi
