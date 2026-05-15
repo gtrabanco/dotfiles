@@ -10,4 +10,5 @@ export path=(
   "${HOME}/Library/pnpm"
   "${HOME}/.docker/bin"
   "/Library/Apple/usr/bin/"
+  "${HOME}/.codeium/windsurf/bin"
 )
