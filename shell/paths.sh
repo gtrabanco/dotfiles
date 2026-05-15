@@ -11,4 +11,5 @@ export path=(
   "${HOME}/.docker/bin"
   "/Library/Apple/usr/bin/"
   "${HOME}/.codeium/windsurf/bin"
+  "${HOME}/.opencode/bin"
 )
