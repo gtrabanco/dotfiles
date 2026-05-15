@@ -1,0 +1,24 @@
+[install]
+# Fixed versions
+exact = true
+
+# Mitigates supply chain attacks by requiring packages to be at 
+# least 3 days old before they can be installed.
+minimumReleaseAge = 259200
+minimumReleaseAgeExcludes = [ "@types/bun", "@types/node", "typescript"]
+
+# pnpm like
+globalStore = true
+
+# Disables Bun's internal trusted dependencies list.
+# No package is implicitly trusted to run post-install scripts.
+default-trusted-dependency = false
+
+# Prevents the lockfile from being updated during install. 
+# Essential for CI and production environments.
+frozenLockfile = true
+
+# Optional: Configure a security scanner to block known vulnerabilities 
+# during installation (requires installing the scanner package first).
+[install.security]
+scanner = "@socketsecurity/bun-security-scanner"

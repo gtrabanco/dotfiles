@@ -8,6 +8,8 @@
     - ~/.hushlogin
     - ~/.config
 # - link:
+#     ~/.bunfig.toml: langs/js/bunfig.toml
+#     ~/Library/Preferences/pnpm/config.yaml: langs/js/pnpm-config.yaml
     # ~/.config/karabiner: os/mac/karabiner
     # ~/.config/karabiner.edn: os/mac/karabiner-goku/karabiner.edn
     # ~/Library/Application Support/com.elgato.StreamDeck/Plugins: ~/Library/Mobile Documents/com~apple~CloudDocs/StreamDeck/mac/Plugins
