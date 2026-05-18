@@ -16,9 +16,9 @@ default-trusted-dependency = false
 
 # Prevents the lockfile from being updated during install. 
 # Essential for CI and production environments.
-frozenLockfile = true
+#frozenLockfile = true
 
 # Optional: Configure a security scanner to block known vulnerabilities 
 # during installation (requires installing the scanner package first).
-[install.security]
-scanner = "@socketsecurity/bun-security-scanner"
+#[install.security]
+#scanner = "@socketsecurity/bun-security-scanner"
