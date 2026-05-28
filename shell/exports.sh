@@ -94,3 +94,6 @@ export ZSA_KEYBOARD_ID="r5Pzw"
 
 # VSCode
 export USER_ZDOTDIR="${HOME}"
+
+# Chrome cli with brave
+CHROME_BUNDLE_IDENTIFIER="com.brave.Browser"
