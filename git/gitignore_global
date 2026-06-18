@@ -113,3 +113,5 @@ DerivedData/
 # Playgrounds I usually have in project to see doubts
 **/playground*
 
+
+**/.claude/settings.local.json

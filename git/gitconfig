@@ -2,7 +2,7 @@
 [user]
 # Please adapt and uncomment the following lines:
 	name = Gabriel Trabanco Llano
-	email = gtrabanco@users.noreply.github.com
+	email = 1969593+gtrabanco@users.noreply.github.com
 	signingkey = B8629F2451528D18
 
 [fetch]
@@ -111,7 +111,7 @@
 	process = git-lfs filter-process
 	required = true
 [gpg]
-	program = gpg
+	program = /Users/gtrabanco/.homebrew/bin/gpg
 [push]
 	default = current
 [rebase]

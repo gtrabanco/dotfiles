@@ -97,3 +97,6 @@ export USER_ZDOTDIR="${HOME}"
 
 # Chrome cli with brave
 CHROME_BUNDLE_IDENTIFIER="com.brave.Browser"
+
+# Headroom-ai (bun add -g headroom-ai)
+export HEADROOM_OUTPUT_SHAPER=1 
