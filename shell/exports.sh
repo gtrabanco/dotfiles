@@ -18,7 +18,8 @@ export SLOTH_INIT_SCRIPTS=true       # This makes slower the initialization
 # (depending on how fast are init scripts...), but provides a lot of functionality
 
 # Secrets config
-export DOTLY_SECRETS_VAR_MACOS_STORE="keychain" # filepath or keychain (only macos)
+export LOCAL_KEYCHAING="${HOME}/Library/Keychains/login.keychain-db"
+export DOTLY_SECRETS_VAR_MACOS_STORE="keychain" # filepath or keychain (only macos) # TODO: infisical
 
 # Git binary we want to use
 export GIT_EXECUTABLE="/usr/local/bin/git"
@@ -96,7 +97,10 @@ export ZSA_KEYBOARD_ID="r5Pzw"
 export USER_ZDOTDIR="${HOME}"
 
 # Chrome cli with brave
-CHROME_BUNDLE_IDENTIFIER="com.brave.Browser"
+export CHROME_BUNDLE_IDENTIFIER="com.brave.Browser"
 
 # Headroom-ai (bun add -g headroom-ai)
-export HEADROOM_OUTPUT_SHAPER=1 
+export HEADROOM_OUTPUT_SHAPER=1
+
+#Infisical
+export INFISICAL_DISABLE_UPDATE_CHECK=true
