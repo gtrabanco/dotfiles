@@ -1,0 +1,10 @@
+# File to store infisical custom domain configuration and avoid to show
+# the domain in public dotfiles
+readonly infisical_domain_file="${HOME}/.infisical/INFISICAL_DOMAIN.var"
+
+if [[ -z "${INFISICAL_DOMAIN:-}" && -r "${infisical_domain_file}" ]]; then
+  export INFISICAL_DOMAIN="$(cat "${infisical_domain_file}")"
+fi
+
+# Load env secrets for dotfiles
+eval "$(infisical export --silent --expand --format "dotenv-export")"
