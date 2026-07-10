@@ -1,0 +1,7 @@
+cargo-update
+docopt
+docpars
+git-delta
+hyperfine
+jq
+kadabra

@@ -1,0 +1,5 @@
+certifi==2026.6.17
+meson==1.11.1
+ndiff==7.99
+setuptools==82.0.1
+wheel==0.47.0
