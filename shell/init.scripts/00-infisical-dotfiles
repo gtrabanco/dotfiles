@@ -8,3 +8,16 @@ fi
 
 # Load env secrets for dotfiles
 eval "$(infisical export --silent --expand --format "dotenv-export")"
+
+__env_sed_script=
+env() {
+  if [[ -z $__env_sed_script ]]; then
+    __env_sed_script="$(
+        infisical export --silent --format dotenv |
+        cut -d= -f1 |
+        xargs -I{} printf 's/^%s=.*/%s=<redacted>/;' "{}" "{}"
+    )"
+  fi
+
+  command env | sed "$__env_sed_script"
+}
