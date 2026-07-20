@@ -2,9 +2,6 @@
 path = modules/sloth
 url = git@github.com:gtrabanco/sloth.git
 branch = main
-[submodule "modules/raycast_commands"]
-path = modules/raycast_commands
-url = https://github.com/raycast/script-commands
 [submodule "dotbot"]
 path = modules/dotbot
 url = https://github.com/anishathalye/dotbot

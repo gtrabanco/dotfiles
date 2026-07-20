@@ -1,1 +1,0 @@
-../config.d/github.com
