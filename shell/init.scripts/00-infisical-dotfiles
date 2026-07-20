@@ -6,6 +6,21 @@ if [[ -z "${INFISICAL_DOMAIN:-}" && -r "${infisical_domain_file}" ]]; then
   export INFISICAL_DOMAIN="$(cat "${infisical_domain_file}")"
 fi
 
+# Check if infisical CLI is available
+if ! command -v infisical &>/dev/null; then
+  echo "[infisical] error: infisical CLI not found. Install it or run restoration_scripts/99-infisical-setup.sh" >&2
+  return 1 2>/dev/null || exit 1
+fi
+
+# Check if logged in to Infisical
+if ! infisical login status &>/dev/null; then
+  local _log_file="${HOME}/.infisical/init-errors.log"
+  mkdir -p "$(dirname "$_log_file")"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] not authenticated — run 'infisical login' to authenticate" >> "$_log_file"
+  echo "[infisical] error: not logged in. Run 'infisical login' to authenticate. Logged to $_log_file" >&2
+  return 1 2>/dev/null || exit 1
+fi
+
 # Load env secrets for dotfiles
 eval "$(infisical export --silent --expand --format "dotenv-export")"
 

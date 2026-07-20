@@ -17,9 +17,7 @@ export SLOTH_UPDATE_VERSION="latest" # latest, stable (default), minor
 export SLOTH_INIT_SCRIPTS=true       # This makes slower the initialization
 # (depending on how fast are init scripts...), but provides a lot of functionality
 
-# Secrets config
-export LOCAL_KEYCHAING="${HOME}/Library/Keychains/login.keychain-db"
-export DOTLY_SECRETS_VAR_MACOS_STORE="keychain" # filepath or keychain (only macos) # TODO: infisical
+# Secrets managed by Infisical (shell/init.scripts/00-infisical-dotfiles)
 
 # Git binary we want to use
 export GIT_EXECUTABLE="/usr/local/bin/git"

@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-# TOKENS are loaded in init-scripts because we need dot
-if command -v dot > /dev/null 2>&1; then
-  [[ -z "$HASS_FQDN" ]] && HASS_FQDN="$(dot secrets var HASS_FQDN)"
-  [[ -z "$HASS_TOKEN" ]] && HASS_TOKEN="$(dot secrets var HASS_TOKEN)"
-  [[ -z "$GITHUB_TOKEN" ]] && GITHUB_TOKEN="$(gh auth token)" && HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
-  [[ -z "$NTFY_PUSHOVER_TOKEN" ]] && NTFY_PUSHOVER_TOKEN="$(dot secrets var NTFY_PUSHOVER_TOKEN)"
-  [[ -z "$TELEGRAM_API_KEY" ]] && TELEGRAM_API_KEY="$(dot secrets var TELEGRAM_API_KEY)"
-  [[ -z "$TELEGRAM_GROUP_ID" ]] && TELEGRAM_GROUP_ID="$(dot secrets var TELEGRAM_GROUP_ID)"
-  [[ -z "$TELEGRAM_VIM_NAME" ]] && TELEGRAM_VIM_NAME="$(dot secrets var TELEGRAM_VIM_NAME)"
-  export HASS_FQDN HASS_TOKEN HOMEBREW_GITHUB_API_TOKEN GITHUB_TOKEN NTFY_PUSHOVER_TOKEN TELEGRAM_API_KEY TELEGRAM_GROUP_ID TELEGRAM_VIM_NAME
+# TOKENS are loaded via Infisical (00-infisical-dotfiles init script).
+# This file only handles tokens that come from external providers (gh CLI).
+
+if command -v gh &>/dev/null; then
+  [[ -z "$GITHUB_TOKEN" ]] && GITHUB_TOKEN="$(gh auth token)"
+  [[ -z "$HOMEBREW_GITHUB_API_TOKEN" ]] && HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
+  export GITHUB_TOKEN HOMEBREW_GITHUB_API_TOKEN
 fi

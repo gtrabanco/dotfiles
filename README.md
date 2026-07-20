@@ -29,21 +29,19 @@ This requieres a newer version than official DOTLY version which is in [my fork]
 1. Generate ssh key or import the old one (not recommended) and add it to your GitHub or elsewhere you stored your dotfiles (the public key) to import your dotfiles if the repository is private and to be able to modify your dotfiles.
 2. Do the same with the repository you have your secrets (if you have your secrets in a repository :).
 3. Use script to restore `bash <(curl -s https://raw.githubusercontent.com/gtrabanco/sloth/HEAD/restorer)`
-4. Apply your secrets: `dot secrets apply` 
-5. Restart your terminal
-6. Import your packages `dot package import`
+4. Authenticate with Infisical: `infisical login` (then restart your terminal)
+5. Import your packages `dot package import`
 
 ### Long version
 
 1. Generate ssh key or import the old one (not recommended) and add it to your GitHub or elsewhere you stored your dotfiles (the public key) to import your dotfiles if the repository is private and to be able to modify your dotfiles.
-2. Do the same with the repository you have your secrets (if you have your secrets in a repository :).
-3. Clone your dotfiles repository `git clone [your repository of dotfiles] $HOME/.dotfiles`
-4. Go to your dotfiles folder `cd $HOME/.dotfiles`
-5. Install git submodules `git submodule update --init --recursive`
-6. Install your dotfiles `DOTFILES_PATH="$HOME/.dotfiles" DOTLY_PATH="$DOTFILES_PATH/modules/sloth" SLOTH_PATH="$DOTLY_PATH" "$DOTLY_PATH/bin/dot" self install`
-7. Apply your secrets: `dot secrets apply` 
-8. Restart your terminal
-9. Import your packages `dot package import`
+2. Clone your dotfiles repository `git clone [your repository of dotfiles] $HOME/.dotfiles`
+3. Go to your dotfiles folder `cd $HOME/.dotfiles`
+4. Install git submodules `git submodule update --init --recursive`
+5. Install your dotfiles `DOTFILES_PATH="$HOME/.dotfiles" DOTLY_PATH="$DOTFILES_PATH/modules/sloth" SLOTH_PATH="$DOTLY_PATH" "$DOTLY_PATH/bin/dot" self install`
+6. Authenticate with Infisical: `infisical login`
+7. Restart your terminal
+8. Import your packages `dot package import`
 
 ### Install Paragon NTFS
 
@@ -53,13 +51,15 @@ After `dot package import`:
 /usr/local/Caskroom/paragon-ntfs/15/FSInstaller.app
 ```
 
-## Secrets Scripts
+## Secrets
 
-Those scripts are not ready for production and could end in a lost of private data that can not be recovered or easy recovered. I do not recommend at all the use of those scripts yet for files.
+Secrets are managed via [Infisical](https://infisical.com). On a fresh machine, run the Infisical setup restoration script or authenticate manually:
 
-I recommend and are running very well for TOKEN variables without exposing the token values in your repository.
+```bash
+infisical login
+```
 
-Go [Secrets scripts folder](https://github.com/gtrabanco/dotfiles/tree/master/scripts/secrets) to view more information.
+The shell init script `00-infisical-dotfiles` loads all secrets at shell startup. If you are not logged in, it will log the error to `~/.infisical/init-errors.log` and show a message.
 
 
 ## Other cool dotfiles

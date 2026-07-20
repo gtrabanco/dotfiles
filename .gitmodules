@@ -2,10 +2,6 @@
 path = modules/sloth
 url = git@github.com:gtrabanco/sloth.git
 branch = main
-[submodule "modules/secrets"]
-path = modules/secrets
-url = keybase://private/gtrabanco/secrets
-branch = master
 [submodule "modules/raycast_commands"]
 path = modules/raycast_commands
 url = https://github.com/raycast/script-commands
