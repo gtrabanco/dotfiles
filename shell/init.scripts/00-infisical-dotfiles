@@ -32,6 +32,9 @@ env() {
         cut -d= -f1 |
         xargs -I{} printf 's/^%s=.*/%s=<redacted>/;' "{}" "{}"
     )"
+
+    __env_sed_script+="s/^GITHUB_TOKEN=.*/GITHUB_TOKEN=<redacted>/;"
+    __env_sed_script+="s/^HOMEBREW_GITHUB_API_TOKEN=.*/HOMEBREW_GITHUB_API_TOKEN=<redacted>/;"
   fi
 
   command env | sed "$__env_sed_script"
