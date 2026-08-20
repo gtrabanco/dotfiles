@@ -49,7 +49,6 @@ alias git-lines="git ls-files | xargs wc -l 2>/dev/null | tail -n1 | awk '{print
 
 # Utils
 alias k='kill -9'
-alias i.='(idea $PWD &>/dev/null &)'
 alias c.='(code $PWD &>/dev/null &)'
 alias o.='open .'
 alias diff="colordiff"
@@ -106,7 +105,7 @@ alias reload='exec ${SHELL} -l'
 alias npath='echo -e ${PATH//:/\\n}'
 
 # Youtube-dl
-alias youtube-dl="echo 'Changed youtube-dl for yt-dlp, use it instead.'"
+alias youtube-dl='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
 alias ytdl='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
 
 # Replace jq with yq
