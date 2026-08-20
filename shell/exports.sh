@@ -84,6 +84,7 @@ EDITOR="/usr/bin/vim"
 export EDITOR
 
 export LANG=en_GB.UTF-8
+export LC_CTYPE=en_GB.UTF-8
 
 # HASSIO
 #export HASS_SCHEME="https"
